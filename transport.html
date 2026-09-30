@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Transport Portal | Smart CampusQR</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --primary-light: #e0e7ff;
+            --accent: #0ea5e9;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #cbd5e1;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --shadow-subtle: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+            --shadow-hover: 0 20px 35px -10px rgba(79, 70, 229, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Navigation Bar */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-emblem {
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            color: white;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .logo-text h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .nav-badge-btn {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        /* Main Grid Wrapper */
+        .portal-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .portal-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Professional Animated Panel */
+        .transit-info-panel {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transit-info-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .panel-header h3 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+
+        .panel-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Creative Visual Transit Track */
+        .visual-road-track {
+            background: var(--primary-light);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            border: 1px dashed #c7d2fe;
+        }
+
+        .track-line {
+            width: 4px;
+            height: 120px;
+            background: #cbd5e1;
+            position: relative;
+            border-radius: 4px;
+            overflow: visible;
+        }
+
+        .moving-transit-bus {
+            position: absolute;
+            left: -18px;
+            font-size: 2.2rem;
+            animation: moveBusVertical 3.5s ease-in-out infinite alternate;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+        }
+
+        @keyframes moveBusVertical {
+            0% { top: -10px; transform: rotate(0deg); }
+            100% { top: 80px; transform: rotate(0deg); }
+        }
+
+        .track-markers {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .system-status-box {
+            background: #f1f5f9;
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .status-row span:last-child {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .indicator-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #dcfce7;
+            color: #166534;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .indicator-pill::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.4); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Right Interactive Search Workspace */
+        .workspace-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-subtle);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .workspace-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .workspace-title {
+            margin-bottom: 2rem;
+        }
+
+        .workspace-title h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .workspace-title p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .search-form-group {
+            display: flex;
+            gap: 0.75rem;
+            background: #f8fafc;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+        }
+
+        .search-input-box {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 0.85rem 1rem;
+            font-size: 1rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .search-input-box::placeholder {
+            color: #94a3b8;
+        }
+
+        .execute-search-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .execute-search-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .execute-search-btn:active {
+            transform: scale(0.98);
+        }
+
+        .validation-alert {
+            color: #dc2626;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        /* Professional Results Data Display Card */
+        .live-result-container {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+            animation: fadeInResult 0.4s ease forwards;
+        }
+
+        @keyframes fadeInResult {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-heading h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
+        }
+
+        @media (max-width: 600px) {
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .spec-item {
+            background: white;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .spec-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-value {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .highlight-phone {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo-group">
+            <div class="logo-emblem">⚡</div>
+            <div class="logo-text">
+                <h2>Smart CampusQR</h2>
+                <span>Transit Intelligence</span>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#" class="active">Transport Hub</a></li>
+                <li><a href="#" class="nav-badge-btn">Emergency Help</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Core Interactive Portal Layout -->
+    <div class="portal-wrapper">
+        
+        <!-- Left Side Premium Graphic Panel -->
+        <aside class="transit-info-panel">
+            <div class="panel-header">
+                <h3>Fleet Telemetry</h3>
+                <p>Real-time university shuttle tracking network</p>
+            </div>
+
+            <div class="visual-road-track">
+                <div class="track-line">
+                    <div class="moving-transit-bus">🚌</div>
+                </div>
+                <div class="track-markers">
+                    <span>Main Terminal</span>
+                    <span>Hostel Quad</span>
+                </div>
+            </div>
+
+            <div class="system-status-box">
+                <div class="status-row">
+                    <span>System Health:</span>
+                    <span><span class="indicator-pill">Operational</span></span>
+                </div>
+                <div class="status-row">
+                    <span>Active Shuttles:</span>
+                    <span>12 Units Online</span>
+                </div>
+                <div class="status-row">
+                    <span>Average Delay:</span>
+                    <span>&lt; 2 Minutes</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Right Side Dynamic Search Workspace -->
+        <main class="workspace-card">
+            <div class="workspace-title">
+                <h1><span>🚌</span> Campus Transport</h1>
+                <p>Search by destination location or direct bus number (e.g., Central Library or Bus #02) below to discover details instantly.</p>
+            </div>
+
+            <div class="search-form-group">
+                <input type="text" id="userDestination" class="search-input-box" placeholder="e.g., Central Library, Hostel Block C, or Bus #02...">
+                <button class="execute-search-btn" onclick="executeBusLookup()">FIND BUS</button>
+            </div>
+            
+            <div id="errorValidation" class="validation-alert">⚠️ Please enter a valid destination or bus number to proceed!</div>
+
+            <!-- Detailed Result Card Display -->
+            <div id="resultWorkspace" class="live-result-container">
+                <div class="result-heading">
+                    <h3>🚍 Optimal Route Allocation</h3>
+                    <span class="indicator-pill">Verified Route</span>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec-item">
+                        <span class="spec-label">Route / Destination</span>
+                        <span id="displayDest" class="spec-value">-</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Assigned Bus Number</span>
+                        <span id="displayBusNo" class="spec-value">-</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Departure Schedule</span>
+                        <span id="displayTiming" class="spec-value">-</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Driver In-Charge</span>
+                        <span id="displayDriver" class="spec-value">-</span>
+                    </div>
+                    <div class="spec-item" style="grid-column: span 2;">
+                        <span class="spec-label">Direct Driver Contact</span>
+                        <span class="spec-value"><a id="displayContact" href="#" class="highlight-phone">-</a></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Page Footer -->
+    <footer>
+        <p>&copy; 2026 Smart CampusQR Transport Module. Developed for advanced campus mobility.</p>
+    </footer>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        function executeBusLookup() {
+            const rawInput = document.getElementById('userDestination').value.trim();
+            const query = rawInput.toLowerCase();
+            const resultBox = document.getElementById('resultWorkspace');
+            const alertBox = document.getElementById('errorValidation');
+
+            if (query === "") {
+                alertBox.style.display = "block";
+                resultBox.style.display = "none";
+                return;
+            }
+
+            alertBox.style.display = "none";
+            resultBox.style.display = "block";
+
+            // Default fallback parameters
+            let busNo = "Bus #04 (Route Alpha - Express)";
+            let timing = "09:30 AM / Frequency: Every 15 Mins";
+            let driver = "Mr. Ramesh Kumar";
+            let contact = "+91 98765-43210";
+            let displayTarget = rawInput;
+
+            // Direct Bus Number Match Logic
+            if (query.includes("bus 1") || query.includes("#01") || query.includes("01")) {
+                busNo = "Bus #01 (Hostel Resident Shuttle)";
+                timing = "09:15 AM / Continuous Loop";
+                driver = "Mr. Mohan Lal";
+                contact = "+91 99887-76655";
+                displayTarget = "Hostel Resident Circuit (Bus #01)";
+            } else if (query.includes("bus 2") || query.includes("#02") || query.includes("02")) {
+                busNo = "Bus #02 (Route Beta - Academic Quad)";
+                timing = "09:45 AM / Frequency: Every 20 Mins";
+                driver = "Mr. Suresh Singh";
+                contact = "+91 91234-56789";
+                displayTarget = "Academic Quad / Library (Bus #02)";
+            } else if (query.includes("bus 4") || query.includes("#04") || query.includes("04")) {
+                busNo = "Bus #04 (Route Alpha - Express)";
+                timing = "09:30 AM / Frequency: Every 15 Mins";
+                driver = "Mr. Ramesh Kumar";
+                contact = "+91 98765-43210";
+                displayTarget = "Express Route (Bus #04)";
+            } else if (query.includes("bus 7") || query.includes("#07") || query.includes("07")) {
+                busNo = "Bus #07 (Main Gateway Express)";
+                timing = "09:00 AM / Direct Connection";
+                driver = "Mr. Rajesh Sharma";
+                contact = "+91 98112-33445";
+                displayTarget = "Main Gateway Express (Bus #07)";
+            } 
+            // Destination Keyword Match Logic
+            else if (query.includes("library") || query.includes("tech") || query.includes("science")) {
+                busNo = "Bus #02 (Route Beta - Academic Quad)";
+                timing = "09:45 AM / Frequency: Every 20 Mins";
+                driver = "Mr. Suresh Singh";
+                contact = "+91 91234-56789";
+            } else if (query.includes("hostel") || query.includes("block c") || query.includes("quad")) {
+                busNo = "Bus #01 (Hostel Resident Shuttle)";
+                timing = "09:15 AM / Continuous Loop";
+                driver = "Mr. Mohan Lal";
+                contact = "+91 99887-76655";
+            } else if (query.includes("gate") || query.includes("terminal")) {
+                busNo = "Bus #07 (Main Gateway Express)";
+                timing = "09:00 AM / Direct Connection";
+                driver = "Mr. Rajesh Sharma";
+                contact = "+91 98112-33445";
+            }
+
+            // Injecting values dynamically into the layout
+            document.getElementById('displayDest').innerText = displayTarget;
+            document.getElementById('displayBusNo').innerText = busNo;
+            document.getElementById('displayTiming').innerText = timing;
+            document.getElementById('displayDriver').innerText = driver;
+            
+            const contactEl = document.getElementById('displayContact');
+            contactEl.innerText = contact;
+            contactEl.href = "tel:" + contact;
+        }
+    </script>
+
+</body>
+</html>

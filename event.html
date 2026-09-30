@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Events & Cultural Fest | Smart Campus QR</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #8b5cf6; /* Vibrant Purple Accent for Events */
+            --accent-hover: #7c3aed;
+            --bg-canvas: #f8fafc;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --radius-xl: 20px;
+            --shadow-card: 0 10.5px 30px rgba(15, 23, 42, 0.06);
+            --shadow-hover: 0 20px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Professional Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #c084fc, #8b5cf6);
+        }
+
+        .back-link {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(8px);
+            transition: background 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1.15rem;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            .back-link {
+                position: static;
+                display: inline-block;
+                margin-bottom: 1rem;
+                transform: none;
+            }
+            header {
+                padding: 2rem 1rem;
+            }
+        }
+
+        /* Main Workspace Container */
+        .workspace {
+            max-width: 1300px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            width: 100%;
+            flex: 1;
+            align-items: start;
+        }
+
+        @media (max-width: 960px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Animated Showcase Panel */
+        .showcase-panel {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: var(--radius-xl);
+            padding: 2.25rem 1.75rem;
+            color: white;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            position: sticky;
+            top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .showcase-tag {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .showcase-panel h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .showcase-panel p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .anim-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 2rem 1.25rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .anim-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            animation: floatingEmoji 3s ease-in-out infinite;
+        }
+
+        .anim-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .anim-desc {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        @keyframes floatingEmoji {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        /* Right Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.75rem;
+        }
+
+        /* Event Cards */
+        .event-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: #ddd6fe;
+        }
+
+        .event-card:hover::before {
+            background: var(--accent);
+        }
+
+        .event-icon-box {
+            width: 70px;
+            height: 70px;
+            background: #f5f3ff;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 1.25rem auto;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover .event-icon-box {
+            transform: scale(1.1) rotate(5deg);
+            background: #ede9fe;
+        }
+
+        .event-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 1.75rem;
+            line-height: 1.5;
+        }
+
+        .action-btn {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+        }
+
+        .event-card:hover .action-btn {
+            background-color: var(--accent-hover);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Professional Footer */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            background-color: var(--primary);
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="back-link">&larr; Back to Hub</a>
+        <h1>Campus Events & Festivities</h1>
+        <p>Discover upcoming cultural fests, tech hackathons, music gigs, and workshops.</p>
+    </header>
+
+    <div class="workspace">
+        <!-- Left Side Animated Events Showcase -->
+        <aside class="showcase-panel">
+            <span class="showcase-tag">Happening Now</span>
+            <h3>Upcoming Highlights</h3>
+            <p>Get involved & showcase your talent</p>
+            <div class="anim-card" id="animCard">
+                <div class="anim-emoji" id="animEmoji">🎸</div>
+                <div class="anim-title" id="animTitle">Live Music Night</div>
+                <div class="anim-desc" id="animDesc">Acoustic performances and indie band jams at the open-air theater.</div>
+            </div>
+        </aside>
+
+        <!-- Right Side Events Grid -->
+        <div class="content-area">
+            <div class="section-header">
+                <h2>Featured Campus Events</h2>
+            </div>
+            
+            <div class="events-grid">
+                
+                <!-- Cultural Fest -->
+                <div class="event-card">
+                    <div>
+                        <div class="event-icon-box">🎉</div>
+                        <div class="event-name">Annual Cultural Fest</div>
+                        <p class="event-desc">Three days of dance, drama, fashion shows, celebrity nights, and food stalls.</p>
+                    </div>
+                    <button class="action-btn" onclick="alert('Cultural Fest Registration Open! Check your student portal.')">Register Now</button>
+                </div>
+
+                <!-- Tech Hackathon -->
+                <div class="event-card">
+                    <div>
+                        <div class="event-icon-box">💻</div>
+                        <div class="event-name">CodeSprint Hackathon</div>
+                        <p class="event-desc">24-hour coding challenge to build innovative full-stack & AI solutions.</p>
+                    </div>
+                    <button class="action-btn" onclick="alert('Hackathon team registration details sent to your email.')">Join Hackathon</button>
+                </div>
+
+                <!-- Open Mic & Music -->
+                <div class="event-card">
+                    <div>
+                        <div class="event-icon-box">🎤</div>
+                        <div class="event-name">Open Mic & Rap Battle</div>
+                        <p class="event-desc">Showcase your poetry, stand-up comedy, singing, or rap verses on stage.</p>
+                    </div>
+                    <button class="action-btn" onclick="alert('Slot booking for Open Mic is now live!')">Book Slot</button>
+                </div>
+
+                <!-- Workshops & Seminars -->
+                <div class="event-card">
+                    <div>
+                        <div class="event-icon-box">🏆</div>
+                        <div class="event-name">Inter-College Sports Meet</div>
+                        <p class="event-desc">Compete in football, cricket, basketball, esports tournaments, and athletics.</p>
+                    </div>
+                    <button class="action-btn" onclick="alert('Sports tournament captain registration active.')">View Fixtures</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Smart Campus QR Events Portal &bull; All Rights Reserved</p>
+    </footer>
+
+    <script>
+        const eventItems = [
+            { emoji: "🎸", title: "Live Music Night", desc: "Acoustic performances and indie band jams at the open-air theater." },
+            { emoji: "💻", title: "CodeSprint Hackathon", desc: "24-hour coding challenge to build innovative full-stack & AI solutions." },
+            { emoji: "🎤", title: "Open Mic & Rap Battle", desc: "Showcase your poetry, stand-up comedy, singing, or rap verses on stage." },
+            { emoji: "🏆", title: "Sports Championship", desc: "Inter-college tournaments for football, cricket, and esports." },
+            { emoji: "🎨", title: "Art & Craft Exhibition", desc: "Creative displays, digital design showcases, and photography contests." }
+        ];
+
+        let currentIndex = 0;
+        const emojiEl = document.getElementById('animEmoji');
+        const titleEl = document.getElementById('animTitle');
+        const descEl = document.getElementById('animDesc');
+        const cardEl = document.getElementById('animCard');
+
+        function updateShowcase() {
+            // Smooth fade out and slide-up transition
+            cardEl.style.opacity = '0';
+            cardEl.style.transform = 'translateY(12px) scale(0.96)';
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % eventItems.length;
+                const item = eventItems[currentIndex];
+                
+                emojiEl.innerText = item.emoji;
+                titleEl.innerText = item.title;
+                descEl.innerText = item.desc;
+
+                // Smooth fade in and slide down transition
+                cardEl.style.opacity = '1';
+                cardEl.style.transform = 'translateY(0) scale(1)';
+            }, 350);
+        }
+
+        // Cycle animation every 4 seconds
+        setInterval(updateShowcase, 4000);
+    </script>
+</body>
+</html>

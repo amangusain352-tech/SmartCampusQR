@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Dining Hub | Smart Campus QR</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #f97316;
+            --accent-hover: #ea580c;
+            --bg-canvas: #f8fafc;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --radius-xl: 20px;
+            --shadow-card: 0 10.5px 30px rgba(15, 23, 42, 0.06);
+            --shadow-hover: 0 20px 40px rgba(249, 115, 22, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Professional Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f97316, #fb923c, #f97316);
+        }
+
+        header h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1.15rem;
+            font-weight: 400;
+        }
+
+        /* Main Workspace Container */
+        .workspace {
+            max-width: 1300px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            width: 100%;
+            flex: 1;
+            align-items: start;
+        }
+
+        @media (max-width: 960px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left Animated Showcase Panel */
+        .showcase-panel {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: var(--radius-xl);
+            padding: 2.25rem 1.75rem;
+            color: white;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+            position: sticky;
+            top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            text-align: center;
+        }
+
+        .showcase-tag {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .showcase-panel h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .showcase-panel p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        .anim-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 2rem 1.25rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .anim-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            animation: floatingEmoji 3s ease-in-out infinite;
+        }
+
+        .anim-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .anim-desc {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        @keyframes floatingEmoji {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+
+        /* Right Content Area */
+        .content-area {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.75rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.75rem;
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .canteen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.75rem;
+        }
+
+        /* Canteen Cards */
+        .canteen-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canteen-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: transparent;
+            transition: background 0.3s ease;
+        }
+
+        .canteen-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: #fed7aa;
+        }
+
+        .canteen-card:hover::before {
+            background: var(--accent);
+        }
+
+        .canteen-icon-box {
+            width: 70px;
+            height: 70px;
+            background: #fff7ed;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 1.25rem auto;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .canteen-card:hover .canteen-icon-box {
+            transform: scale(1.1) rotate(5deg);
+            background: #ffedd5;
+        }
+
+        .canteen-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .canteen-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 1.75rem;
+            line-height: 1.5;
+        }
+
+        .explore-btn {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+        }
+
+        .canteen-card:hover .explore-btn {
+            background-color: var(--accent-hover);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Professional Footer */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            background-color: var(--primary);
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Smart Campus Dining Hub</h1>
+        <p>Explore menus, daily specials, and quick bites across all campus canteens.</p>
+    </header>
+
+    <div class="workspace">
+        <!-- Left Side Premium Animated Showcase Panel -->
+        <aside class="showcase-panel">
+            <span class="showcase-tag">Live Feed</span>
+            <h3>Canteen Specials</h3>
+            <p>Fresh cravings prepared daily</p>
+            <div class="anim-card" id="animCard">
+                <div class="anim-emoji" id="animEmoji">🍔</div>
+                <div class="anim-title" id="animTitle">Juicy Burgers</div>
+                <div class="anim-desc" id="animDesc">Crispy patties loaded with melted cheese & fresh veggies.</div>
+            </div>
+        </aside>
+
+        <!-- Right Side Canteen Grid -->
+        <div class="content-area">
+            <div class="section-header">
+                <h2>Available Campus Canteens</h2>
+            </div>
+            
+            <div class="canteen-grid">
+                
+                <!-- ET Canteen -->
+                <a href="cafeteria.html?canteen=et" class="canteen-card">
+                    <div>
+                        <div class="canteen-icon-box">⚡</div>
+                        <div class="canteen-name">ET Canteen</div>
+                        <p class="canteen-desc">Quick bites, beverages, and snacks near the Engineering & Technology block.</p>
+                    </div>
+                    <button class="explore-btn">Explore Menu &rarr;</button>
+                </a>
+
+                <!-- Main Canteen -->
+                <a href="cafeteria.html?canteen=main" class="canteen-card">
+                    <div>
+                        <div class="canteen-icon-box">🏫</div>
+                        <div class="canteen-name">Main Canteen</div>
+                        <p class="canteen-desc">The central hub for full meals, South/North Indian thalis, and daily specials.</p>
+                    </div>
+                    <button class="explore-btn">Explore Menu &rarr;</button>
+                </a>
+
+                <!-- Yummy Tummy -->
+                <a href="cafeteria.html?canteen=yummy" class="canteen-card">
+                    <div>
+                        <div class="canteen-icon-box">🍲</div>
+                        <div class="canteen-name">Yummy Tummy</div>
+                        <p class="canteen-desc">Delicious rolls, Chinese fast food, momos, and comforting refreshments.</p>
+                    </div>
+                    <button class="explore-btn">Explore Menu &rarr;</button>
+                </a>
+
+                <!-- Burger Point -->
+                <a href="cafeteria.html?canteen=burger" class="canteen-card">
+                    <div>
+                        <div class="canteen-icon-box">🍟</div>
+                        <div class="canteen-name">Burger Point</div>
+                        <p class="canteen-desc">Crispy burgers, peri-peri fries, loaded wraps, and cold beverages.</p>
+                    </div>
+                    <button class="explore-btn">Explore Menu &rarr;</button>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Smart Campus QR Canteen Portal &bull; All Rights Reserved</p>
+    </footer>
+
+    <script>
+        const foodItems = [
+            { emoji: "🍔", title: "Juicy Burgers", desc: "Crispy patties loaded with melted cheese & fresh veggies." },
+            { emoji: "☕", title: "Hot Brews & Coffee", desc: "Energizing cappuccinos and adrak chai to kickstart your day." },
+            { emoji: "🥟", title: "Steamy Momos", desc: "Hot dumplings served with fiery red spicy chutney." },
+            { emoji: "🍛", title: "Desi Thalis & Meals", desc: "Hearty North & South Indian meals cooked to perfection." },
+            { emoji: "🥪", title: "Avocado & Grilled Wraps", desc: "Healthy sourdough toasts and loaded chicken wraps." }
+        ];
+
+        let currentIndex = 0;
+        const emojiEl = document.getElementById('animEmoji');
+        const titleEl = document.getElementById('animTitle');
+        const descEl = document.getElementById('animDesc');
+        const cardEl = document.getElementById('animCard');
+
+        function updateShowcase() {
+            // Smooth fade out and slide-up transition
+            cardEl.style.opacity = '0';
+            cardEl.style.transform = 'translateY(12px) scale(0.96)';
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % foodItems.length;
+                const item = foodItems[currentIndex];
+                
+                emojiEl.innerText = item.emoji;
+                titleEl.innerText = item.title;
+                descEl.innerText = item.desc;
+
+                // Smooth fade in and slide down transition
+                cardEl.style.opacity = '1';
+                cardEl.style.transform = 'translateY(0) scale(1)';
+            }, 350);
+        }
+
+        // Cycle animation every 4 seconds
+        setInterval(updateShowcase, 4000);
+    </script>
+</body>
+</html>

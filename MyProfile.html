@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - Student Profile Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50/50 dark:bg-gray-950 text-gray-800 dark:text-gray-100 font-sans antialiased transition-colors duration-300">
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-3"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border-b border-gray-200/80 dark:border-gray-800 sticky top-0 z-40 px-6 py-3.5 flex items-center justify-between shadow-xs transition-colors duration-300">
+        <div class="flex items-center space-x-6">
+            <button id="sidebar-toggle" aria-label="Toggle Sidebar" class="lg:hidden text-gray-600 dark:text-gray-300 hover:text-brand-600 focus:outline-none transition transform active:scale-95">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i class="fa-solid fa-graduation-cap text-base"></i>
+                </div>
+                <div>
+                    <span class="text-base font-extrabold bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent hidden sm:inline">SmartCampusQR</span>
+                    <span class="text-xs block text-gray-400 font-medium hidden sm:block">Student Profile Manager</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3 text-gray-600 dark:text-gray-300">
+            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="w-10 h-10 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center justify-center transition transform hover:rotate-45 active:scale-95">
+                <i id="theme-icon" class="fa-regular fa-moon text-base"></i>
+            </button>
+            <div class="flex items-center space-x-3 border-l pl-4 border-gray-200 dark:border-gray-800">
+                <div class="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-sm shadow-inner overflow-hidden" id="nav-avatar-container">
+                    <i class="fa-solid fa-user" id="nav-avatar-icon"></i>
+                </div>
+                <div class="hidden sm:block text-left">
+                    <span class="text-xs font-bold block text-gray-900 dark:text-white" id="nav-display-name">Aman Singh Gosai</span>
+                    <span class="text-[10px] text-gray-400 block font-medium" id="nav-display-roll">Roll No: 2329282</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex min-h-[calc(100vh-73px)] relative">
+        
+        <!-- Sidebar Overlay for Mobile -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-30 hidden lg:hidden transition-opacity duration-300"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-white dark:bg-gray-900 border-r border-gray-200/80 dark:border-gray-800 p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex-shrink-0 flex flex-col justify-between shadow-xl lg:shadow-none">
+            <div>
+                <div class="flex items-center justify-between lg:hidden mb-6 pb-3 border-b border-gray-100 dark:border-gray-800">
+                    <span class="font-bold text-brand-600 flex items-center space-x-2"><i class="fa-solid fa-bars-staggered"></i><span>Navigation</span></span>
+                    <button id="sidebar-close" aria-label="Close Sidebar" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+
+                <div class="mb-8">
+                    <p class="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-3">Workspace</p>
+                    <nav class="space-y-1.5">
+                        <a href="library.html" class="flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all">
+                            <i class="fa-solid fa-chart-pie w-5 text-center"></i><span>Dashboard</span>
+                        </a>
+                        <a href="myprofile.html" class="flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-sm bg-gradient-to-r from-brand-500 to-brand-600 text-white font-medium shadow-md shadow-brand-500/25 transition-all">
+                            <i class="fa-solid fa-user-gear w-5 text-center"></i><span>My Profile</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-3">Quick Links</p>
+                    <nav class="space-y-1">
+                        <a href="library.html" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-book-open text-brand-500 w-4"></i><span>Library Books</span></a>
+                        <a href="payment.html" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 transition-all"><i class="fa-solid fa-wallet text-emerald-500 w-4"></i><span>Fee & Fines Gateway</span></a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
+                <a href="library.html" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all">
+                    <i class="fa-solid fa-arrow-left w-4 text-center"></i><span>Back to Library</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 md:p-10 max-w-7xl mx-auto overflow-y-auto animate-fade-in">
+            
+            <!-- Profile Hero Banner -->
+            <div class="bg-gradient-to-r from-brand-600 to-indigo-700 rounded-3xl p-6 md:p-8 text-white shadow-xl shadow-brand-500/10 mb-8 relative overflow-hidden">
+                <div class="absolute right-0 top-0 translate-x-8 -translate-y-8 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div class="flex items-center space-x-5">
+                        <!-- Profile Image Container with Upload Trigger -->
+                        <div class="relative group cursor-pointer" onclick="document.getElementById('profile-pic-input').click()">
+                            <div id="profile-banner-avatar" class="w-20 h-20 md:w-24 md:h-24 rounded-3xl bg-white/20 backdrop-blur-md border-2 border-white/30 flex items-center justify-center text-3xl font-bold shadow-lg overflow-hidden">
+                                <i class="fa-solid fa-user-astronaut" id="banner-avatar-icon"></i>
+                            </div>
+                            <div class="absolute inset-0 bg-black/50 rounded-3xl opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-semibold">
+                                <i class="fa-solid fa-camera mr-1"></i> Change
+                            </div>
+                        </div>
+                        <input type="file" id="profile-pic-input" accept="image/*" class="hidden" onchange="previewProfilePic(event)">
+                        
+                        <div>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md mb-2">
+                                <i class="fa-solid fa-shield-halved mr-1.5 text-emerald-300"></i> Admission Record Verified
+                            </span>
+                            <h1 id="banner-fullname" class="text-2xl md:text-3xl font-black tracking-tight">Aman Singh Gosai</h1>
+                            <p id="banner-class-info" class="text-xs text-brand-100 mt-1">B.Tech Computer Science & IT (Semester 4)</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/15 text-xs space-y-1">
+                        <div class="flex justify-between space-x-4"><span class="text-brand-200">Roll No:</span><span id="banner-roll" class="font-bold">2329282</span></div>
+                        <div class="flex justify-between space-x-4"><span class="text-brand-200">Status:</span><span class="font-bold text-emerald-300">Enrolled</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Edit Form -->
+            <div class="bg-white dark:bg-gray-900 p-6 md:p-8 rounded-3xl shadow-xs border border-gray-200/80 dark:border-gray-800 mb-8">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+                    <div>
+                        <h2 class="text-base font-extrabold text-gray-900 dark:text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-user-pen text-brand-500"></i><span>Edit Admission & Personal Details</span>
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Update your formal student records for admission and campus directory.</p>
+                    </div>
+                    <button type="button" onclick="toggleEditLock()" id="lock-toggle-btn" class="mt-3 sm:mt-0 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-bold transition flex items-center space-x-2">
+                        <i class="fa-solid fa-lock" id="lock-icon"></i><span id="lock-text">Unlock Critical Fields</span>
+                    </button>
+                </div>
+                
+                <form id="profile-form" onsubmit="saveProfile(event)" class="space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Full Student Name</label>
+                            <input type="text" id="input-fullname" value="Aman Singh Gosai" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500 font-semibold">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Father's Name</label>
+                            <input type="text" id="input-fathername" value="Mr. Ramesh Singh Gosai" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Mother's Name</label>
+                            <input type="text" id="input-mothername" value="Mrs. Sunita Devi" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Class / Branch</label>
+                            <input type="text" id="input-class" value="B.Tech Computer Science & IT" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Semester</label>
+                            <select id="input-semester" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500 text-gray-800 dark:text-gray-200">
+                                <option value="Semester 1">Semester 1</option>
+                                <option value="Semester 2">Semester 2</option>
+                                <option value="Semester 3">Semester 3</option>
+                                <option value="Semester 4" selected>Semester 4</option>
+                                <option value="Semester 5">Semester 5</option>
+                                <option value="Semester 6">Semester 6</option>
+                                <option value="Semester 7">Semester 7</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">University Roll Number (Admission)</label>
+                            <input type="text" id="input-roll" disabled value="2329282" class="w-full bg-gray-100 dark:bg-gray-800/30 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm text-gray-400 cursor-not-allowed font-mono font-bold">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Contact Phone Number</label>
+                            <input type="tel" id="input-phone" value="+91 98765 43210" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Email Address</label>
+                            <input type="email" id="input-email" value="aman.gosai@smartcampus.edu" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">Residential Address</label>
+                            <input type="text" id="input-address" value="Ludhiana, Punjab, India" class="w-full bg-gray-50 dark:bg-gray-800/50 px-4 py-3 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm focus:outline-none focus:border-brand-500">
+                        </div>
+
+                    </div>
+
+                    <div class="pt-4 flex items-center space-x-4">
+                        <button type="submit" class="px-7 py-3.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-2xl text-xs font-bold shadow-lg shadow-brand-500/25 transition active:scale-95 flex items-center space-x-2">
+                            <i class="fa-solid fa-floppy-disk text-base"></i><span>Save & Update Records</span>
+                        </button>
+                        <button type="button" onclick="resetForm()" class="px-5 py-3.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-2xl text-xs font-bold transition">
+                            Discard Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JavaScript Interactive Functionality -->
+    <script>
+        let isRollEditable = false;
+
+        function toggleEditLock() {
+            isRollEditable = !isRollEditable;
+            const rollInput = document.getElementById('input-roll');
+            const lockIcon = document.getElementById('lock-icon');
+            const lockText = document.getElementById('lock-text');
+            const btn = document.getElementById('lock-toggle-btn');
+
+            if (isRollEditable) {
+                rollInput.disabled = false;
+                rollInput.classList.remove('bg-gray-100', 'dark:bg-gray-800/30', 'text-gray-400', 'cursor-not-allowed');
+                rollInput.classList.add('bg-gray-50', 'dark:bg-gray-800/50', 'text-gray-800', 'dark:text-gray-200');
+                lockIcon.className = "fa-solid fa-unlock text-amber-500";
+                lockText.textContent = "Roll Number Unlocked";
+                btn.classList.add('border', 'border-amber-500/50');
+                showActionMsg("Roll number is now editable for admission correction.");
+            } else {
+                rollInput.disabled = true;
+                rollInput.classList.add('bg-gray-100', 'dark:bg-gray-800/30', 'text-gray-400', 'cursor-not-allowed');
+                rollInput.classList.remove('bg-gray-50', 'dark:bg-gray-800/50', 'text-gray-800', 'dark:text-gray-200');
+                lockIcon.className = "fa-solid fa-lock";
+                lockText.textContent = "Unlock Critical Fields";
+                btn.classList.remove('border', 'border-amber-500/50');
+                showActionMsg("Roll number locked securely.");
+            }
+        }
+
+        function previewProfilePic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const bannerAvatar = document.getElementById('profile-banner-avatar');
+                    const navAvatar = document.getElementById('nav-avatar-container');
+                    
+                    bannerAvatar.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                    navAvatar.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                    showActionMsg("Profile picture updated successfully!");
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const fullName = document.getElementById('input-fullname').value;
+            const rollNo = document.getElementById('input-roll').value;
+            const className = document.getElementById('input-class').value;
+            const semester = document.getElementById('input-semester').value;
+
+            // Update top header and banner
+            document.getElementById('banner-fullname').textContent = fullName;
+            document.getElementById('nav-display-name').textContent = fullName;
+            document.getElementById('banner-roll').textContent = rollNo;
+            document.getElementById('nav-display-roll').textContent = `Roll No: ${rollNo}`;
+            document.getElementById('banner-class-info').textContent = `${className} (${semester})`;
+
+            showActionMsg("Student profile & admission records saved successfully!");
+        }
+
+        function resetForm() {
+            document.getElementById('profile-form').reset();
+            showActionMsg("Form reset to previous saved state.");
+        }
+
+        function showActionMsg(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-xs font-semibold px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3 transform translate-y-4 opacity-0 transition-all duration-300 border border-gray-800';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-400 text-base"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            themeIcon.className = 'fa-regular fa-sun text-base';
+        } else {
+            htmlElement.classList.remove('dark');
+            themeIcon.className = 'fa-regular fa-moon text-base';
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fa-regular fa-moon text-base';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fa-regular fa-sun text-base';
+            }
+        });
+
+        // Mobile Sidebar Controls
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarClose = document.getElementById('sidebar-close');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarClose.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>

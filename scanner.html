@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmartCampusQR | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --bg-main: #eef4ff;
+            --bg-soft: rgba(255, 255, 255, 0.62);
+            --panel: rgba(255, 255, 255, 0.82);
+            --panel-strong: #ffffff;
+            --panel-alt: #f8fbff;
+            --sidebar: #0f172a;
+            --sidebar-soft: rgba(148, 163, 184, 0.12);
+            --text-main: #111827;
+            --text-soft: #64748b;
+            --text-muted: #7b8aa3;
+            --primary: #4f46e5;
+            --primary-2: #7c3aed;
+            --primary-3: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: rgba(148, 163, 184, 0.24);
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+            --glow: rgba(79, 70, 229, 0.22);
+        }
+
+        html[data-theme="dark"] {
+            --bg-main: #070d1a;
+            --bg-soft: rgba(15, 23, 42, 0.7);
+            --panel: rgba(15, 23, 42, 0.76);
+            --panel-strong: #111827;
+            --panel-alt: #101b2d;
+            --sidebar: #0b1220;
+            --sidebar-soft: rgba(148, 163, 184, 0.08);
+            --text-main: #edf2ff;
+            --text-soft: #cbd5e1;
+            --text-muted: #94a3b8;
+            --primary: #7c8cff;
+            --primary-2: #a78bfa;
+            --primary-3: #60a5fa;
+            --success: #34d399;
+            --danger: #f87171;
+            --border: rgba(148, 163, 184, 0.18);
+            --shadow: 0 20px 42px rgba(2, 6, 23, 0.48);
+            --glow: rgba(124, 140, 255, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.14), transparent 24%),
+                radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.12), transparent 24%),
+                var(--bg-main);
+            color: var(--text-main);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.28;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::before {
+            background: rgba(96, 165, 250, 0.42);
+            top: -80px;
+            left: 8%;
+            animation: floatGlow 14s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            background: rgba(167, 139, 250, 0.38);
+            right: 7%;
+            bottom: -90px;
+            animation: floatGlow 18s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(25px, -20px, 0) scale(1.08); }
+        }
+
+        .sidebar,
+        .main,
+        .header,
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 245px;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--sidebar) 0%, #111827 100%);
+            color: white;
+            padding: 24px 18px;
+            z-index: 100;
+            border-right: 1px solid rgba(148, 163, 184, 0.12);
+            box-shadow: 14px 0 32px rgba(15, 23, 42, 0.16);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px 32px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #5b5ef2, #8b5cf6);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            box-shadow: 0 10px 22px rgba(91, 94, 242, 0.4);
+        }
+
+        .brand h2 {
+            font-size: 1.05rem;
+            letter-spacing: -0.04em;
+            font-weight: 800;
+        }
+
+        .brand span {
+            color: #8fb2ff;
+        }
+
+        .menu-title {
+            font-size: 10px;
+            color: rgba(148, 163, 184, 0.9);
+            padding: 0 13px;
+            margin-bottom: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #cbd5e1;
+            padding: 13px 14px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.25s ease;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            color: white;
+            background: linear-gradient(90deg, rgba(96, 165, 250, 0.2), rgba(124, 58, 237, 0.26));
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            transform: translateX(3px);
+        }
+
+        .menu a.logout:hover {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            right: 18px;
+        }
+
+        .logout {
+            color: #fca5a5 !important;
+        }
+
+        .main {
+            margin-left: 245px;
+            min-height: 100vh;
+        }
+
+        .header {
+            height: 80px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+            position: sticky;
+            top: 0;
+            z-index: 15;
+        }
+
+        html[data-theme="dark"] .header {
+            background: rgba(15, 23, 42, 0.7);
+        }
+
+        .header-left h3 {
+            font-size: 1.1rem;
+            letter-spacing: -0.04em;
+        }
+
+        .header-left p {
+            color: var(--text-soft);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .theme-toggle {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--border);
+            background: var(--panel-strong);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(12deg) scale(1.04);
+            box-shadow: 0 16px 26px var(--glow);
+        }
+
+        .notification {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: var(--panel-strong);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .notification-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            right: 10px;
+            top: 10px;
+            border: 2px solid var(--panel-strong);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--panel-strong);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 7px 10px 7px 7px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .profile-info strong {
+            display: block;
+            font-size: 13px;
+            letter-spacing: -0.02em;
+        }
+
+        .profile-info span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .content {
+            padding: 35px;
+        }
+
+        .welcome {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            gap: 20px;
+        }
+
+        .welcome h1 {
+            font-size: clamp(2rem, 2.8vw, 2.9rem);
+            margin-bottom: 7px;
+            letter-spacing: -0.06em;
+            line-height: 1.05;
+        }
+
+        .welcome h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .welcome p {
+            color: var(--text-soft);
+            font-size: 0.95rem;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--success);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 5px rgba(16, 185, 129, 0.12);
+        }
+
+        .mini-cards {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .mini-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 18px 18px 17px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .mini-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+        }
+
+        .mini-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--primary-3);
+        }
+
+        .mini-card:nth-child(2) .mini-icon {
+            background: rgba(124, 58, 237, 0.08);
+            color: var(--primary-2);
+        }
+
+        .mini-card:nth-child(3) .mini-icon {
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--success);
+        }
+
+        .mini-card span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 5px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .mini-card strong {
+            font-size: 1.12rem;
+            letter-spacing: -0.04em;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 0.85fr;
+            gap: 22px;
+        }
+
+        .qr-section,
+        .info-card,
+        .live-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+        }
+
+        .qr-section {
+            border-radius: 24px;
+            padding: 28px;
+            min-height: 430px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-section::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: rgba(79, 70, 229, 0.06);
+            border-radius: 50%;
+            top: -90px;
+            right: -70px;
+        }
+
+        .section-title {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title h2 {
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+            letter-spacing: -0.04em;
+        }
+
+        .section-title p {
+            color: var(--text-soft);
+            font-size: 12px;
+        }
+
+        .qr-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 55px;
+            margin-top: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .qr-wrapper {
+            position: relative;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.88);
+            border-radius: 22px;
+            box-shadow: 0 16px 40px rgba(79, 70, 229, 0.18), 0 0 0 1px rgba(148, 163, 184, 0.2);
+            animation: floatQR 4s ease-in-out infinite;
+        }
+
+        @keyframes floatQR {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-7px); }
+        }
+
+        .qr-wrapper::before,
+        .qr-wrapper::after {
+            content: "";
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-color: var(--primary);
+            border-style: solid;
+        }
+
+        .qr-wrapper::before {
+            top: -4px;
+            left: -4px;
+            border-width: 3px 0 0 3px;
+            border-radius: 8px 0 0 0;
+        }
+
+        .qr-wrapper::after {
+            bottom: -4px;
+            right: -4px;
+            border-width: 0 3px 3px 0;
+            border-radius: 0 0 8px 0;
+        }
+
+        .qr-wrapper img {
+            width: 220px;
+            height: 220px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .qr-info {
+            max-width: 290px;
+        }
+
+        .qr-info h3 {
+            font-size: 1.42rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.04em;
+        }
+
+        .qr-info p {
+            color: var(--text-soft);
+            font-size: 0.82rem;
+            line-height: 1.75;
+            margin-bottom: 18px;
+        }
+
+        .scan-box {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            background: var(--panel-alt);
+            padding: 13px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+        }
+
+        .scan-box-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--primary-3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+        .scan-box strong {
+            font-size: 12px;
+            display: block;
+        }
+
+        .scan-box span {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .qr-id {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 18px;
+        }
+
+        .qr-id strong {
+            color: var(--text-main);
+        }
+
+        .scan-action-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .scan-btn {
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            border-radius: 12px;
+            padding: 11px 16px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 14px 24px var(--glow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .scan-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 18px 28px var(--glow);
+        }
+
+        .scan-btn.secondary {
+            background: rgba(148, 163, 184, 0.10);
+            color: var(--text-main);
+            box-shadow: none;
+            border: 1px solid var(--border);
+        }
+
+        .scanner-panel {
+            margin-top: 18px;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+        }
+
+        .camera-box {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto 12px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #0f172a;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            box-shadow: 0 10px 28px rgba(2, 6, 23, 0.18);
+        }
+
+        .camera-box video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #020617;
+        }
+
+        .scan-status {
+            font-size: 12px;
+            color: var(--text-soft);
+            text-align: center;
+            min-height: 18px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .info-card {
+            border-radius: 22px;
+            padding: 22px 20px;
+        }
+
+        .info-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            letter-spacing: -0.04em;
+        }
+
+        .step {
+            display: flex;
+            gap: 13px;
+            margin-bottom: 17px;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            min-width: 31px;
+            height: 31px;
+            border-radius: 10px;
+            background: rgba(79, 70, 229, 0.10);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .step strong {
+            display: block;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .step span {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .live-card {
+            background: linear-gradient(135deg, #111827, #1d4ed8 60%, #4f46e5);
+            color: white;
+            border-radius: 22px;
+            padding: 22px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-card::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 20px solid rgba(255,255,255,.06);
+            border-radius: 50%;
+            right: -35px;
+            top: -35px;
+        }
+
+        .live-card small {
+            color: #dbeafe;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .live-card h3 {
+            margin-top: 7px;
+            font-size: 1.15rem;
+            letter-spacing: -0.05em;
+        }
+
+        .live-card p {
+            color: rgba(219, 234, 254, 0.9);
+            font-size: 11px;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .active-line {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 16px;
+            font-size: 11px;
+            color: #dcfce7;
+            font-weight: 600;
+        }
+
+        .active-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.14);
+        }
+
+        .welcome,
+        .mini-cards,
+        .dashboard-grid,
+        .quick-actions {
+            animation: fadeUp 0.6s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0 28px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            box-shadow: 0 12px 24px var(--glow);
+        }
+
+        .action-btn.secondary {
+            background: rgba(148, 163, 184, 0.08);
+            color: var(--text-main);
+        }
+
+        .action-btn.alert {
+            background: rgba(239, 68, 68, 0.08);
+            color: #be123c;
+        }
+
+        .action-btn.ghost {
+            background: var(--panel-strong);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        @media (max-width: 1050px) {
+            .qr-area {
+                gap: 25px;
+            }
+
+            .qr-wrapper img {
+                width: 180px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 10px;
+            }
+
+            .brand h2,
+            .menu-title,
+            .menu a span {
+                display: none;
+            }
+
+            .brand {
+                justify-content: center;
+                padding-bottom: 35px;
+            }
+
+            .menu a {
+                justify-content: center;
+            }
+
+            .sidebar-bottom {
+                left: 10px;
+                right: 10px;
+            }
+
+            .main {
+                margin-left: 70px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-area {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .qr-info {
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 0 18px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .content {
+                padding: 22px 15px;
+            }
+
+            .welcome {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .welcome h1 {
+                font-size: 24px;
+            }
+
+            .mini-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .qr-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎓</div>
+
+            <h2>
+                SmartCampus<span>QR</span>
+            </h2>
+        </div>
+
+        <div class="menu-title">
+            MAIN MENU
+        </div>
+
+        <nav class="menu">
+
+            <a href="/python-scan/" class="active">
+                <div class="menu-icon">⌂</div>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/MyProfile.html">
+                <div class="menu-icon">👤</div>
+                <span>Profile</span>
+            </a>
+
+            <a href="#scannerSection" id="scannerMenuBtn">
+                <div class="menu-icon">▦</div>
+                <span>Scanner</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <nav class="menu">
+                <a href="/login.html" class="logout" id="logoutBtn">
+                    <div class="menu-icon">↪</div>
+                    <span>Logout</span>
+                </a>
+            </nav>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div class="header-left">
+                <h3>Dashboard</h3>
+                <p>Smart Campus Service Directory</p>
+            </div>
+
+            <div class="header-right">
+                <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle light and dark mode" type="button">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+
+                <div class="notification" aria-label="Notifications">
+                    🔔
+                    <div class="notification-dot"></div>
+                </div>
+
+                <div class="profile">
+
+                    <div class="avatar">
+                        A
+                    </div>
+
+                    <div class="profile-info">
+                        <strong>Aman</strong>
+                        <span>Student</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+            <!-- WELCOME -->
+
+            <div class="welcome">
+
+                <div>
+                    <h1>
+                        Welcome back, <span>Aman!</span> 👋
+                    </h1>
+
+                    <p>
+                        Your campus services are just one scan away.
+                    </p>
+                </div>
+
+                <div class="status">
+                    <div class="status-dot"></div>
+                    QR System Active
+                </div>
+
+            </div>
+
+            <!-- MINI CARDS -->
+
+            <div class="mini-cards">
+
+                <div class="mini-card">
+
+                    <div class="mini-icon">
+                        📱
+                    </div>
+
+                    <div>
+                        <span>QR STATUS</span>
+                        <strong>Active</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="mini-card">
+
+                    <div class="mini-icon">
+                        ⚡
+                    </div>
+
+                    <div>
+                        <span>ACCESS</span>
+                        <strong>Instant</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="mini-card">
+
+                    <div class="mini-icon">
+                        🛡️
+                    </div>
+
+                    <div>
+                        <span>SYSTEM</span>
+                        <strong>Secure</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAIN DASHBOARD -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- QR CARD -->
+
+                <div class="qr-section" id="scannerSection">
+
+                    <div class="section-title">
+
+                        <h2>
+                            Your Campus QR Code
+                        </h2>
+
+                        <p>
+                            Scan this QR code to access SmartCampus services
+                        </p>
+
+                    </div>
+
+
+                    <div class="qr-area">
+
+
+                        <!-- QR -->
+
+                        <div class="qr-wrapper">
+                            <img
+                                src="/smart_campus_qr.png"
+                                alt="SmartCampusQR"
+                                onerror="this.onerror=null; this.src='/Qr.PNG';"
+                                style="max-width: 100%; height: auto; display: block;"
+                            >
+                        </div>
+
+
+                        <!-- QR DETAILS -->
+
+                        <div class="qr-info">
+
+                            <h3>
+                                Scan & Access
+                            </h3>
+
+                            <p>
+                                Use your phone camera to scan this QR code.
+                                You will automatically be redirected to the
+                                campus service selection page.
+                            </p>
+
+
+                            <div class="scan-box">
+
+                                <div class="scan-box-icon">
+                                    📷
+                                </div>
+
+                                <div>
+                                    <strong>
+                                        Scan with your phone
+                                    </strong>
+
+                                    <span>
+                                        No app installation required
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="scan-action-group">
+                                <button id="startScannerBtn" class="scan-btn" type="button">Scan QR with Camera</button>
+                                <button id="stopScannerBtn" class="scan-btn secondary hidden" type="button">Stop Camera</button>
+                                <a href="/service-selection/" class="scan-btn secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Open Service Page</a>
+                            </div>
+
+                            <div id="scannerPanel" class="scanner-panel hidden">
+                                <div class="camera-box">
+                                    <video id="qrVideo" autoplay playsinline muted></video>
+                                    <canvas id="qrCanvas" width="320" height="240" hidden></canvas>
+                                </div>
+                                <div id="scanStatus" class="scan-status">Waiting for QR code...</div>
+                            </div>
+
+                            <div class="qr-id">
+                                QR ID:
+                                <strong>SCQR-2026-001</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT PANEL -->
+
+                <div class="info-panel">
+
+
+                    <!-- HOW IT WORKS -->
+
+                    <div class="info-card">
+
+                        <h3>
+                            How it works
+                        </h3>
+
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                01
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Scan QR Code
+                                </strong>
+
+                                <span>
+                                    Open your phone camera
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                02
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Select Service
+                                </strong>
+
+                                <span>
+                                    Choose the service you need
+                                </span>
+                            </div>
+
+                        </div>
+
+
+                        <div class="step">
+
+                            <div class="step-number">
+                                03
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Get Information
+                                </strong>
+
+                                <span>
+                                    Access campus information instantly
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LIVE STATUS -->
+
+                    <div class="live-card">
+
+                        <small>
+                            SMART CAMPUS SYSTEM
+                        </small>
+
+                        <h3>
+                            Everything in one scan.
+                        </h3>
+
+                        <p>
+                            Departments, library, transport,
+                            cafeteria, medical services and more.
+                        </p>
+
+                        <div class="active-line">
+
+                            <div class="active-dot"></div>
+
+                            System running live
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script>
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const root = document.documentElement;
+
+        const savedTheme = localStorage.getItem('smartcampus_theme') || 'light';
+        root.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+
+        themeToggleBtn.addEventListener('click', () => {
+            const activeTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', activeTheme);
+            localStorage.setItem('smartcampus_theme', activeTheme);
+            themeIcon.className = activeTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        });
+
+        const startScannerBtn = document.getElementById('startScannerBtn');
+        const stopScannerBtn = document.getElementById('stopScannerBtn');
+        const scannerPanel = document.getElementById('scannerPanel');
+        const qrVideo = document.getElementById('qrVideo');
+        const qrCanvas = document.getElementById('qrCanvas');
+        const scanStatus = document.getElementById('scanStatus');
+        const quickScanBtn = document.getElementById('quickScanBtn');
+        const scannerMenuBtn = document.getElementById('scannerMenuBtn');
+
+        let stream = null;
+        let isScanning = false;
+        let animationFrameId = null;
+        let barcodeDetector = null;
+
+        function setScanStatus(message, isError = false) {
+            scanStatus.textContent = message;
+            scanStatus.style.color = isError ? '#dc2626' : '#475569';
+        }
+
+        function stopScanner() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+
+            if (qrVideo) {
+                qrVideo.srcObject = null;
+            }
+
+            isScanning = false;
+            scannerPanel.classList.add('hidden');
+            stopScannerBtn.classList.add('hidden');
+            startScannerBtn.classList.remove('hidden');
+        }
+
+        async function startScanner() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                setScanStatus('Camera is not supported in this browser.', true);
+                return;
+            }
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment' }
+                });
+
+                qrVideo.srcObject = stream;
+                await qrVideo.play();
+
+                scannerPanel.classList.remove('hidden');
+                startScannerBtn.classList.add('hidden');
+                stopScannerBtn.classList.remove('hidden');
+                isScanning = true;
+                barcodeDetector = null;
+                if ('BarcodeDetector' in window) {
+                    try {
+                        barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+                    } catch (error) {
+                        console.warn('Native QR detection is unavailable:', error);
+                    }
+                }
+                setScanStatus('Scanning for QR code...');
+
+                const context = qrCanvas.getContext('2d', { willReadFrequently: true });
+                const openServiceSelection = () => {
+                    setScanStatus('QR code detected! Opening service selection...');
+                    stopScanner();
+                    window.location.href = '/service-selection/';
+                };
+
+                const scanFrame = async () => {
+                    if (!isScanning) return;
+
+                    if (qrVideo.readyState === qrVideo.HAVE_CURRENT_DATA) {
+                        if (barcodeDetector) {
+                            try {
+                                const [code] = await barcodeDetector.detect(qrVideo);
+                                if (code && code.rawValue.trim()) {
+                                    openServiceSelection();
+                                    return;
+                                }
+                            } catch (error) {
+                                barcodeDetector = null;
+                            }
+                        }
+
+                        if (typeof window.jsQR !== 'function') {
+                            setScanStatus('QR scanner could not load. Check your connection and refresh.', true);
+                            return;
+                        }
+
+                        qrCanvas.width = qrVideo.videoWidth || 320;
+                        qrCanvas.height = qrVideo.videoHeight || 240;
+                        context.drawImage(qrVideo, 0, 0, qrCanvas.width, qrCanvas.height);
+
+                        const imageData = context.getImageData(0, 0, qrCanvas.width, qrCanvas.height);
+                        const code = jsQR(imageData.data, qrCanvas.width, qrCanvas.height, {
+                            inversionAttempts: 'dontInvert'
+                        });
+
+                        if (code) {
+                            const scannedValue = code.data.trim();
+                            if (scannedValue) {
+                                openServiceSelection();
+                                return;
+                            }
+                        }
+                    }
+
+                    animationFrameId = requestAnimationFrame(scanFrame);
+                };
+
+                animationFrameId = requestAnimationFrame(scanFrame);
+            } catch (error) {
+                const message = error.name === 'NotAllowedError'
+                    ? 'Camera access denied. Please allow camera permission.'
+                    : `Could not start the camera: ${error.message}`;
+                setScanStatus(message, true);
+                console.error('QR scanner error:', error);
+            }
+        }
+
+        startScannerBtn.addEventListener('click', startScanner);
+        scannerMenuBtn.addEventListener('click', event => {
+            event.preventDefault();
+            document.getElementById('scannerSection').scrollIntoView({ behavior: 'smooth' });
+            startScanner();
+        });
+        stopScannerBtn.addEventListener('click', stopScanner);
+        if (quickScanBtn) quickScanBtn.addEventListener('click', startScanner);
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutQuickBtn = document.getElementById('logoutQuickBtn');
+
+        function doLogout() {
+            window.location.href = '/login.html';
+        }
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                doLogout();
+            });
+        }
+
+        if (logoutQuickBtn) {
+            logoutQuickBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                doLogout();
+            });
+        }
+    </script>
+
+</body>
+</html>

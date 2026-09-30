@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - B.Tech Semester 2 Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(15px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans antialiased transition-colors duration-300">
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 px-4 md:px-6 py-3 flex items-center justify-between shadow-sm transition-colors duration-300">
+        <div class="flex items-center space-x-4 md:space-x-8">
+            <button id="sidebar-toggle" class="lg:hidden text-gray-600 dark:text-gray-300 hover:text-brand-600 focus:outline-none transition transform active:scale-95">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <div class="text-lg md:text-xl font-bold text-brand-600 dark:text-brand-400 flex items-center space-x-2">
+                <span>🎓</span>
+                <span class="hidden sm:inline">SmartCampusQR</span>
+            </div>
+            <div class="relative w-48 sm:w-72 hidden md:block">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="top-search-input" placeholder="Search Sem 2 books..." class="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
+            </div>
+        </div>
+        <div class="flex items-center space-x-4 text-gray-600 dark:text-gray-300">
+            <button id="notification-btn" class="hover:text-brand-600 relative transition transform hover:scale-110 active:scale-95">
+                <i class="fa-regular fa-bell text-lg"></i>
+                <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            </button>
+            <button id="dark-mode-toggle" class="hover:text-brand-600 transition transform hover:rotate-45 active:scale-95">
+                <i id="theme-icon" class="fa-regular fa-moon text-lg"></i>
+            </button>
+            <div class="flex items-center space-x-2 border-l pl-4 border-gray-200 dark:border-gray-700 cursor-pointer relative" id="profile-menu-btn">
+                <span class="bg-brand-100 dark:bg-brand-900 text-brand-700 dark:text-brand-300 w-8 h-8 rounded-full flex items-center justify-center font-semibold text-sm shadow-inner">👤</span>
+                <span class="text-sm font-medium hidden sm:inline">Aman</span>
+                <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex min-h-[calc(100vh-65px)] relative">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 hidden lg:hidden transition-opacity duration-300"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex-shrink-0 flex flex-col justify-between shadow-lg lg:shadow-none">
+            <div>
+                <div class="flex items-center justify-between lg:hidden mb-4 pb-2 border-b border-gray-100 dark:border-gray-700">
+                    <span class="font-bold text-brand-600">Menu</span>
+                    <button id="sidebar-close" class="text-gray-500 hover:text-gray-700 transition active:scale-95"><i class="fa-solid fa-xmark text-lg"></i></button>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Main</p>
+                    <nav class="space-y-1">
+                        <a href="library.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>🏠</span><span>Dashboard</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>📱</span><span>QR Scan</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="mb-6">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Semesters</p>
+                    <nav class="space-y-1">
+                        <a href="sem1.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>1️⃣</span><span>Semester 1</span>
+                        </a>
+                        <a href="sem2.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm bg-gradient-to-r from-brand-500 to-brand-600 text-white font-medium shadow-md shadow-brand-500/20 transition transform hover:scale-[1.02]">
+                            <span>2️⃣</span><span>Semester 2</span>
+                        </a>
+                        <a href="sem3.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>3️⃣</span><span>Semester 3</span>
+                        </a>
+                        <a href="sem4.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>4️⃣</span><span>Semester 4</span>
+                        </a>
+                        <a href="sem5.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>5️⃣</span><span>Semester 5</span>
+                        </a>
+                        <a href="sem6.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>6️⃣</span><span>Semester 6</span>
+                        </a>
+                        <a href="sem7.html" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/60 transition transform hover:translate-x-1">
+                            <span>7️⃣</span><span>Semester 7</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-gray-100 dark:border-gray-700">
+                <a href="#" id="logout-btn" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition transform hover:scale-[1.02]">
+                    <span>🚪</span><span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 md:p-8 max-w-7xl mx-auto overflow-y-auto animate-fade-in">
+            
+            <!-- Header Section -->
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <a href="library.html" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline mb-2 inline-block transition">← Back to Main Library Dashboard</a>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">📘 B.Tech Semester 2 - Library Catalog</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">All required textbooks, manuals, and reference notes for First Year (Sem 2)</p>
+                </div>
+                <div class="mt-4 sm:mt-0">
+                    <span class="inline-flex items-center px-4 py-2 rounded-xl text-xs font-semibold bg-brand-50 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-700 shadow-sm">
+                        Total Sem 2 Books: 8 Available
+                    </span>
+                </div>
+            </div>
+
+            <!-- Search Widget -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8 flex flex-col sm:flex-row items-center gap-3 transition-all duration-300 hover:shadow-md">
+                <div class="flex items-center space-x-3 w-full bg-gray-50 dark:bg-gray-700/50 px-3 py-2 rounded-xl border border-transparent focus-within:border-brand-500 focus-within:bg-white dark:focus-within:bg-gray-800 transition-all duration-200">
+                    <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+                    <input type="text" id="library-search-input" placeholder="Search Semester 2 books by name, author, or subject..." class="w-full bg-transparent focus:outline-none text-sm text-gray-700 dark:text-gray-200">
+                </div>
+                <button id="search-action-btn" class="w-full sm:w-auto bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-brand-500/20 transition transform active:scale-95 flex-shrink-0 flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-search"></i>
+                    <span>Search</span>
+                </button>
+            </div>
+
+            <!-- SEARCH RESULTS CONTAINER (Initially Hidden) -->
+            <div id="search-results-section" class="mb-8 hidden animate-slide-up">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider flex items-center space-x-2">
+                        <span>🔍</span><span>Search Results for "<span id="search-query-display" class="text-brand-600 dark:text-brand-400"></span>"</span>
+                    </h2>
+                    <button onclick="clearSearch()" class="text-xs text-brand-600 dark:text-brand-400 hover:underline font-medium transition active:scale-95">Clear Search</button>
+                </div>
+                <div id="search-results-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Dynamic Search Results Injected Here -->
+                </div>
+            </div>
+
+            <!-- Semester 2 Books Grid -->
+            <div class="mb-8">
+                <h2 class="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4 flex items-center space-x-2">
+                    <span>📚</span><span>All Semester 2 Textbooks</span>
+                </h2>
+                <div id="sem2-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Injected via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Footer Details -->
+            <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col sm:flex-row items-center justify-between text-sm text-gray-600 dark:text-gray-300">
+                <div class="flex items-center space-x-2 mb-2 sm:mb-0">
+                    <span>📍</span>
+                    <span class="font-medium text-gray-800 dark:text-white">First Year Section • Block A</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span>🕐</span>
+                    <span class="font-medium text-brand-600 dark:text-brand-400">9:00 AM – 4:00 PM</span>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- JavaScript Interactive Functionality -->
+    <script>
+        // Semester 2 Specific Book Database
+        const sem2Books = [
+            { title: "Engineering Mathematics - II", author: "B.S. Grewal", category: "Math", semester: "Sem 2", isbn: "978-8174091962", status: "Available (9 copies)", icon: "📊" },
+            { title: "Engineering Chemistry", author: "J.C. Kuriacose & J. Rajaram", category: "Chemistry", semester: "Sem 2", isbn: "978-8121903561", status: "Available (11 copies)", icon: "🧪" },
+            { title: "Basic Electronics Engineering", author: "V.K. Mehta", category: "Electronics", semester: "Sem 2", isbn: "978-8121924757", status: "Available (7 copies)", icon: "🔌" },
+            { title: "Data Structures Using C", author: "Reema Thareja", category: "CS", semester: "Sem 2", isbn: "978-0198099307", status: "Available (15 copies)", icon: "💻" },
+            { title: "Environmental Science & Engineering", author: "Anubha Kaushik", category: "Humanities", semester: "Sem 2", isbn: "978-8122423013", status: "Available (12 copies)", icon: "🌱" },
+            { title: "Advanced Engineering Physics", author: "Malik & Singh", category: "Physics", semester: "Sem 2", isbn: "978-0070671190", status: "Available (6 copies)", icon: "⚡" },
+            { title: "Engineering Mechanics", author: "S.S. Bhavikatti", category: "Mechanical", semester: "Sem 2", isbn: "978-8121926126", status: "Available (8 copies)", icon: "⚙️" },
+            { title: "Professional Communication", author: "A. Sharma", category: "Humanities", semester: "Sem 2", isbn: "978-9352601442", status: "Available (10 copies)", icon: "📝" }
+        ];
+
+        // Render Sem 2 Books
+        const sem2BooksGrid = document.getElementById('sem2-books-grid');
+
+        function renderBooks(books) {
+            sem2BooksGrid.innerHTML = '';
+            if (books.length === 0) {
+                sem2BooksGrid.innerHTML = `<div class="col-span-full p-8 text-center bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm text-gray-500 animate-fade-in">No books found matching your query.</div>`;
+                return;
+            }
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-xl hover:-translate-y-1.5 hover:border-brand-500 dark:hover:border-brand-500 transition-all duration-300 flex flex-col justify-between group';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-3xl p-2 bg-brand-50 dark:bg-brand-900/40 rounded-xl group-hover:scale-110 transition-transform duration-300">${book.icon}</span>
+                            <span class="text-xs px-2.5 py-1 bg-brand-50 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 rounded-lg font-semibold">${book.category}</span>
+                        </div>
+                        <h3 class="font-bold text-gray-800 dark:text-gray-100 text-base group-hover:text-brand-600 transition-colors">${book.title}</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1.5">Author: ${book.author}</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">ISBN: ${book.isbn}</p>
+                        <p class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-3 flex items-center"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block mr-1.5 animate-pulse"></span> ${book.status}</p>
+                    </div>
+                    <button onclick="reserveBook('${book.title}')" class="mt-5 w-full py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-500/20 transition transform active:scale-95">Request / Reserve</button>
+                `;
+                sem2BooksGrid.appendChild(card);
+            });
+        }
+
+        renderBooks(sem2Books);
+
+        // Dark Mode Toggle Logic
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            htmlElement.classList.add('dark');
+            themeIcon.className = 'fa-regular fa-sun text-lg';
+        } else {
+            htmlElement.classList.remove('dark');
+            themeIcon.className = 'fa-regular fa-moon text-lg';
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            if (htmlElement.classList.contains('dark')) {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.className = 'fa-regular fa-moon text-lg';
+            } else {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.className = 'fa-regular fa-sun text-lg';
+            }
+        });
+
+        // Mobile Sidebar Toggle Logic
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarClose = document.getElementById('sidebar-close');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarClose.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Toast Notification System
+        function showActionMsg(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm px-5 py-3 rounded-2xl shadow-xl flex items-center space-x-3 transform translate-y-4 opacity-0 transition-all duration-300';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-400 text-base"></i><span class="font-medium">${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-4', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-4', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Live Search Functionality for Sem 2
+        const searchInput = document.getElementById('library-search-input');
+        const topSearchInput = document.getElementById('top-search-input');
+        const searchBtn = document.getElementById('search-action-btn');
+        const searchResultsSection = document.getElementById('search-results-section');
+        const searchResultsList = document.getElementById('search-results-list');
+        const searchQueryDisplay = document.getElementById('search-query-display');
+
+        function executeSearch(query) {
+            const trimmedQuery = query.trim().toLowerCase();
+            if (!trimmedQuery) {
+                showActionMsg('Please enter a search keyword.');
+                return;
+            }
+
+            searchQueryDisplay.textContent = query;
+            const filtered = sem2Books.filter(book => 
+                book.title.toLowerCase().includes(trimmedQuery) ||
+                book.author.toLowerCase().includes(trimmedQuery) ||
+                book.category.toLowerCase().includes(trimmedQuery) ||
+                book.isbn.toLowerCase().includes(trimmedQuery)
+            );
+
+            searchResultsList.innerHTML = '';
+            if (filtered.length > 0) {
+                filtered.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between';
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-2xl">${book.icon}</span>
+                                <span class="text-xs px-2.5 py-1 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 rounded-lg font-semibold">${book.category}</span>
+                            </div>
+                            <h3 class="font-bold text-gray-800 dark:text-gray-100 text-sm">${book.title}</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Author: ${book.author}</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-0.5">ISBN: ${book.isbn}</p>
+                            <p class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-2">${book.status}</p>
+                        </div>
+                        <button onclick="reserveBook('${book.title}')" class="mt-5 w-full py-2 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-500/20 transition transform active:scale-95">Request / Reserve</button>
+                    `;
+                    searchResultsList.appendChild(card);
+                });
+            } else {
+                searchResultsList.innerHTML = `<div class="col-span-full p-8 text-center bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 text-sm text-gray-500">No Semester 2 books found matching "${query}".</div>`;
+            }
+
+            searchResultsSection.classList.remove('hidden');
+            searchResultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        searchBtn.addEventListener('click', () => executeSearch(searchInput.value));
+        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') executeSearch(searchInput.value); });
+        if (topSearchInput) {
+            topSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') executeSearch(topSearchInput.value); });
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            if (topSearchInput) topSearchInput.value = '';
+            searchResultsSection.classList.add('hidden');
+        }
+
+        function reserveBook(title) {
+            showActionMsg(`Reservation request submitted for "${title}".`);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — Smart Campus QR</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        [data-theme="light"] {
+            --bg-main: #edf3fb;
+            --surface: rgba(255, 255, 255, 0.88);
+            --surface-strong: #ffffff;
+            --text-main: #111827;
+            --text-muted: #5f6f86;
+            --primary: #4f46e5;
+            --primary-2: #8b5cf6;
+            --primary-soft: rgba(79, 70, 229, 0.12);
+            --accent: #f59e0b;
+            --success: #10b981;
+            --border: rgba(148, 163, 184, 0.24);
+            --input-bg: #f8fafc;
+            --shadow: 0 22px 45px rgba(15, 23, 42, 0.08);
+            --glow: rgba(79, 70, 229, 0.2);
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #0b1220;
+            --surface: rgba(15, 23, 42, 0.82);
+            --surface-strong: #111827;
+            --text-main: #f8fafc;
+            --text-muted: #9aa8bd;
+            --primary: #7c8cff;
+            --primary-2: #a78bfa;
+            --primary-soft: rgba(124, 140, 255, 0.14);
+            --accent: #fbbf24;
+            --success: #34d399;
+            --border: rgba(148, 163, 184, 0.14);
+            --input-bg: rgba(15, 23, 42, 0.72);
+            --shadow: 0 22px 45px rgba(2, 6, 23, 0.45);
+            --glow: rgba(124, 140, 255, 0.25);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at top left, rgba(99, 102, 241, 0.12), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.10), transparent 30%),
+                var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 30px;
+            overflow-x: hidden;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px 0 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            letter-spacing: -0.03em;
+        }
+
+        .logo i {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            box-shadow: 0 8px 16px var(--glow);
+        }
+
+        .theme-toggle {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.05);
+        }
+
+        .auth-shell {
+            max-width: 1100px;
+            width: 100%;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .visual-panel {
+            position: relative;
+            height: 100%;
+            min-height: 640px;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background-image: url('https://images.unsplash.com/photo-1562774053-701939374585?q=80&w=1200&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            border: 1px solid var(--border);
+        }
+
+        .visual-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.65));
+        }
+
+        .visual-caption {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            z-index: 2;
+            color: #ffffff;
+        }
+
+        .visual-caption h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .visual-caption p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+
+        .auth-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+        }
+
+        .auth-header {
+            margin-bottom: 24px;
+        }
+
+        .auth-header h1 {
+            font-size: 1.85rem;
+            letter-spacing: -0.04em;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 2px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i.field-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 11px 14px 11px 40px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-soft);
+            background: var(--surface-strong);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.88rem;
+        }
+
+        .terms-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin: 14px 0;
+            grid-column: span 2;
+            cursor: pointer;
+        }
+
+        .terms-row a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .btn-submit {
+            width: 100%;
+            grid-column: span 2;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px var(--glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 24px var(--glow);
+        }
+
+        .auth-footer-text {
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 16px;
+            grid-column: span 2;
+        }
+
+        .auth-footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .auth-shell {
+                grid-template-columns: 1fr;
+            }
+            .visual-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 12px 16px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width, .terms-row, .btn-submit, .auth-footer-text { grid-column: span 1; }
+            .auth-container { padding: 20px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <a href="welcome.html" class="logo">
+            <i class="fa-solid fa-qrcode"></i> Smart Campus QR
+        </a>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggleBtn" title="Toggle Day/Night Mode">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Authentication Shell -->
+    <div class="auth-shell">
+        <div class="visual-panel">
+            <div class="visual-caption">
+                <h3>Welcome to Smart Campus</h3>
+                <p>Scan, connect, and manage your daily academic activities effortlessly with our integrated QR ecosystem.</p>
+            </div>
+        </div>
+
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1>Student Registration</h1>
+                <p>Fill in your academic profile to access all campus services</p>
+            </div>
+
+            <form id="registerForm" class="form-grid">
+                <div class="form-group full-width">
+                    <label class="form-label" for="fullname">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user field-icon"></i>
+                        <input type="text" id="fullname" class="form-control" placeholder="Aman Singh Gosai" required>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="email">Campus Email / ID</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope field-icon"></i>
+                        <input type="email" id="email" class="form-control" placeholder="student@campus.edu" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="classCourse">Class / Course</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-graduation-cap field-icon"></i>
+                        <select id="classCourse" class="form-control" required>
+                            <option value="" disabled selected>Select Course</option>
+                            <option value="B.Tech CS/IT">B.Tech (CSE / IT)</option>
+                            <option value="B.Tech Mechanical">B.Tech (Mechanical)</option>
+                            <option value="BCA">BCA</option>
+                            <option value="MCA">MCA</option>
+                            <option value="B.Sc">B.Sc</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="semester">Semester / Year</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-calendar-days field-icon"></i>
+                        <select id="semester" class="form-control" required>
+                            <option value="" disabled selected>Select Semester</option>
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                            <option value="3rd Semester">3rd Semester</option>
+                            <option value="4th Semester">4th Semester</option>
+                            <option value="5th Semester">5th Semester</option>
+                            <option value="6th Semester">6th Semester</option>
+                            <option value="7th Semester">7th Semester</option>
+                            <option value="8th Semester">8th Semester</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="rollNo">Roll Number / Student ID</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-id-card field-icon"></i>
+                        <input type="text" id="rollNo" class="form-control" placeholder="e.g., 2329282" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock field-icon"></i>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" id="togglePasswordBtn">
+                            <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock field-icon"></i>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" id="toggleConfirmBtn">
+                            <i class="fa-solid fa-eye" id="eyeConfirmIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <label class="terms-row">
+                    <input type="checkbox" id="terms" required> I agree to the <a href="#">Terms & Conditions</a>
+                </label>
+
+                <button type="submit" class="btn-submit">
+                    <span>Complete Registration</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <div class="auth-footer-text">
+                    Already have an account? <a href="login.html">Login here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 Smart Campus QR. All Rights Reserved.
+    </footer>
+
+    <!-- JavaScript Scripting -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Theme Sync & Toggle Logic ---
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const themeIcon = document.getElementById('themeIcon');
+            const htmlElement = document.documentElement;
+
+            const savedTheme = localStorage.getItem('campus_theme') || 'light';
+            htmlElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggleBtn.addEventListener('click', () => {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('campus_theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            }
+
+            // --- Password Visibility Toggles ---
+            setupPasswordToggle('password', 'togglePasswordBtn', 'eyeIcon');
+            setupPasswordToggle('confirmPassword', 'toggleConfirmBtn', 'eyeConfirmIcon');
+
+            function setupPasswordToggle(passId, btnId, iconId) {
+                const input = document.getElementById(passId);
+                const btn = document.getElementById(btnId);
+                const icon = document.getElementById(iconId);
+
+                btn.addEventListener('click', () => {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    icon.className = type === 'text' ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+                });
+            }
+
+            // --- Form Submit & Validation ---
+            const registerForm = document.getElementById('registerForm');
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const pass = document.getElementById('password').value;
+                const confirmPass = document.getElementById('confirmPassword').value;
+
+                if (pass !== confirmPass) {
+                    alert('Passwords do not match! Please check again.');
+                    return;
+                }
+
+                alert('Registration successful! Redirecting to login...');
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+</body>
+</html>

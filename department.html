@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Department Directory | Smart CampusQR</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #0ea5e9;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Navbar */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 0.6rem 1.25rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1200px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+        }
+
+        /* Section Headings */
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 2.5rem 0 1.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Grid Layouts */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .faculty-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .tree-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .tree-list li {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .tree-list li span:last-child {
+            color: var(--text-main);
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .badge-status {
+            display: inline-block;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+        }
+
+        /* Map Card */
+        .card-full {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            border: 1px solid #c7d2fe;
+            text-align: center;
+            padding: 2.5rem;
+        }
+
+        .map-placeholder {
+            margin-top: 1rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 2px dashed #a5b4fc;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+            background: var(--card-bg);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">⚡</div>
+            <span>Smart CampusQR</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#" class="active">Directory</a></li>
+                <li><a href="#">QR Simulator</a></li>
+                <li><a href="#">Workflow</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="btn-primary">Scan Station</a>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Department Resource Hub</h1>
+            <p>Complete structural hierarchy including Faculty profiles with photos, contact numbers, cabins, and campus facilities.</p>
+        </div>
+
+        <h2 class="section-title">👨‍🏫 Faculty Cabins & Profiles</h2>
+        <div class="grid-container">
+            
+            <div class="card">
+                <div class="card-header-flex">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Dr. Rajesh Sharma" class="faculty-avatar">
+                    <div>
+                        <div class="card-title">Dr. Rajesh Sharma</div>
+                        <div class="card-subtitle">Professor & Senior Researcher</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Cabin Number:</span> <span>Room 401</span></li>
+                    <li><span>Floor:</span> <span>4th Floor</span></li>
+                    <li><span>Contact Number:</span> <span>+91 98765-43210</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status">Available</span></span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Dr. Anil Kumar" class="faculty-avatar">
+                    <div>
+                        <div class="card-title">Dr. Anil Kumar</div>
+                        <div class="card-subtitle">Associate Professor</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Cabin Number:</span> <span>Room 404</span></li>
+                    <li><span>Floor:</span> <span>4th Floor</span></li>
+                    <li><span>Contact Number:</span> <span>+91 91234-56789</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status">Available</span></span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Prof. Priya Verma" class="faculty-avatar">
+                    <div>
+                        <div class="card-title">Prof. Priya Verma</div>
+                        <div class="card-subtitle">Assistant Professor</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Cabin Number:</span> <span>Room 407</span></li>
+                    <li><span>Floor:</span> <span>4th Floor</span></li>
+                    <li><span>Contact Number:</span> <span>+91 99887-76655</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status">Available</span></span></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <h2 class="section-title">🏢 Administrative Offices & Facilities</h2>
+        <div class="grid-container">
+
+            <div class="card">
+                <div class="card-header-flex">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" alt="HOD" class="faculty-avatar">
+                    <div>
+                        <div class="card-title">👨‍💼 HOD Office</div>
+                        <div class="card-subtitle">Dr. R. K. Malhotra (Head)</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Office Number:</span> <span>Room 402</span></li>
+                    <li><span>Floor:</span> <span>4th Floor</span></li>
+                    <li><span>Contact:</span> <span>+91 98111-22334</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🏢 Department Office</div>
+                <ul class="tree-list">
+                    <li><span>Office Number:</span> <span>Room 403</span></li>
+                    <li><span>Staff Details:</span> <span>Mr. Suresh (Admin Clerk)</span></li>
+                    <li><span>Working Hours:</span> <span>9:00 AM - 5:00 PM</span></li>
+                    <li><span>Contact:</span> <span>+91 11-23456789</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🧪 Laboratories</div>
+                <ul class="tree-list">
+                    <li><span>Lab Name:</span> <span>AI & Data Science Lab</span></li>
+                    <li><span>Lab Number:</span> <span>Room 201</span></li>
+                    <li><span>Floor:</span> <span>2nd Floor</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">📚 Department Library</div>
+                <ul class="tree-list">
+                    <li><span>Location:</span> <span>Room 405, 4th Floor</span></li>
+                    <li><span>Timings:</span> <span>8:30 AM - 6:00 PM</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🎤 Seminar Hall</div>
+                <ul class="tree-list">
+                    <li><span>Hall Number:</span> <span>Auditorium Wing, Hall B</span></li>
+                    <li><span>Floor:</span> <span>3rd Floor</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🖨️ Printing / Photocopy</div>
+                <ul class="tree-list">
+                    <li><span>Location:</span> <span>Near Department Office (Room 403)</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🚻 Washroom</div>
+                <ul class="tree-list">
+                    <li><span>Male:</span> <span>East Wing Corridor</span></li>
+                    <li><span>Female:</span> <span>West Wing Corridor</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">💧 Drinking Water</div>
+                <ul class="tree-list">
+                    <li><span>Water Cooler Location:</span> <span>Near Central Elevator Lobby</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🛗 Lift / Stairs</div>
+                <ul class="tree-list">
+                    <li><span>Location:</span> <span>Main Entrance Foyer</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-title" style="border:none; margin-bottom:0

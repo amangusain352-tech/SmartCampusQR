@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - B.Tech Semester 4</title>
+    <style>
+        :root {
+            --bg-main: #f8f9fa;
+            --sidebar-bg: #ffffff;
+            --card-bg: #ffffff;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --badge-bg: #eff6ff;
+            --badge-text: #1d4ed8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            padding: 20px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            padding: 20px 20px 10px 20px;
+            font-weight: 600;
+        }
+
+        .menu-items {
+            list-style: none;
+            padding: 0 10px;
+        }
+
+        .menu-items li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: background 0.2s;
+        }
+
+        .menu-items li a:hover {
+            background-color: #f3f4f6;
+        }
+
+        .menu-items li.active a {
+            background-color: #eff6ff;
+            color: var(--primary);
+        }
+
+        /* Main Content Area */
+        main {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navbar */
+        header {
+            height: 70px;
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .search-bar-container {
+            position: relative;
+            width: 350px;
+        }
+
+        .search-bar-container input {
+            width: 100%;
+            padding: 8px 15px 8px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #f9fafb;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-bar-container svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--text-muted);
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background-color: #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        /* Dashboard Content */
+        .content-body {
+            padding: 30px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .catalog-header {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .catalog-title h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .catalog-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .books-available-badge {
+            background-color: #f0fdf4;
+            color: #166534;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #bbf7d0;
+        }
+
+        /* Inner Search Bar */
+        .inner-search {
+            display: flex;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .inner-search input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 0.95rem;
+            padding-left: 10px;
+        }
+
+        .search-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Grid Cards */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: box-shadow 0.2s;
+        }
+
+        .book-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .book-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .book-icon-title {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .book-icon {
+            font-size: 1.5rem;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .book-info h3 {
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .book-info p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .subject-badge {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .book-status {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 15px;
+        }
+
+        .request-btn {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .request-btn:hover {
+            background-color: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="sidebar-brand">
+            🎓 SmartCampusQR
+        </div>
+        <div class="menu-category">Main</div>
+        <ul class="menu-items">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">QR Scan</a></li>
+        </ul>
+
+        <div class="menu-category">Semesters</div>
+        <ul class="menu-items">
+            <li><a href="#">Semester 1</a></li>
+            <li><a href="#">Semester 2</a></li>
+            <li><a href="#">Semester 3</a></li>
+            <li class="active"><a href="#">Semester 4</a></li>
+            <li><a href="#">Semester 5</a></li>
+            <li><a href="#">Semester 6</a></li>
+            <li><a href="#">Semester 7</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Top Navigation Bar -->
+        <header>
+            <div class="search-bar-container">
+                <svg width="16" height="16" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" placeholder="Search Sem 4 books...">
+            </div>
+            <div class="user-nav">
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <span>Aman</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content Body -->
+        <div class="content-body">
+            <a href="#" class="back-link">← Back to Main Library Dashboard</a>
+
+            <div class="catalog-header">
+                <div class="catalog-title">
+                    <h1>📘 B.Tech Semester 4 - Library Catalog</h1>
+                    <p>All required textbooks, manuals, and reference notes for Second Year (Sem 4)</p>
+                </div>
+                <div class="books-available-badge">
+                    Total Sem 4 Books: 6 Available
+                </div>
+            </div>
+
+            <div class="inner-search">
+                <input type="text" placeholder="Search Semester 4 books by name, author, or subject...">
+                <button class="search-btn">Search</button>
+            </div>
+
+            <div class="section-title">
+                📚 ALL SEMESTER 4 TEXTBOOKS
+            </div>
+
+            <!-- Books Grid -->
+            <div class="books-grid">
+                <!-- Book 1 -->
+                <div class="book-card">
+                    <div>
+                        <div class="book-card-top">
+                            <div class="book-icon-title">
+                                <div class="book-icon">📊</div>
+                                <div class="book-info">
+                                    <h3>Operating Systems</h3>
+                                    <p>Author: Abraham Silberschatz</p>
+                                    <p>ISBN: 978-1118063330</p>
+                                </div>
+                            </div>
+                            <span class="subject-badge">CS</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="book-status">Available (7 copies)</div>
+                        <button class="request-btn">Request / Reserve</button>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="book-card">
+                    <div>
+                        <div class="book-card-top">
+                            <div class="book-icon-title">
+                                <div class="book-icon">🗄️</div>
+                                <div class="book-info">
+                                    <h3>Database Management Systems</h3>
+                                    <p>Author: Raghu Ramakrishnan</p>
+                                    <p>ISBN: 978-0072465633</p>
+                                </div>
+                            </div>
+                            <span class="subject-badge">CS</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="book-status">Available (9 copies)</div>
+                        <button class="request-btn">Request / Reserve</button>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="book-card">
+                    <div>
+                        <div class="book-card-top">
+                            <div class="book-icon-title">
+                                <div class="book-icon">🌐</div>
+                                <div class="book-info">
+                                    <h3>Computer Networks</h3>
+                                    <p>Author: Andrew S. Tanenbaum</p>
+                                    <p>ISBN: 978-0132126953</p>
+                                </div>
+                            </div>
+                            <span class="subject-badge">Networking</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="book-status">Available (6 copies)</div>
+                        <button class="request-btn">Request / Reserve</button>
+                    </div>
+                </div>
+
+                <!-- Book 4 -->
+                <div class="book-card">
+                    <div>
+                        <div class="book-card-top">
+                            <div class="book-icon-title">
+                                <div class="book-icon">📈</div>
+                                <div class="book-info">
+                                    <h3>Design & Analysis of Algorithms</h3>
+                                    <p>Author: Ellis Horowitz</p>
+                                    <p>ISBN: 978-8173711048</p>
+                                </div>
+                            </div>
+                            <span class="subject-badge">CS</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="book-status">Available (5 copies)</div>
+                        <button class="request-btn">Request / Reserve</button>
+                    </div>
+                </div>
+
+                <!-- Book 5 -->
+                <div class="book-card">
+                    <div>
+                        <div class="book-card-top">
+                            <div class="book-icon-title">
+                                <div class="book-icon">📉</div>
+                                <div class="book-info">
+                                    <h3>Software Engineering</h3>
+                                    <p>Author: Ian Sommerville</p>
+                                    <p>ISBN: 978-0133943030</p>
+                                </div>
+                            </div>
+                            <span class="subject-badge">Software</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="book-status">Available (8 copies)</div>
+                        <button class="request-btn">Request / Reserve</button>
+                    </div>
+                </div>
+
+                <!-- Book 6 -->
+                <div class="book-card">
+                    <div>
+                        <div class="book-card-top">
+                            <div class="book-icon-title">
+                                <div class="book-icon">📐</div>
+                                <div class="book-info">
+                                    <h3>Discrete Mathematics (Adv.)</h3>
+                                    <p>Author: Kenneth H. Rosen</p>
+                                    <p>ISBN: 978-0073383095</p>
+                                </div>
+                            </div>
+                            <span class="subject-badge">Math</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="book-status">Available (4 copies)</div>
+                        <button class="request-btn">Request / Reserve</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

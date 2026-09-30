@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - Secure Payment Gateway</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans antialiased min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md w-full bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-200 dark:border-gray-700 p-6 md:p-8">
+        
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <div class="w-12 h-12 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 rounded-2xl flex items-center justify-center text-xl mx-auto mb-3 shadow-inner">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h1 class="text-xl font-bold text-gray-900 dark:text-white">Secure Payment Gateway</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">SmartCampusQR Library Fine Clearance</p>
+        </div>
+
+        <!-- Bill Details Summary -->
+        <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-2xl mb-6 border border-gray-100 dark:border-gray-700">
+            <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-2">
+                <span>Description</span>
+                <span>Amount</span>
+            </div>
+            <div class="flex justify-between text-sm font-semibold text-gray-800 dark:text-gray-200 pb-2 border-b border-gray-200 dark:border-gray-600">
+                <span>Library Late Fine (Data Structures)</span>
+                <span id="fine-amount-label">₹50</span>
+            </div>
+            <div class="flex justify-between text-sm font-bold text-gray-900 dark:text-white pt-2">
+                <span>Total Payable</span>
+                <span id="fine-total-label" class="text-brand-600 dark:text-brand-400 text-base">₹50</span>
+            </div>
+        </div>
+
+        <!-- Payment Options Selection -->
+        <div class="space-y-3 mb-6">
+            <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Select Payment Method</label>
+            
+            <!-- UPI Option -->
+            <label class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-brand-500 dark:hover:border-brand-500 transition bg-white dark:bg-gray-800">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">📱</span>
+                    <div>
+                        <p class="text-sm font-semibold">UPI / QR Code</p>
+                        <p class="text-xs text-gray-400">Google Pay, PhonePe, Paytm</p>
+                    </div>
+                </div>
+                <input type="radio" name="payment_method" checked class="text-brand-600 focus:ring-brand-500">
+            </label>
+
+            <!-- Net Banking Option -->
+            <label class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-brand-500 dark:hover:border-brand-500 transition bg-white dark:bg-gray-800">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">🏛️</span>
+                    <div>
+                        <p class="text-sm font-semibold">Net Banking</p>
+                        <p class="text-xs text-gray-400">All major Indian banks</p>
+                    </div>
+                </div>
+                <input type="radio" name="payment_method" class="text-brand-600 focus:ring-brand-500">
+            </label>
+
+            <!-- Debit/Credit Card Option -->
+            <label class="flex items-center justify-between p-3.5 rounded-2xl border border-gray-200 dark:border-gray-700 cursor-pointer hover:border-brand-500 dark:hover:border-brand-500 transition bg-white dark:bg-gray-800">
+                <div class="flex items-center space-x-3">
+                    <span class="text-lg">💳</span>
+                    <div>
+                        <p class="text-sm font-semibold">Debit / Credit Card</p>
+                        <p class="text-xs text-gray-400">Visa, MasterCard, RuPay</p>
+                    </div>
+                </div>
+                <input type="radio" name="payment_method" class="text-brand-600 focus:ring-brand-500">
+            </label>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="space-y-3">
+            <button id="pay-button" onclick="processPayment()" class="w-full py-3 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-brand-500/30 transition transform active:scale-95">
+                Pay ₹50 Securely
+            </button>
+            <a href="library.html" class="block text-center w-full py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-xl text-xs font-semibold transition">
+                Cancel & Go Back
+            </a>
+        </div>
+
+    </div>
+
+    <!-- JavaScript for Payment Simulation -->
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const amount = Number(params.get('amount')) || 50;
+
+        const fineAmountLabel = document.getElementById('fine-amount-label');
+        const fineTotalLabel = document.getElementById('fine-total-label');
+        const payButton = document.getElementById('pay-button');
+
+        if (fineAmountLabel && fineTotalLabel) {
+            fineAmountLabel.textContent = `₹${amount}`;
+            fineTotalLabel.textContent = `₹${amount}`;
+        }
+
+        if (payButton) {
+            payButton.innerHTML = `Pay ₹${amount} Securely`;
+        }
+
+        function processPayment() {
+            const btn = event.target;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Processing Payment...`;
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert("Payment Successful! Redirecting back to library dashboard.");
+                window.location.href = "library.html?fine_cleared=true";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

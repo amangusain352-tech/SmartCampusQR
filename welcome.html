@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR | Next-Gen Campus Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================= THEME TOKENS ================= */
+        :root[data-theme="dark"] {
+            --page-background: radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.16), transparent 22%), radial-gradient(circle at 80% 18%, rgba(139, 92, 246, 0.14), transparent 24%), linear-gradient(180deg, #050814 0%, #0b1121 52%, #050814 100%);
+            --bg-deep: #050814;
+            --bg-surface: rgba(11, 17, 33, 0.75);
+            --bg-card: rgba(15, 23, 42, 0.65);
+            --bg-card-hover: rgba(30, 41, 59, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --border-glass-hover: rgba(59, 130, 246, 0.5);
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-glow: rgba(59, 130, 246, 0.35);
+            --accent: #8b5cf6;
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-gradient: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            --badge-bg: rgba(59, 130, 246, 0.12);
+            --badge-border: rgba(59, 130, 246, 0.3);
+            --orb-1: rgba(59, 130, 246, 0.18);
+            --orb-2: rgba(139, 92, 246, 0.15);
+            --orb-3: rgba(16, 185, 129, 0.12);
+            --nav-bg: rgba(5, 8, 20, 0.75);
+            --shadow-glass: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        :root[data-theme="light"] {
+            --page-background: radial-gradient(circle at 15% 15%, rgba(147, 197, 253, 0.25), transparent 18%), radial-gradient(circle at 80% 18%, rgba(216, 180, 254, 0.22), transparent 20%), linear-gradient(180deg, #edf5ff 0%, #f3f7ff 18%, #f8f5ff 52%, #f8fbff 100%);
+            --bg-deep: #f8fafc;
+            --bg-surface: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(255, 255, 255, 0.75);
+            --bg-card-hover: rgba(241, 245, 249, 0.95);
+            --border-glass: rgba(0, 0, 0, 0.08);
+            --border-glass-hover: rgba(37, 99, 235, 0.4);
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-glow: rgba(37, 99, 235, 0.2);
+            --accent: #7c3aed;
+            --accent-glow: rgba(124, 58, 237, 0.2);
+            --emerald: #059669;
+            --emerald-glow: rgba(5, 150, 105, 0.2);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 245, 249, 0.8) 100%);
+            --badge-bg: rgba(37, 99, 235, 0.08);
+            --badge-border: rgba(37, 99, 235, 0.2);
+            --orb-1: rgba(37, 99, 235, 0.1);
+            --orb-2: rgba(124, 58, 237, 0.08);
+            --orb-3: rgba(5, 150, 105, 0.06);
+            --nav-bg: rgba(248, 250, 252, 0.85);
+            --shadow-glass: 0 20px 40px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--page-background);
+            color: var(--text-main);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            transition: background 0.4s ease, color 0.4s ease;
+            background-attachment: fixed;
+        }
+
+        /* ================= AMBIENT BACKGROUND ORBS ================= */
+        .ambient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.85;
+            animation: floatOrb 18s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--orb-1);
+            top: -150px;
+            left: 10%;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--orb-2);
+            top: 35%;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        .orb-3 {
+            width: 550px;
+            height: 550px;
+            background: var(--orb-3);
+            bottom: -150px;
+            left: 30%;
+            animation-delay: -12s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, 40px) scale(1.1); }
+            100% { transform: translate(-40px, 80px) scale(0.95); }
+        }
+
+        /* Grid lines pattern overlay */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* ================= KEYFRAME ANIMATIONS ================= */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(0.8deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px var(--primary-glow); }
+            50% { box-shadow: 0 0 35px var(--primary-glow), 0 0 15px var(--accent-glow); }
+        }
+
+        @keyframes scannerPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(1); }
+            50% { opacity: 0.8; transform: scaleY(1.05); }
+        }
+
+        @keyframes badgeShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .feature-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            padding: 9px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            box-shadow: var(--shadow-glass);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-pill span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            color: var(--primary-light);
+        }
+
+        /* ================= NAVBAR ================= */
+        nav {
+            height: 84px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 7%;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.03);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            animation: pulseGlow 4s infinite ease-in-out;
+            box-shadow: 0 4px 18px var(--primary-glow);
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-links a:not(.login-btn):not(.signup-btn):hover {
+            color: var(--text-main);
+        }
+
+        .nav-links a:not(.login-btn):not(.signup-btn)::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:not(.login-btn):not(.signup-btn):hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 19px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--text-main);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg) scale(1.08);
+            border-color: var(--border-glass-hover);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .login-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            color: var(--text-main) !important;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+        }
+
+        .login-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .signup-btn {
+            padding: 11px 22px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white !important;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 6px 20px var(--primary-glow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-toggle {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            font-size: 20px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* ================= HERO SECTION ================= */
+        .hero {
+            min-height: calc(100vh - 82px);
+            padding: 60px 7% 80px;
+            display: grid;
+            grid-template-columns: 1.12fr 0.88fr;
+            align-items: center;
+            gap: 46px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 670px;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(219, 234, 254, 0.8));
+            border: 1px solid rgba(96, 165, 250, 0.28);
+            color: var(--primary-light);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 28px;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 22px rgba(59, 130, 246, 0.08);
+        }
+
+        .badge-pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--emerald);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--emerald);
+            animation: pulseGlow 2s infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 5.8vw, 7rem);
+            line-height: 0.96;
+            font-weight: 800;
+            letter-spacing: -0.08em;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 span.gradient-text {
+            display: block;
+            background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 38%, #ec4899 100%);
+            background-size: 200% 200%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            animation: gradientFlow 6s ease infinite;
+        }
+
+        .hero p.lead-text {
+            color: var(--text-muted);
+            font-size: 1.12rem;
+            line-height: 1.6;
+            margin-bottom: 34px;
+            font-weight: 400;
+            max-width: 720px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            text-decoration: none;
+            padding: 16px 28px;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 15px 35px var(--primary-glow), 0 5px 15px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-glass-hover);
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px var(--primary-glow);
+        }
+
+        /* ================= QR LOGS CONSOLE CARD ================= */
+        .qr-status-card {
+            margin-top: 32px;
+            padding: 18px 24px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-glass-hover);
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .qr-status-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--primary-light);
+        }
+
+        .qr-log-item {
+            font-size: 13px;
+            margin: 5px 0;
+            color: #e2e8f0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ================= HERO VISUAL (SAAS DASHBOARD MOCKUP) ================= */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-visual::before,
+        .hero-visual::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(18px);
+            pointer-events: none;
+            opacity: 0.72;
+        }
+
+        .hero-visual::before {
+            width: 180px;
+            height: 180px;
+            background: rgba(59, 130, 246, 0.18);
+            top: -30px;
+            right: 0;
+        }
+
+        .hero-visual::after {
+            width: 150px;
+            height: 150px;
+            background: rgba(139, 92, 246, 0.12);
+            bottom: -25px;
+            left: 25px;
+        }
+
+        .hero-glass-container {
+            width: 100%;
+            max-width: 440px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(219, 234, 254, 0.8) 38%, rgba(243, 232, 255, 0.72) 100%);
+            padding: 26px 24px 18px;
+            border-radius: 28px;
+            box-shadow: 0 22px 50px rgba(148, 163, 184, 0.18), 0 10px 28px rgba(79, 70, 229, 0.08);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            position: relative;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            animation: floatCard 7s ease-in-out infinite;
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .hero-glass-container:hover {
+            border-color: var(--border-glass-hover);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 30px var(--primary-glow);
+        }
+
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+        }
+
+        .dashboard-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar-box {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.16);
+        }
+
+        .dashboard-user h4 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .dashboard-user p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .live-status-pill {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--emerald);
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .live-status-pill .dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--emerald);
+            border-radius: 50%;
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        /* Mock Scanner Preview Box */
+        .scanner-hud-box {
+            background: var(--bg-deep);
+            border: 1px dashed var(--border-glass-hover);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanner-hud-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+            animation: scannerPulse 3s infinite ease-in-out;
+        }
+
+        .hud-qr-icon {
+            font-size: 42px;
+            margin-bottom: 8px;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px var(--primary-glow));
+        }
+
+        .hud-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-bottom: 4px;
+        }
+
+        .hud-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .mini-services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .mini-item {
+            background: var(--bg-deep);
+            border: 1px solid var(--border-glass);
+            padding: 16px 14px;
+            border-radius: 18px;
+            text-align: left;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .mini-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px var(--primary-glow);
+            background: var(--bg-card-hover);
+        }
+
+        .mini-item-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--badge-bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .mini-item-info h5 {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .mini-item-info p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Floating Badge Accent */
+        .floating-stat-badge {
+            position: absolute;
+            bottom: -20px;
+            right: -15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass-hover);
+            padding: 12px 18px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(16px);
+            z-index: 10;
+        }
+
+        .floating-stat-badge .stat-val {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--emerald);
+        }
+
+        .floating-stat-badge .stat-lbl {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ================= PLATFORM STATS BAR ================= */
+        .stats-bar {
+            padding: 40px 7%;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-glass);
+            border-bottom: 1px solid var(--border-glass);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .stat-item p {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* ================= SERVICES SECTION ================= */
+        .services {
+            padding: 120px 7%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 64px;
+        }
+
+        .section-header .section-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--primary-light);
+            margin-bottom: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1.2px;
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 22px;
+        }
+
+        .service-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            padding: 36px 24px;
+            border-radius: 24px;
+            text-align: left;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-glass);
+            text-decoration: none;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-box:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--border-glass-hover);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 25px var(--primary-glow);
+            background: var(--bg-card-hover);
+        }
+
+        .service-box:hover::before {
+            opacity: 1;
+        }
+
+        .service-box .s-icon-wrapper {
+            width: 58px;
+            height: 58px;
+            background: var(--badge-bg);
+            border: 1px solid var(--badge-border);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .service-box:hover .s-icon-wrapper {
+            transform: scale(1.15) rotate(6deg);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: 0 8px 20px var(--primary-glow);
+        }
+
+        .service-box h3 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+
+        .service-box p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .service-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-light);
+            transition: gap 0.3s ease;
+        }
+
+        .service-box:hover .service-link-btn {
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        /* ================= WORKFLOW SECTION ================= */
+        .workflow {
+            padding: 120px 7%;
+            background: var(--bg-surface);
+            position: relative;
+        }
+
+        .steps-container {
+            max-width: 1100px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            padding: 40px 32px;
+            border-radius: 26px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .step-card:hover {
+            border-color: var(--border-glass-hover);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px var(--accent-glow);
+        }
+
+        .workflow-demo {
+            max-width: 1120px;
+            margin: 42px auto 0;
+            background: var(--card-gradient);
+            border: 1px solid var(--border-glass);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow-glass);
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            align-items: center;
+            min-height: 380px;
+        }
+
+        .workflow-demo-copy {
+            padding: 42px 38px;
+        }
+
+        .workflow-demo-copy .mini-tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: var(--primary-light);
+            margin-bottom: 16px;
+        }
+
+        .workflow-demo-copy h3 {
+            font-size: 32px;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .workflow-demo-copy p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 15px;
+            margin-bottom: 22px;
+        }
+
+        .demo-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .demo-pill {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid var(--badge-border);
+            color: var(--primary-light);
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .workflow-video-wrap {
+            position: relative;
+            padding: 24px;
+            height: 100%;
+            min-height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(139, 92, 246, 0.08));
+        }
+
+        .workflow-video-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 20px;
+            border-radius: 24px;
+            border: 1px solid var(--border-glass);
+            background: rgba(15, 23, 42, 0.18);
+            pointer-events: none;
+        }
+
+        .workflow-video {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 560px;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 24px 40px rgba(15, 23, 42, 0.25);
+            background: #0f172a;
+            display: block;
+        }
+
+        .workflow-image {
+            display: block;
+            width: 100%;
+            max-width: 560px;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 24px 40px rgba(15, 23, 42, 0.25);
+            background: #0f172a;
+            animation: floatCard 7s ease-in-out infinite;
+        }
+
+        .video-badge {
+            position: absolute;
+            right: 42px;
+            bottom: 30px;
+            z-index: 2;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            backdrop-filter: blur(14px);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .step-tag {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--badge-bg), rgba(139, 92, 246, 0.15));
+            color: var(--primary-light);
+            border: 1px solid var(--badge-border);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.4px;
+        }
+
+        .step-card p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-glass);
+            padding: 80px 7% 35px;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .footer-banner {
+            max-width: 1100px;
+            margin: -130px auto 60px;
+            background: var(--card-gradient);
+            border: 1px solid var(--border-glass-hover);
+            border-radius: 28px;
+            padding: 36px 45px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            box-shadow: var(--shadow-glass), 0 0 30px var(--primary-glow);
+            backdrop-filter: blur(24px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-banner-text h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .footer-banner-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .footer-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.6fr 1fr 1fr 1fr;
+            gap: 48px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .footer-col-brand .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .footer-col-brand p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.65;
+            margin-bottom: 22px;
+        }
+
+        .footer-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--emerald);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-col ul a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .footer-col ul a:hover {
+            color: var(--primary-light);
+            transform: translateX(4px);
+        }
+
+        .footer-bottom {
+            max-width: 1100px;
+            margin: 30px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ================= QR SIMULATOR SECTION ================= */
+        .simulator-section {
+            padding: 110px 7%;
+            background: var(--bg-surface);
+            position: relative;
+        }
+
+        .simulator-container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: var(--card-gradient);
+            border: 1px solid var(--border-glass-hover);
+            border-radius: 32px;
+            padding: 45px;
+            box-shadow: var(--shadow-glass), 0 0 35px var(--primary-glow);
+            backdrop-filter: blur(24px);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .sim-presets h3 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .sim-presets p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .sim-btn-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sim-btn {
+            background: var(--bg-deep);
+            border: 1px solid var(--border-glass);
+            padding: 14px 18px;
+            border-radius: 14px;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sim-btn:hover, .sim-btn.active {
+            border-color: var(--primary);
+            background: var(--badge-bg);
+            color: var(--primary-light);
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .sim-result-box {
+            background: var(--bg-deep);
+            border: 1px dashed var(--border-glass-hover);
+            border-radius: 24px;
+            padding: 28px;
+            text-align: center;
+            position: relative;
+        }
+
+        .sim-qr-preview {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            background: white;
+            padding: 12px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .sim-qr-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .sim-data-display {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            color: var(--emerald);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 8px 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            word-break: break-all;
+        }
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-bottom-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-bottom-links a:hover {
+            color: var(--text-main);
+        }
+
+
+
+        /* ================= RESPONSIVE DESIGN ================= */
+        @media (max-width: 1200px) {
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .semester-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            nav {
+                padding: 0 5%;
+            }
+
+            .semester-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .simulator-container {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-demo {
+                grid-template-columns: 1fr;
+                min-height: 0;
+            }
+
+            .workflow-video-wrap {
+                min-height: 0;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 40px;
+                gap: 60px;
+                min-height: 0;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero p.lead-text {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-banner {
+                flex-direction: column;
+                text-align: center;
+                margin-top: -80px;
+                padding: 28px 24px;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 36px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            /* Responsive dropdown menu */
+            .nav-links.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--nav-bg);
+                backdrop-filter: blur(20px);
+                padding: 24px;
+                border-bottom: 1px solid var(--border-glass);
+                gap: 18px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                height: 72px;
+                padding: 0 16px;
+            }
+
+            .logo {
+                gap: 8px;
+                font-size: 17px;
+            }
+
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+                font-size: 19px;
+            }
+
+            .nav-right {
+                gap: 10px;
+            }
+
+            .theme-toggle,
+            .mobile-toggle {
+                width: 42px;
+                height: 42px;
+                flex: 0 0 42px;
+            }
+
+            .nav-links.active {
+                top: 100%;
+                align-items: stretch;
+                padding: 16px 20px 20px;
+                gap: 8px;
+            }
+
+            .nav-links.active > a {
+                padding: 12px 16px;
+                text-align: center;
+            }
+
+            .hero {
+                padding: 42px 20px 64px;
+                gap: 42px;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+                letter-spacing: -1px;
+                line-height: 1.04;
+            }
+
+            .badge {
+                max-width: 100%;
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+
+            .hero p.lead-text {
+                font-size: 15px;
+                margin-bottom: 24px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                min-height: 48px;
+                padding: 13px 18px;
+            }
+
+            .feature-strip {
+                justify-content: center;
+                gap: 8px;
+                margin-top: 22px;
+            }
+
+            .feature-pill {
+                padding: 7px 10px;
+                font-size: 11px;
+            }
+
+            .stats-bar {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 20px 10px;
+                padding: 26px 20px;
+            }
+
+            .stat-item h3 {
+                font-size: 28px;
+            }
+
+            .stat-item p {
+                font-size: 12px;
+            }
+
+            .services,
+            .workflow,
+            .simulator-section {
+                padding: 72px 20px;
+            }
+
+            .section-header {
+                margin-bottom: 36px;
+            }
+
+            .section-header h2 {
+                font-size: 30px;
+                letter-spacing: 0;
+            }
+
+            .section-header p {
+                font-size: 15px;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .service-box {
+                padding: 24px 20px;
+                border-radius: 18px;
+            }
+
+            .service-box .s-icon-wrapper {
+                margin-bottom: 16px;
+            }
+
+            .steps-container {
+                gap: 14px;
+            }
+
+            .step-card {
+                padding: 26px 22px;
+                border-radius: 20px;
+            }
+
+            .workflow-demo {
+                margin-top: 28px;
+                border-radius: 22px;
+            }
+
+            .workflow-demo-copy {
+                padding: 28px 22px;
+            }
+
+            .workflow-demo-copy h3 {
+                font-size: 26px;
+                letter-spacing: 0;
+            }
+
+            .workflow-video-wrap {
+                padding: 16px;
+            }
+
+            .workflow-video-wrap::before {
+                inset: 12px;
+            }
+
+            .workflow-image,
+            .workflow-video {
+                border-radius: 14px;
+            }
+
+            .video-badge {
+                right: 24px;
+                bottom: 24px;
+            }
+
+            .simulator-container {
+                padding: 22px 18px;
+                gap: 24px;
+                border-radius: 22px;
+            }
+
+            .sim-presets h3 {
+                font-size: 21px;
+            }
+
+            .sim-btn {
+                min-height: 48px;
+                padding: 12px 14px;
+                gap: 10px;
+                font-size: 13px;
+            }
+
+            .sim-result-box {
+                padding: 20px 16px;
+            }
+
+            footer {
+                padding: 58px 20px 26px;
+            }
+
+            .footer-banner {
+                margin: -38px auto 42px;
+                padding: 24px 20px;
+                gap: 18px;
+                border-radius: 22px;
+            }
+
+            .footer-banner-text h3 {
+                font-size: 21px;
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 28px 18px;
+                padding-bottom: 32px;
+            }
+
+            .footer-col-brand {
+                grid-column: 1 / -1;
+            }
+
+            .footer-status-pill {
+                max-width: 100%;
+                font-size: 11px;
+            }
+
+            .footer-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+                margin-top: 22px;
+            }
+
+            .footer-bottom-links {
+                flex-wrap: wrap;
+                gap: 10px 16px;
+            }
+
+            .floating-stat-badge {
+                right: 0;
+                bottom: -24px;
+                padding: 10px 12px;
+            }
+
+            .hero-glass-container {
+                padding: 22px 18px 26px;
+                border-radius: 22px;
+            }
+
+            .dashboard-user {
+                gap: 9px;
+            }
+
+            .dashboard-user p {
+                font-size: 10px;
+            }
+
+            .live-status-pill {
+                padding: 6px 9px;
+                font-size: 10px;
+            }
+
+            .mini-services-grid {
+                gap: 8px;
+            }
+
+            .mini-item {
+                padding: 12px 10px;
+                gap: 8px;
+                border-radius: 14px;
+            }
+
+            .mini-item-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .mini-item-info h5 {
+                font-size: 12px;
+            }
+
+            .mini-item-info p {
+                font-size: 10px;
+            }
+
+            .scanner-hud-box {
+                padding: 18px 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ambient Mesh Orbs Background -->
+    <div class="ambient-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="bg-grid"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="{% url 'welcome' %}" class="logo" aria-label="SmartCampusQR home">
+            <div class="logo-icon">⚡</div>
+            Smart<span>CampusQR</span>
+        </a>
+
+        <div class="nav-right">
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'welcome' %}">Home</a>
+                <a href="#services">Services</a>
+                <a href="#simulator">QR Simulator</a>
+                <a href="#workflow">Workflow</a>
+                <a href="{% url 'page_render' page_name='register.html' %}" class="signup-btn">Get Started</a>
+                <a href="{% url 'page_render' page_name='login.html' %}" class="login-btn">Login</a>
+            </div>
+
+
+            <!-- Light/Dark Theme Toggle Button -->
+            <button class="theme-toggle" id="themeToggleBtn" title="Switch Theme">
+                🌙
+            </button>
+
+            <!-- Mobile Hamburger Toggle -->
+            <button class="mobile-toggle" id="mobileToggleBtn" aria-label="Toggle menu">
+                ☰
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content reveal">
+            <div class="badge">
+                <span class="badge-pulse"></span>
+                Next-Gen Smart Campus Platform
+            </div>
+
+            <h1>
+                Smart Campus.<br>
+                <span class="gradient-text">One Scan Away.</span>
+            </h1>
+
+            <p class="lead-text">
+                Experience ultra-fast, QR-powered access to every corner of your university. 
+                Get instant real-time access to library availability, transport tracking, and campus events in under 0.04s.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="{% url 'service_selection' %}" class="btn-primary">
+                    Explore Directory <span>&rarr;</span>
+                </a>
+                <a href="{% url 'page_render' page_name='login.html' %}" class="btn-secondary">
+                    Sign In
+                </a>
+            </div>
+
+            <div class="feature-strip reveal">
+                <div class="feature-pill"><span>⚡</span> Real-time access</div>
+                <div class="feature-pill"><span>📍</span> Campus tracking</div>
+                <div class="feature-pill"><span>🔐</span> Secure check-ins</div>
+            </div>
+
+            <!-- DJANGO QR SCANNER LOGS CONSOLE -->
+            <div id="qrLogsConsole" class="qr-status-card reveal" {% if not logs %}style="display: none;"{% endif %}>
+                <div class="qr-status-card-header">
+                    <span>🔍 QR System Diagnostics &amp; Logs</span>
+                    <span style="font-size: 11px; color: var(--emerald);">● Active</span>
+                </div>
+                <div id="qrLogsContent">
+                    {% if logs %}
+                        {% for log in logs %}
+                            <div class="qr-log-item">
+                                <span style="color: var(--primary-light);">&gt;</span> {{ log }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- HERO VISUAL: PREMIUM SAAS GLASSMOPHISM MOCKUP -->
+        <div class="hero-visual reveal">
+            <div class="hero-glass-container">
+                <div class="dashboard-header">
+                    <div class="dashboard-user">
+                        <div class="avatar-box">🏫</div>
+                        <div>
+                            <h4>Campus Hub</h4>
+                            <p>Live Active Services Grid</p>
+                        </div>
+                    </div>
+                    <div class="live-status-pill">
+                        <span class="dot"></span> Online
+                    </div>
+                </div>
+
+                <!-- Live HUD Scanner Simulation -->
+                <div class="scanner-hud-box">
+                    <div class="hud-qr-icon">📱</div>
+                    <div class="hud-title">Instant Camera HUD Ready</div>
+                    <div class="hud-sub">Point &amp; Scan any campus station QR tag</div>
+                </div>
+
+                <!-- Mini Quick Action Grid -->
+                <div class="mini-services-grid">
+                    <a href="{% url 'service_selection' %}" class="mini-item">
+                        <div class="mini-item-icon">📚</div>
+                        <div class="mini-item-info">
+                            <h5>Library</h5>
+                            <p>Seats Open</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'service_selection' %}" class="mini-item">
+                        <div class="mini-item-icon">🚌</div>
+                        <div class="mini-item-info">
+                            <h5>Transport</h5>
+                            <p>Live Routes</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'service_selection' %}" class="mini-item">
+                        <div class="mini-item-icon">🍴</div>
+                        <div class="mini-item-info">
+                            <h5>Cafeteria</h5>
+                            <p>Menu Ready</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'service_selection' %}" class="mini-item">
+                        <div class="mini-item-icon">🏥</div>
+                        <div class="mini-item-info">
+                            <h5>Medical</h5>
+                            <p>24/7 Desk</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Floating Micro Stat Badge -->
+                <div class="floating-stat-badge">
+                    <span style="font-size: 20px;">⚡</span>
+                    <div>
+                        <div class="stat-val">0.04s</div>
+                        <div class="stat-lbl">Ultra Scan Speed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLATFORM STATS BAR -->
+    <section class="stats-bar reveal">
+        <div class="stat-item reveal">
+            <h3>100%</h3>
+            <p>Contactless &amp; Instant</p>
+        </div>
+        <div class="stat-item reveal">
+            <h3>0.04s</h3>
+            <p>Average Scan Speed</p>
+        </div>
+        <div class="stat-item reveal">
+            <h3>15K+</h3>
+            <p>Daily Student Scans</p>
+        </div>
+        <div class="stat-item reveal">
+            <h3>99.9%</h3>
+            <p>Platform Uptime</p>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section class="services reveal" id="services">
+        <div class="section-header reveal">
+            <span class="section-tag">Campus Ecosystem</span>
+            <h2>Integrated Services</h2>
+            <p>Everything you need across your campus, organized into high-speed digital modules.</p>
+        </div>
+
+        <div class="services-grid">
+            <a href="{% url 'service_selection' %}" class="service-box reveal">
+                <div class="s-icon-wrapper">📚</div>
+                <h3>Library</h3>
+                <p>Explore digital catalogs, track live open seating, and view operating hours.</p>
+                <div class="service-link-btn">Access Module &rarr;</div>
+            </a>
+
+            <a href="{% url 'service_selection' %}" class="service-box reveal">
+                <div class="s-icon-wrapper">🚌</div>
+                <h3>Transport</h3>
+                <p>Live shuttle tracking, route schedules, and real-time arrival estimates.</p>
+                <div class="service-link-btn">Access Module &rarr;</div>
+            </a>
+
+            <a href="{% url 'service_selection' %}" class="service-box reveal">
+                <div class="s-icon-wrapper">🍴</div>
+                <h3>Cafeteria</h3>
+                <p>Digital menus, meal prep schedules, and stall queue metrics.</p>
+                <div class="service-link-btn">Access Module &rarr;</div>
+            </a>
+
+            <a href="{% url 'service_selection' %}" class="service-box reveal">
+                <div class="s-icon-wrapper">🏥</div>
+                <h3>Medical</h3>
+                <p>Emergency medical hotline, dispensary hours, and health desks.</p>
+                <div class="service-link-btn">Access Module &rarr;</div>
+            </a>
+
+            <a href="{% url 'service_selection' %}" class="service-box reveal">
+                <div class="s-icon-wrapper">🎉</div>
+                <h3>Events</h3>
+                <p>Hackathons, club announcements, and university fests calendar.</p>
+                <div class="service-link-btn">Access Module &rarr;</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- WORKFLOW SECTION -->
+    <section class="workflow reveal" id="workflow">
+        <div class="section-header reveal">
+            <span class="section-tag">Simple &amp; Seamless</span>
+            <h2>How It Works</h2>
+            <p>Three effortless steps connecting you to your university digital infrastructure.</p>
+        </div>
+
+        <div class="steps-container">
+            <div class="step-card reveal">
+                <div class="step-tag">01</div>
+                <h3>Quick Register</h3>
+                <p>Create your student credential securely in seconds using your official campus ID.</p>
+            </div>
+
+            <div class="step-card reveal">
+                <div class="step-tag">02</div>
+                <h3>Scan Location QR</h3>
+                <p>Point your smartphone camera at any QR tag installed across university desks.</p>
+            </div>
+
+            <div class="step-card reveal">
+                <div class="step-tag">03</div>
+                <h3>Instant Insights</h3>
+                <p>Receive live schedules, room availability, and operational updates instantly on screen.</p>
+            </div>
+        </div>
+
+        <div class="workflow-demo reveal">
+            <div class="workflow-demo-copy">
+                <span class="mini-tag">30 sec demo</span>
+                <h3>See the SmartCampusQR flow in action.</h3>
+                <p>
+                    From student login to QR scanning and live campus updates, the complete journey is designed to feel instant,
+                    intuitive, and highly secure for every student on campus.
+                </p>
+                <div class="demo-meta">
+                    <span class="demo-pill">Register</span>
+                    <span class="demo-pill">Scan</span>
+                    <span class="demo-pill">Access</span>
+                </div>
+            </div>
+
+            <div class="workflow-video-wrap">
+                <img class="workflow-image" src="campus_demo.gif" alt="SmartCampusQR demo animation" />
+                <span class="video-badge">00:30 Demo</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIVE QR SIMULATOR -->
+    <section class="simulator-section reveal" id="simulator">
+        <div class="section-header reveal">
+            <span class="section-tag">Interactive Preview</span>
+            <h2>Live QR Decoding Engine</h2>
+            <p>Simulate scanning location QR tags installed across campus desks in real time.</p>
+        </div>
+
+        <div class="simulator-container reveal">
+            <div class="sim-presets">
+                <h3>Select Campus QR Tag</h3>
+                <p>Click a station preset below to test how python-pyzbar decodes location payload tags instantly.</p>
+                <div class="sim-btn-list">
+                    <button class="sim-btn active" onclick="simulateQR('Library Seat #42', '/service-selection/', '📚 Central Library - Floor 2', this)">
+                        <span>📚 Central Library Tag</span>
+                        <span>&rarr;</span>
+                    </button>
+                    <button class="sim-btn" onclick="simulateQR('Campus Shuttle #4', '/service-selection/', '🚌 Shuttle Route B - Live En Route', this)">
+                        <span>🚌 Campus Bus Shuttle</span>
+                        <span>&rarr;</span>
+                    </button>
+                    <button class="sim-btn" onclick="simulateQR('Cafeteria Counter 2', '/service-selection/', '🍴 Food Court - Open Queue', this)">
+                        <span>🍴 Main Cafeteria Tag</span>
+                        <span>&rarr;</span>
+                    </button>
+                    <button class="sim-btn" onclick="simulateQR('Dispensary Station', '/service-selection/', '🏥 Health Desk - Duty Doctor Active', this)">
+                        <span>🏥 Emergency Health Desk</span>
+                        <span>&rarr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sim-result-box">
+                <div class="sim-qr-preview">
+                    <img src="smart_campus_qr.png" alt="Smart Campus QR Tag" id="simQrImg" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%230f172a%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%233b82f6%22 font-size=%2230%22%3EQR%3C/text%3E%3C/svg%3E';">
+                </div>
+                <div class="sim-data-display" id="simDataDisplay">
+                    QR DATA: http://127.0.0.1:8000/service-selection/
+                </div>
+                <h4 id="simLocationTitle" style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">📚 Central Library - Floor 2</h4>
+                <p id="simStatusText" style="font-size: 13px; color: var(--emerald); font-weight: 600; margin-bottom: 16px;">● 94 Seats Available &bull; Latency 0.03s</p>
+                <a href="{% url 'service_selection' %}" class="btn-primary" style="padding: 10px 20px; font-size: 13px; width: 100%;">
+                    Launch Station Portal &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer>
+        <!-- CTA Banner -->
+        <div class="footer-banner">
+            <div class="footer-banner-text">
+                <h3>Ready to Transform Your Campus Experience?</h3>
+                <p>Scan location QR tags or browse services directly from your student portal.</p>
+            </div>
+            <a href="{% url 'service_selection' %}" class="btn-primary">
+                Explore Services &rarr;
+            </a>
+        </div>
+
+        <!-- Multi-Column Grid -->
+        <div class="footer-grid">
+            <!-- Brand Column -->
+            <div class="footer-col footer-col-brand">
+                <a href="{% url 'welcome' %}" class="footer-logo">
+                    <div class="logo-icon" style="width: 36px; height: 36px; font-size: 18px;">⚡</div>
+                    Smart<span>CampusQR</span>
+                </a>
+                <p>
+                    Empowering universities with ultra-fast, contactless QR-powered access to library, transport, cafeteria, and campus operations.
+                </p>
+                <div class="footer-status-pill">
+                    <span style="width: 6px; height: 6px; background-color: var(--emerald); border-radius: 50%;"></span>
+                    All Campus Systems Operational
+                </div>
+            </div>
+
+            <!-- Column 1: Quick Links -->
+            <div class="footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="{% url 'welcome' %}">Home</a></li>
+                    <li><a href="#services">Services Grid</a></li>
+                    <li><a href="#workflow">Workflow Guide</a></li>
+                    <li><a href="{% url 'service_selection' %}">Service Selection</a></li>
+                    <li><a href="{% url 'python_scan' %}">Python QR Scanner</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 2: Campus Modules -->
+            <div class="footer-col">
+                <h4>Modules</h4>
+                <ul>
+                    <li><a href="{% url 'service_selection' %}">Digital Library</a></li>
+                    <li><a href="{% url 'service_selection' %}">Live Transport</a></li>
+                    <li><a href="{% url 'service_selection' %}">Cafeteria Menu</a></li>
+                    <li><a href="{% url 'service_selection' %}">Medical &amp; Health</a></li>
+                    <li><a href="{% url 'service_selection' %}">Campus Events</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Portals & Access -->
+            <div class="footer-col">
+                <h4>Portals</h4>
+                <ul>
+                    <li><a href="{% url 'page_render' page_name='login.html' %}">Student Sign In</a></li>
+                    <li><a href="{% url 'page_render' page_name='register.html' %}">Register Account</a></li>
+                    <li><a href="{% url 'generate_qr' %}">QR Code Generator</a></li>
+                    <li><a href="/admin/">Admin Console</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Copyright & Utility Bar -->
+        <div class="footer-bottom">
+            <div>
+                &copy; 2026 SmartCampusQR &mdash; Built for next-gen universities.
+            </div>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Security</a>
+                <a href="#">System Status</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT FOR INTERACTIVITY & THEME -->
+    <script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const htmlElement = document.documentElement;
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', currentTheme);
+        themeToggleBtn.textContent = currentTheme === 'dark' ? '🌙' : '☀️';
+
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = htmlElement.getAttribute('data-theme');
+            let newTheme = theme === 'dark' ? 'light' : 'dark';
+            
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggleBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+        });
+
+        // Mobile Menu Toggle
+        const mobileToggleBtn = document.getElementById('mobileToggleBtn');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileToggleBtn && navLinks) {
+            mobileToggleBtn.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                mobileToggleBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+            });
+        }
+
+        // Live QR Tag Simulator Interactivity
+        function simulateQR(tag, url, locationInfo, btnElement) {
+            document.querySelectorAll('.sim-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+            
+            const displayEl = document.getElementById('simDataDisplay');
+            const titleEl = document.getElementById('simLocationTitle');
+            const statusEl = document.getElementById('simStatusText');
+            
+            if (displayEl && titleEl && statusEl) {
+                displayEl.textContent = 'QR DATA: ' + url;
+                titleEl.textContent = locationInfo;
+                statusEl.textContent = '● Verified Active • Latency 0.03s';
+            }
+        }
+
+        // Reveal on scroll animation
+        const revealItems = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        revealItems.forEach((item) => revealObserver.observe(item));
+
+        const heroGlass = document.querySelector('.hero-glass-container');
+        if (heroGlass) {
+            window.addEventListener('pointermove', (event) => {
+                const { innerWidth, innerHeight } = window;
+                const rotateY = ((event.clientX / innerWidth) - 0.5) * 10;
+                const rotateX = (0.5 - (event.clientY / innerHeight)) * 8;
+                heroGlass.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+            });
+
+            window.addEventListener('pointerleave', () => {
+                heroGlass.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0)';
+            });
+        }
+
+        // Safeguard to prevent uncompiled template tags from displaying in static file view
+        const consoleEl = document.getElementById('qrLogsConsole');
+        const contentEl = document.getElementById('qrLogsContent');
+        if (consoleEl && contentEl) {
+            if (contentEl.innerHTML.includes('{%') || contentEl.children.length === 0) {
+                consoleEl.style.display = 'none';
+            }
+        }
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Smart Campus QR</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        [data-theme="light"] {
+            --bg-main: #edf3fb;
+            --surface: rgba(255, 255, 255, 0.75);
+            --surface-strong: #ffffff;
+            --text-main: #101828;
+            --text-muted: #5f6f86;
+            --primary: #4f46e5;
+            --primary-2: #8b5cf6;
+            --primary-soft: rgba(79, 70, 229, 0.12);
+            --border: rgba(148, 163, 184, 0.25);
+            --input-bg: #f8fafc;
+            --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+            --glow: rgba(79, 70, 229, 0.2);
+            --success: #10b981;
+        }
+
+        [data-theme="dark"] {
+            --bg-main: #070d1a;
+            --surface: rgba(15, 23, 42, 0.78);
+            --surface-strong: #111827;
+            --text-main: #edf2ff;
+            --text-muted: #9aa8bd;
+            --primary: #7c8cff;
+            --primary-2: #a78bfa;
+            --primary-soft: rgba(124, 140, 255, 0.14);
+            --border: rgba(148, 163, 184, 0.18);
+            --input-bg: rgba(15, 23, 42, 0.72);
+            --shadow: 0 22px 45px rgba(2, 6, 23, 0.45);
+            --glow: rgba(124, 140, 255, 0.25);
+            --success: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            position: relative;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(79, 70, 229, 0.18), transparent 24%),
+                radial-gradient(circle at 90% 20%, rgba(168, 85, 247, 0.12), transparent 22%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.1), transparent 25%),
+                var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 22px 40px 16px;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.28;
+            pointer-events: none;
+            animation: drift 18s ease-in-out infinite alternate;
+            z-index: 0;
+        }
+
+        body::before {
+            background: rgba(99, 102, 241, 0.45);
+            top: -120px;
+            left: -80px;
+        }
+
+        body::after {
+            background: rgba(168, 85, 247, 0.32);
+            right: -100px;
+            bottom: -100px;
+            animation-delay: 4s;
+        }
+
+        @keyframes drift {
+            0% { transform: translate3d(0, 0, 0) scale(1); }
+            100% { transform: translate3d(30px, -25px, 0) scale(1.12); }
+        }
+
+        nav,
+        .auth-shell,
+        footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 8px 0 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.28rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            letter-spacing: -0.04em;
+        }
+
+        .logo i {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            box-shadow: 0 12px 24px var(--glow);
+            transform: rotate(-4deg);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(18deg) scale(1.05);
+            box-shadow: 0 16px 28px var(--glow);
+        }
+
+        .auth-shell {
+            max-width: 1200px;
+            width: 100%;
+            margin: 34px auto 18px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 28px;
+        }
+
+        .visual-panel {
+            background: linear-gradient(135deg, rgba(255,255,255,0.48), rgba(255,255,255,0.16));
+            border: 1px solid var(--border);
+            border-radius: 34px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 640px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.9s ease both;
+        }
+
+        .visual-panel::before,
+        .visual-panel::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: 0.8;
+        }
+
+        .visual-panel::before {
+            width: 240px;
+            height: 240px;
+            right: -80px;
+            top: -60px;
+            background: radial-gradient(circle, rgba(165, 180, 252, 0.7), transparent 60%);
+            animation: floatOrb 14s ease-in-out infinite alternate;
+        }
+
+        .visual-panel::after {
+            width: 220px;
+            height: 220px;
+            left: -60px;
+            bottom: -50px;
+            background: radial-gradient(circle, rgba(217, 70, 239, 0.55), transparent 60%);
+            animation: floatOrb 18s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes floatOrb {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(18px, -24px) scale(1.1); }
+        }
+
+        .scanner-device {
+            position: relative;
+            width: 100%;
+            max-width: 560px;
+            min-height: 520px;
+            background: linear-gradient(180deg, #101827 0%, #030712 100%);
+            border: 1px solid rgba(124, 140, 255, 0.28);
+            border-radius: 34px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 28px rgba(99, 102, 241, 0.15);
+            padding: 20px;
+            animation: floatDevice 15s ease-in-out infinite;
+        }
+
+        @keyframes floatDevice {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .device-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 6px 8px 0;
+        }
+
+        .device-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #f8fafc;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .device-brand .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 18px rgba(168, 85, 247, 0.55);
+        }
+
+        .live-pill {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.4);
+            color: #34d399;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.18);
+        }
+
+        .live-pill span {
+            width: 7px;
+            height: 7px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: pulseDot 1.6s infinite ease-in-out;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.6); opacity: 0.5; }
+        }
+
+        .scanner-screen {
+            position: relative;
+            height: 410px;
+            background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 80%);
+            border: 1px solid rgba(124, 140, 255, 0.2);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .scanner-screen::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+            animation: scanSweep 5s linear infinite;
+        }
+
+        @keyframes scanSweep {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scan-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(124, 140, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 140, 255, 0.08) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        .story-stage {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kiosk-station {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 110px;
+            height: 150px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            box-shadow: 0 0 18px rgba(168, 85, 247, 0.22);
+            z-index: 2;
+            animation: kioskPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes kioskPulse {
+            0%, 100% { box-shadow: 0 0 18px rgba(168, 85, 247, 0.22); }
+            50% { box-shadow: 0 0 28px rgba(168, 85, 247, 0.4); }
+        }
+
+        .kiosk-qr {
+            width: 64px;
+            height: 64px;
+            background: white;
+            border-radius: 6px;
+            padding: 5px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .kiosk-qr::before {
+            content: "";
+            position: absolute;
+            inset: 5px;
+            background: repeating-linear-gradient(0deg, #0f172a 0, #0f172a 5px, transparent 5px, transparent 10px);
+            border-radius: 3px;
+        }
+
+        .kiosk-text {
+            color: #c084fc;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .scanning-student {
+            position: absolute;
+            left: 55px;
+            bottom: 40px;
+            width: 120px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+            animation: studentScanCycle 10s infinite cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes studentScanCycle {
+            0% { transform: translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 1; transform: translateX(40px); }
+            25% { transform: translateX(40px) translateY(-3px); }
+            75% { transform: translateX(40px) translateY(0); }
+            90% { opacity: 1; transform: translateX(0); }
+            100% { opacity: 0; transform: translateX(-30px); }
+        }
+
+        .s-head {
+            width: 44px;
+            height: 46px;
+            background: #fed7aa;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 10px rgba(254, 215, 170, 0.4);
+        }
+
+        .s-hair {
+            position: absolute;
+            top: -3px;
+            left: -2px;
+            right: -2px;
+            height: 24px;
+            background: #38bdf8;
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 8px #38bdf8;
+        }
+
+        .s-body {
+            width: 62px;
+            height: 75px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+            border-radius: 20px 20px 12px 12px;
+            margin-top: -4px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+        }
+
+        .s-arm {
+            position: absolute;
+            top: 16px;
+            right: -26px;
+            width: 38px;
+            height: 14px;
+            background: #8b5cf6;
+            border-radius: 7px;
+            transform: rotate(-20deg);
+        }
+
+        .s-phone {
+            position: absolute;
+            right: -36px;
+            top: 2px;
+            width: 20px;
+            height: 32px;
+            background: #0f172a;
+            border: 2px solid #22d3ee;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #22d3ee;
+            animation: phoneFlash 10s infinite;
+        }
+
+        @keyframes phoneFlash {
+            0%, 20% { border-color: #0f172a; box-shadow: none; }
+            25%, 75% { border-color: #22d3ee; box-shadow: 0 0 18px #22d3ee; }
+            80%, 100% { border-color: #0f172a; box-shadow: none; }
+        }
+
+        .s-legs {
+            display: flex;
+            gap: 8px;
+            margin-top: -2px;
+        }
+
+        .s-leg {
+            width: 16px;
+            height: 42px;
+            background: #1e293b;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .laser-beam {
+            position: absolute;
+            left: 140px;
+            top: 155px;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #22d3ee, #34d399);
+            box-shadow: 0 0 15px #22d3ee, 0 0 5px #34d399;
+            opacity: 0;
+            z-index: 4;
+            animation: laserActive 10s infinite;
+        }
+
+        @keyframes laserActive {
+            0%, 22% { opacity: 0; width: 0; }
+            25% { opacity: 1; width: 65px; }
+            75% { opacity: 1; width: 65px; }
+            80%, 100% { opacity: 0; width: 0; }
+        }
+
+        .service-dashboard-popup {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.7);
+            width: 280px;
+            background: rgba(11, 17, 32, 0.95);
+            border: 1px solid rgba(52, 211, 153, 0.6);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(52, 211, 153, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .service-dashboard-popup.open {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+        }
+
+        .service-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .service-title {
+            color: #f8fafc;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .service-title i {
+            color: #34d399;
+            text-shadow: 0 0 10px #34d399;
+        }
+
+        .service-badge {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3));
+            color: #34d399;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 99px;
+            border: 1px solid rgba(52, 211, 153, 0.4);
+        }
+
+        .service-grid-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .service-item-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(124, 140, 255, 0.25);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .service-item-card:hover {
+            border-color: #22d3ee;
+            box-shadow: 0 0 12px rgba(34, 211, 238, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .service-item-card i {
+            font-size: 1.1rem;
+            color: #22d3ee;
+            margin-bottom: 4px;
+            text-shadow: 0 0 8px rgba(34, 211, 238, 0.6);
+        }
+
+        .service-item-card span {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            bottom: 12px;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .timeline-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ec4899, #8b5cf6, #22d3ee, #34d399);
+            animation: progressTimeline 10s linear infinite;
+        }
+
+        @keyframes progressTimeline {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .auth-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 32px 30px 26px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeUp 0.9s ease 0.15s both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            margin-bottom: 6px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+            border: 1px solid rgba(79, 70, 229, 0.12);
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            box-shadow: 0 0 8px rgba(79, 70, 229, 0.55);
+        }
+
+        .auth-header h1 {
+            font-size: clamp(2.2rem, 2.9vw, 3.2rem);
+            letter-spacing: -0.065em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.08;
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            line-height: 1.7;
+        }
+
+        .form-group {
+            margin-top: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.84rem;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i.field-icon {
+            position: absolute;
+            left: 16px;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 15px 16px 15px 46px;
+            border-radius: 14px;
+            font-size: 0.96rem;
+            color: var(--text-main);
+            outline: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+        }
+
+        .form-control:hover {
+            border-color: rgba(79,70,229,0.35);
+        }
+
+        .form-control:focus {
+            border-color: rgba(79,70,229,0.72);
+            box-shadow: 0 0 0 4px rgba(79,70,229,0.12);
+            background: var(--surface-strong);
+        }
+
+        .form-actions-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 0 24px;
+            font-size: 0.8rem;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+        }
+
+        .remember-me input {
+            accent-color: var(--primary);
+        }
+
+        .forgot-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .btn-submit {
+            position: relative;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: white;
+            padding: 16px 18px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 12px 26px var(--glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+            transform: translateX(-120%);
+            animation: buttonShimmer 2.8s ease-in-out infinite;
+        }
+
+        @keyframes buttonShimmer {
+            0% { transform: translateX(-120%); }
+            45%, 100% { transform: translateX(120%); }
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px var(--glow);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 14px;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .social-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            flex: 1;
+            border: 1px solid var(--border);
+            background: var(--surface-strong);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.03);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(79,70,229,0.2);
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+        }
+
+        .auth-footer-text {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 24px;
+        }
+
+        .auth-footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-top: 15px;
+        }
+
+        @media (max-width: 960px) {
+            .auth-shell { grid-template-columns: 1fr; }
+            .visual-panel { min-height: 480px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav>
+        <a href="welcome.html" class="logo">
+            <i class="fa-solid fa-qrcode"></i> Smart Campus QR
+        </a>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggleBtn" title="Toggle Day/Night Mode">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="auth-shell">
+        <!-- Colorful & Black Cinematic Scan Panel -->
+        <div class="visual-panel">
+            <div class="scanner-device">
+                <div class="device-top">
+                    <div class="device-brand">
+                        <div class="icon"><i class="fa-solid fa-qrcode"></i></div>
+                        Smart Campus QR
+                    </div>
+                    <div class="live-pill"><span></span> Cyber Neon Live</div>
+                </div>
+
+                <div class="scanner-screen">
+                    <div class="scan-grid"></div>
+
+                    <!-- Story Stage -->
+                    <div class="story-stage">
+                        <!-- Kiosk Station with QR Code -->
+                        <div class="kiosk-station">
+                            <div class="kiosk-qr"></div>
+                            <span class="kiosk-text">Gate QR</span>
+                        </div>
+
+                        <!-- Neon Laser Scanner Beam -->
+                        <div class="laser-beam"></div>
+
+                        <!-- Colorful Animated Student Scanning with Mobile -->
+                        <div class="scanning-student">
+                            <div class="s-head">
+                                <div class="s-hair"></div>
+                            </div>
+                            <div class="s-body">
+                                <div class="s-arm">
+                                    <div class="s-phone"></div>
+                                </div>
+                            </div>
+                            <div class="s-legs">
+                                <div class="s-leg"></div>
+                                <div class="s-leg"></div>
+                            </div>
+                        </div>
+
+                        <!-- Colorful Service Dashboard Popup -->
+                        <div class="service-dashboard-popup" id="servicePopup">
+                            <div class="service-top-row">
+                                <span class="service-title"><i class="fa-solid fa-bolt"></i> Campus Services</span>
+                                <span class="service-badge">Unlocked</span>
+                            </div>
+                            <div class="service-grid-items">
+                                <div class="service-item-card">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <span>ID Pass</span>
+                                </div>
+                                <div class="service-item-card">
+                                    <i class="fa-solid fa-utensils"></i>
+                                    <span>Cafeteria</span>
+                                </div>
+                                <div class="service-item-card">
+                                    <i class="fa-solid fa-book-open"></i>
+                                    <span>Library</span>
+                                </div>
+                                <div class="service-item-card">
+                                    <i class="fa-solid fa-bus"></i>
+                                    <span>Transit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Progress Bar -->
+                    <div class="timeline-progress">
+                        <div class="timeline-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Form Panel -->
+        <div class="auth-container">
+            <div class="auth-header">
+                <span class="eyebrow">Secure Access</span>
+                <h1>Welcome Back</h1>
+                <p>Enter your credentials to access your campus dashboard</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">Campus Email or ID</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope field-icon"></i>
+                        <input type="text" id="email" class="form-control" placeholder="student@campus.edu" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock field-icon"></i>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-actions-row">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember"> Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <span>Sign In</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="divider">or continue with</div>
+
+            <div class="social-row">
+                <button type="button" class="social-btn"><i class="fa-brands fa-google"></i> Google</button>
+                <button type="button" class="social-btn"><i class="fa-brands fa-microsoft"></i> Microsoft</button>
+            </div>
+
+            <div class="auth-footer-text">
+                Don't have an account? <a href="register.html">Register here</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Smart Campus QR. All Rights Reserved.
+    </footer>
+
+    <!-- Script to Trigger Service Window Pop-up in sync with Scan -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle logic
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const themeIcon = document.getElementById('themeIcon');
+            const htmlElement = document.documentElement;
+
+            const savedTheme = localStorage.getItem('campus_theme') || 'light';
+            htmlElement.setAttribute('data-theme', savedTheme);
+            themeIcon.className = savedTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+
+            themeToggleBtn.addEventListener('click', () => {
+                const currentTheme = htmlElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                htmlElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('campus_theme', newTheme);
+                themeIcon.className = newTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            });
+
+            // Sync Service Popup with Scanning Animation Loop (10s cycle)
+            const servicePopup = document.getElementById('servicePopup');
+
+            function runServicePopupSequence() {
+                setTimeout(() => {
+                    servicePopup.classList.add('open');
+                }, 2500);
+
+                setTimeout(() => {
+                    servicePopup.classList.remove('open');
+                }, 7500);
+            }
+
+            runServicePopupSequence();
+            setInterval(runServicePopupSequence, 10000);
+
+            // Form submit simulation
+            document.getElementById('loginForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Login successful! Redirecting...');
+                window.location.href = 'scanner.html';
+            });
+        });
+    </script>
+</body>
+</html>
