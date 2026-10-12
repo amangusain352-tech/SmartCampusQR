@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart CampusQR - Teacher Portal & Extended Registration</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Font Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#060812',
+              card: '#0d1122',
+              border: '#1f2942',
+              purple: '#6366f1',
+              neon: '#818cf8',
+              pink: '#c084fc',
+              cyan: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #060812;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+    }
+
+    .bg-glow {
+      background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.22) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 40%, rgba(192, 132, 252, 0.18) 0%, transparent 45%),
+                  radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.15) 0%, transparent 50%);
+    }
+
+    .glass-card {
+      background: rgba(13, 17, 34, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(129, 140, 248, 0.4);
+      box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+      transition: all 0.3s ease;
+    }
+    .btn-gradient:hover {
+      box-shadow: 0 6px 28px rgba(168, 85, 247, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-dark {
+      background: rgba(22, 28, 50, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    .btn-dark:hover {
+      background: rgba(35, 43, 74, 0.95);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .pill-glow {
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.25);
+    }
+
+    @keyframes scan {
+      0% { top: 0%; opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { top: 95%; opacity: 0.8; }
+    }
+    .scanner-line {
+      animation: scan 2.2s infinite ease-in-out;
+    }
+
+    .form-input {
+      background: rgba(8, 11, 22, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      transition: all 0.2s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #818cf8;
+      box-shadow: 0 0 12px rgba(129, 140, 248, 0.35);
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #060812;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1f2942;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-glow">
+
+  <!-- Top Navbar Header -->
+  <header class="w-full border-b border-white/5 bg-slate-950/70 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="handleLogoClick()">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <i class="fa-solid fa-bolt text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-1">
+            <span class="text-xl font-extrabold tracking-tight text-white">Smart</span>
+            <span class="text-xl font-extrabold tracking-tight text-indigo-400">CampusQR</span>
+          </div>
+          <span class="text-[10px] uppercase tracking-widest text-indigo-300/70 font-semibold block -mt-1">Faculty & Educator Hub</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links (Logged In View) -->
+      <nav id="navLinks" class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+        <button onclick="scrollToTop()" class="hover:text-indigo-400 transition-colors py-1">Dashboard</button>
+        <button onclick="openAttendanceModal()" class="hover:text-indigo-400 transition-colors py-1">Classes</button>
+        <button onclick="openQRModal()" class="hover:text-indigo-400 transition-colors py-1 flex items-center">
+          <span class="relative flex h-2 w-2 mr-1.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>QR Scanner HUD</span>
+        </button>
+        <button onclick="openGradingModal()" class="hover:text-indigo-400 transition-colors py-1">Grading</button>
+        <button onclick="openNoticeModal()" class="hover:text-indigo-400 transition-colors py-1">Notice Board</button>
+      </nav>
+
+      <!-- Session Actions -->
+      <div class="flex items-center space-x-3">
+        <!-- Auth Badge when logged out -->
+        <div id="authHeaderStatus" class="flex items-center space-x-2">
+          <span class="inline-flex items-center space-x-1.5 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1.5 rounded-full text-indigo-300 text-xs font-semibold">
+            <i class="fa-solid fa-shield-halved text-xs"></i>
+            <span>Faculty Verification Required</span>
+          </span>
+        </div>
+
+        <!-- Logged-in Teacher Info & Profile Menu -->
+        <div id="userHeaderProfile" class="hidden items-center space-x-3">
+          <button onclick="openProfileModal()" class="flex items-center space-x-2 bg-slate-900/90 border border-indigo-500/30 hover:border-indigo-400 px-3.5 py-1.5 rounded-xl transition-all">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xs font-bold border border-indigo-300/40" id="avatarInitials">
+              TS
+            </div>
+            <div class="text-left hidden sm:block">
+              <p class="text-xs font-bold text-white leading-tight" id="loggedInTeacherName">Prof. Teacher</p>
+              <p class="text-[10px] text-indigo-300 font-mono" id="loggedInFacultyId">FAC-0000</p>
+            </div>
+          </button>
+
+          <button onclick="logoutTeacher()" class="btn-dark text-rose-300 hover:text-rose-200 text-xs font-semibold px-3.5 py-2.5 rounded-xl flex items-center space-x-2 border-rose-500/30 hover:border-rose-500/50" title="Sign Out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span class="hidden sm:inline">Logout</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+
+    <!-- SECTION 1: EXPANDED AUTHENTICATION & MULTI-FIELD REGISTRATION PORTAL -->
+    <section id="authSection" class="w-full my-4 flex items-center justify-center">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center w-full">
+        
+        <!-- Left Side Information Box -->
+        <div class="lg:col-span-5 space-y-6 text-left">
+          <div class="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-indigo-950/80 border border-indigo-500/30 text-indigo-300 text-xs font-semibold pill-glow">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Faculty Registration Portal v2.4</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-5xl font-black text-white tracking-tight leading-[1.15]">
+            Faculty Onboarding &<br>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400">
+              Campus Access System.
+            </span>
+          </h1>
+
+          <p class="text-slate-400 text-sm sm:text-base leading-relaxed">
+            Register your faculty profile with cabin location, free call hours, department credentials, and contact information to access the Smart CampusQR Educator Suite.
+          </p>
+
+          <!-- Highlights Cards -->
+          <div class="space-y-3 pt-2">
+            <div class="glass-card rounded-2xl p-4 border border-white/5 flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-lg shrink-0">
+                <i class="fa-solid fa-door-open"></i>
+              </div>
+              <div>
+                <h4 class="text-white text-xs font-bold">Cabin & Free Call Hours</h4>
+                <p class="text-slate-400 text-[11px]">Help students find your cabin and schedule call consultations.</p>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-4 border border-white/5 flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg shrink-0">
+                <i class="fa-solid fa-qrcode"></i>
+              </div>
+              <div>
+                <h4 class="text-white text-xs font-bold">Live Student QR Attendance</h4>
+                <p class="text-slate-400 text-[11px]">Scan student cards or issue session QR codes instantly.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side Multi-Field Registration / Login Container -->
+        <div class="lg:col-span-7 w-full max-w-2xl mx-auto">
+          <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative">
+            
+            <!-- Auth Form Switch Tabs -->
+            <div class="flex items-center justify-between bg-slate-950/90 p-1.5 rounded-2xl border border-white/10 mb-6">
+              <button id="loginTabBtn" onclick="switchAuthTab('login')" class="w-1/2 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all">
+                Existing Teacher Sign In
+              </button>
+              <button id="registerTabBtn" onclick="switchAuthTab('register')" class="w-1/2 py-2.5 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md">
+                Register New Faculty
+              </button>
+            </div>
+
+            <!-- FORM 1: LOGIN FORM -->
+            {% if messages %}
+              <div class="mb-4 space-y-2" role="alert">
+                {% for message in messages %}
+                  <p class="rounded-xl border border-rose-500/30 bg-rose-950/40 px-3 py-2 text-xs text-rose-200">{{ message }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form id="loginForm" method="post" action="{% url 'teacher_login' %}" class="space-y-4 hidden">
+              {% csrf_token %}
+              <div>
+                <label class="block text-slate-300 text-xs font-medium mb-1.5">Faculty Email / Employee ID</label>
+                <div class="relative">
+                  <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+                  <input type="text" id="loginEmail" name="identifier" required placeholder="sharma@university.edu or FAC-9042" class="w-full form-input pl-9 pr-4 py-2.5 rounded-xl text-sm">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-slate-300 text-xs font-medium mb-1.5">Password</label>
+                <div class="relative">
+                  <i class="fa-solid fa-key absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+                  <input type="password" id="loginPassword" name="password" required placeholder="••••••••" class="w-full form-input pl-9 pr-4 py-2.5 rounded-xl text-sm">
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                  <input type="checkbox" checked class="rounded border-slate-700 bg-slate-900 text-indigo-500 focus:ring-0">
+                  <span>Remember Session</span>
+                </label>
+                <a href="#" onclick="showNotification('Password reset link dispatched to department admin.', 'info')" class="text-indigo-400 hover:underline">Forgot Password?</a>
+              </div>
+
+              <button type="submit" class="w-full btn-gradient text-white font-bold py-3.5 rounded-2xl text-sm flex items-center justify-center space-x-2 mt-4">
+                <span>Sign In to Faculty Portal</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+              </button>
+            </form>
+
+            <!-- FORM 2: EXPANDED MULTI-FIELD REGISTRATION FORM -->
+            <form id="registerForm" method="post" action="{% url 'teacher_register' %}" class="space-y-4">
+              {% csrf_token %}
+              
+              <div class="p-3 rounded-2xl bg-indigo-950/40 border border-indigo-500/20 text-indigo-300 text-xs flex items-center space-x-2 mb-2">
+                <i class="fa-solid fa-circle-info text-indigo-400 text-sm shrink-0"></i>
+                <span>Fill in your complete faculty details to generate your campus profile card.</span>
+              </div>
+
+              <!-- Row 1: Full Name & Employee ID -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Full Name (with Prefix)</label>
+                  <input type="text" id="regName" name="full_name" required placeholder="Prof. Rajesh Sharma" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Faculty ID / Employee Code</label>
+                  <input type="text" id="regId" name="faculty_id" required placeholder="FAC-9042" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs font-mono">
+                </div>
+              </div>
+
+              <!-- Row 2: Department & Designation -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Department</label>
+                  <select id="regDept" name="department" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics & Comm.">Electronics & Comm.</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Applied Sciences">Applied Sciences</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Designation / Role</label>
+                  <select id="regRole" name="designation" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                    <option value="Assistant Professor">Assistant Professor</option>
+                    <option value="Associate Professor">Associate Professor</option>
+                    <option value="Head of Department (HOD)">Head of Department (HOD)</option>
+                    <option value="Visiting Faculty">Visiting Faculty</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Row 3: Mobile Number & Email Address -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Mobile / WhatsApp Number</label>
+                  <input type="tel" id="regPhone" name="phone" required placeholder="+91 98765-43210" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Official University Email</label>
+                  <input type="email" id="regEmail" name="email" required placeholder="sharma@university.edu" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+              </div>
+
+              <!-- Row 4: Cabin Number & Free Call Hours -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Cabin / Office Room No.</label>
+                  <input type="text" id="regCabin" name="cabin" required placeholder="Cabin C-204, IT Block Level 2" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Free Time for Call / Student Hours</label>
+                  <input type="text" id="regCallTime" name="call_hours" required placeholder="02:00 PM - 04:00 PM (Mon-Fri)" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+              </div>
+
+              <!-- Row 5: Primary Subjects Taught -->
+              <div>
+                <label class="block text-slate-300 text-xs font-semibold mb-1">Primary Subjects Taught</label>
+                <input type="text" id="regSubjects" name="subjects" required placeholder="CS-201 Data Structures, CS-305 Algorithms" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+              </div>
+
+              <!-- Row 6: Passwords -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Password</label>
+                  <input type="password" id="regPass" name="password" required placeholder="••••••••" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+                <div>
+                  <label class="block text-slate-300 text-xs font-semibold mb-1">Confirm Password</label>
+                  <input type="password" id="regConfirmPass" name="confirm_password" required placeholder="••••••••" class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+                </div>
+              </div>
+
+              <button type="submit" class="w-full btn-gradient text-white font-bold py-3.5 rounded-2xl text-xs sm:text-sm flex items-center justify-center space-x-2 mt-4">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Complete Registration & Open Dashboard</span>
+              </button>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: MAIN TEACHER DASHBOARD (UNLOCKED AFTER REGISTRATION/LOGIN) -->
+    <section id="dashboardSection" class="hidden space-y-8">
+      
+      <!-- Faculty Welcome Banner & Live Badge Card -->
+      <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 bg-gradient-to-r from-indigo-950/80 via-slate-900/90 to-purple-950/80 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="space-y-3 z-10 max-w-xl">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center space-x-1.5 bg-indigo-500/20 border border-indigo-400/30 px-3 py-1 rounded-full text-indigo-300 text-xs font-semibold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="welcomeDeptTag">Computer Science Department</span>
+            </span>
+            <span class="inline-flex items-center space-x-1 bg-purple-500/20 border border-purple-400/30 px-3 py-1 rounded-full text-purple-300 text-xs font-semibold" id="welcomeRoleTag">
+              Assistant Professor
+            </span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            <span id="dashGreeting">Welcome</span>, <span id="dashTeacherName" class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-300">Prof. Teacher</span>! 👋
+          </h2>
+          
+          <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+            Your teacher portal is synced with campus servers. Your office hours and cabin room are live for student consultations.
+          </p>
+        </div>
+
+        <!-- Faculty Details Badge Box -->
+        <div class="z-10 bg-slate-950/90 border border-indigo-500/30 rounded-2xl p-4 w-full lg:w-80 space-y-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-[10px] uppercase font-bold text-indigo-400 tracking-wider">Faculty Details Badge</span>
+            <button onclick="openProfileModal()" class="text-xs text-indigo-300 hover:text-white flex items-center space-x-1">
+              <i class="fa-solid fa-pen-to-square"></i>
+              <span>Edit</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2 text-xs">
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="text-slate-500"><i class="fa-solid fa-door-closed mr-1.5 text-indigo-400"></i>Cabin Room:</span>
+              <strong class="text-white font-mono" id="badgeCabin">C-204, IT Block</strong>
+            </div>
+
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="text-slate-500"><i class="fa-solid fa-clock mr-1.5 text-purple-400"></i>Call Free Time:</span>
+              <strong class="text-purple-300" id="badgeCallTime">02:00 PM - 04:00 PM</strong>
+            </div>
+
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="text-slate-500"><i class="fa-solid fa-phone mr-1.5 text-emerald-400"></i>Mobile Contact:</span>
+              <strong class="text-emerald-300 font-mono" id="badgePhone">+91 98765-43210</strong>
+            </div>
+
+            <div class="flex items-center justify-between text-slate-300">
+              <span class="text-slate-500"><i class="fa-solid fa-book-open mr-1.5 text-amber-400"></i>Subjects:</span>
+              <strong class="text-amber-300 truncate max-w-[140px]" id="badgeSubjects">CS-201, CS-305</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div onclick="openAttendanceModal()" class="glass-card glass-card-hover rounded-2xl p-5 border border-white/5 cursor-pointer flex items-center justify-between">
+          <div>
+            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Today's Sessions</p>
+            <h3 class="text-2xl font-black text-white mt-1">4 Classes</h3>
+            <p class="text-indigo-400 text-xs mt-1"><i class="fa-solid fa-clock mr-1"></i>CS-201 @ 10:00 AM</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-chalkboard-user"></i>
+          </div>
+        </div>
+
+        <div onclick="openAttendanceModal()" class="glass-card glass-card-hover rounded-2xl p-5 border border-white/5 cursor-pointer flex items-center justify-between">
+          <div>
+            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Enrolled Students</p>
+            <h3 class="text-2xl font-black text-white mt-1">142 Students</h3>
+            <p class="text-emerald-400 text-xs mt-1"><i class="fa-solid fa-user-check mr-1"></i>94% Avg Attendance</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-users"></i>
+          </div>
+        </div>
+
+        <div onclick="openGradingModal()" class="glass-card glass-card-hover rounded-2xl p-5 border border-white/5 cursor-pointer flex items-center justify-between">
+          <div>
+            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Ungraded Tests</p>
+            <h3 class="text-2xl font-black text-white mt-1">18 Submissions</h3>
+            <p class="text-amber-400 text-xs mt-1"><i class="fa-solid fa-pen-to-square mr-1"></i>Mid-Term CS-201</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-file-signature"></i>
+          </div>
+        </div>
+
+        <div onclick="openProfileModal()" class="glass-card glass-card-hover rounded-2xl p-5 border border-white/5 cursor-pointer flex items-center justify-between">
+          <div>
+            <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Call Slots Status</p>
+            <h3 class="text-2xl font-black text-emerald-400 mt-1">Available</h3>
+            <p class="text-slate-400 text-xs mt-1"><i class="fa-solid fa-headset mr-1"></i>Call Hours Published</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-phone-volume"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Feature Operations Grid -->
+      <div>
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
+          <i class="fa-solid fa-grip text-indigo-400"></i>
+          <span>Faculty Workspace Directory</span>
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          
+          <!-- Card 1: Attendance Scanner -->
+          <div onclick="openQRModal()" class="glass-card glass-card-hover rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-400/30 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-qrcode"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white">Attendance QR Scanner HUD</h4>
+              <p class="text-slate-400 text-xs leading-relaxed">
+                Scan physical or digital student QR tags during class sessions or launch dynamic session check-in QR codes.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-indigo-400">
+              <span>Launch Camera Scanner</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <!-- Card 2: Student Attendance Roster -->
+          <div onclick="openAttendanceModal()" class="glass-card glass-card-hover rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-clipboard-user"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white">Attendance Roster</h4>
+              <p class="text-slate-400 text-xs leading-relaxed">
+                Manually record student attendance status, view roll counters, and export classroom reports.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-emerald-400">
+              <span>Open Class Roster</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <!-- Card 3: Marks & Grading Engine -->
+          <div onclick="openGradingModal()" class="glass-card glass-card-hover rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-400/30 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white">Marks & Grading Portal</h4>
+              <p class="text-slate-400 text-xs leading-relaxed">
+                Upload mid-term scores, quiz grades, and calculate final weighted marks for your department.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-purple-400">
+              <span>Enter Marks Engine</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <!-- Card 4: Class Timetable -->
+          <div onclick="openScheduleModal()" class="glass-card glass-card-hover rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/30 text-amber-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white">Teaching Timetable</h4>
+              <p class="text-slate-400 text-xs leading-relaxed">
+                Check weekly lecture schedules, lab bookings, and room block assignments.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-amber-400">
+              <span>View Timetable</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <!-- Card 5: Campus Notice Publisher -->
+          <div onclick="openNoticeModal()" class="glass-card glass-card-hover rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-pink-500/20 border border-pink-400/30 text-pink-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white">Broadcast Notice</h4>
+              <p class="text-slate-400 text-xs leading-relaxed">
+                Post important classroom updates, assignment deadlines, or syllabus notifications to enrolled students.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-pink-400">
+              <span>Publish Notice</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+          <!-- Card 6: Profile & Call Hours Management -->
+          <div onclick="openProfileModal()" class="glass-card glass-card-hover rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 border border-cyan-400/30 text-cyan-400 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-id-card"></i>
+              </div>
+              <h4 class="text-lg font-bold text-white">Profile & Cabin Settings</h4>
+              <p class="text-slate-400 text-xs leading-relaxed">
+                Update your cabin room number, mobile phone contact, and free call hours for student consultation.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold text-cyan-400">
+              <span>Update Cabin & Timings</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: PROFILE DETAILS & EDIT CABIN / CALL TIMINGS MODAL -->
+  <div id="profileModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-6 border border-white/10 relative">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-address-card"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-lg">Faculty Profile Settings</h3>
+            <p class="text-slate-400 text-xs">Update your cabin & free consultation hours</p>
+          </div>
+        </div>
+        <button onclick="closeProfileModal()" class="text-slate-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleProfileUpdate(event)" class="space-y-3.5">
+        
+        <div>
+          <label class="block text-slate-300 text-xs font-medium mb-1">Full Name & Designation</label>
+          <input type="text" id="editName" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 text-xs font-medium mb-1">Department</label>
+            <input type="text" id="editDept" readonly class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs opacity-60">
+          </div>
+          <div>
+            <label class="block text-slate-300 text-xs font-medium mb-1">Faculty ID</label>
+            <input type="text" id="editFacId" readonly class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs font-mono opacity-60">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 text-xs font-medium mb-1">Cabin Room Number</label>
+            <input type="text" id="editCabin" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+          </div>
+          <div>
+            <label class="block text-slate-300 text-xs font-medium mb-1">Mobile Contact</label>
+            <input type="text" id="editPhone" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 text-xs font-medium mb-1">Free Time for Call / Consultations</label>
+          <input type="text" id="editCallTime" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 text-xs font-medium mb-1">Subjects Taught</label>
+          <input type="text" id="editSubjects" required class="w-full form-input px-3.5 py-2.5 rounded-xl text-xs">
+        </div>
+
+        <button type="submit" class="w-full btn-gradient text-white text-xs font-bold py-3 rounded-xl mt-3 flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span>Save Profile Changes</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: QR CAMERA SCANNER HUD -->
+  <div id="qrModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-6 border border-white/10 relative overflow-hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-indigo-600/30 border border-indigo-400/30 flex items-center justify-center text-indigo-300">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <h3 class="text-white font-bold text-lg">Student QR Scanner HUD</h3>
+        </div>
+        <button onclick="closeQRModal()" class="text-slate-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="my-6 relative bg-slate-950 rounded-2xl overflow-hidden border border-indigo-500/30 h-60 flex flex-col items-center justify-center text-center p-4">
+        <div class="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-400 to-transparent scanner-line"></div>
+        <div class="w-36 h-36 border-2 border-dashed border-indigo-500/60 rounded-2xl flex items-center justify-center relative bg-indigo-950/20">
+          <i class="fa-solid fa-id-card text-4xl text-indigo-400/40"></i>
+        </div>
+        <p class="text-slate-300 text-xs mt-3">Position student QR code within frame or simulate below</p>
+      </div>
+
+      <div class="space-y-2.5">
+        <button onclick="simulateScan('AARAV SHARMA (Roll: 1024)')" class="w-full btn-gradient text-white text-xs font-bold py-3 rounded-xl flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Simulate Scan Student (Aarav Sharma)</span>
+        </button>
+        <button onclick="simulateScan('PRIYA VERMA (Roll: 1029)')" class="w-full btn-dark text-slate-200 text-xs font-semibold py-3 rounded-xl flex items-center justify-center space-x-2 border border-slate-700">
+          <i class="fa-solid fa-user-check text-emerald-400"></i>
+          <span>Simulate Scan Student (Priya Verma)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: ATTENDANCE ROSTER MODAL -->
+  <div id="attendanceModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-2xl w-full rounded-3xl p-6 border border-white/10 relative">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div>
+          <h3 class="text-white font-bold text-lg">Class CS-201: Data Structures</h3>
+          <p class="text-slate-400 text-xs">Section A • Room 302 • Live Student Roster</p>
+        </div>
+        <button onclick="closeAttendanceModal()" class="text-slate-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="my-4 space-y-2 max-h-64 overflow-y-auto pr-1">
+        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-300 font-bold flex items-center justify-center text-xs">AS</div>
+            <div>
+              <p class="text-white font-semibold text-sm">Aarav Sharma</p>
+              <p class="text-slate-400 text-[11px]">Roll #1024</p>
+            </div>
+          </div>
+          <button onclick="toggleAttendanceStatus(this)" class="px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold">
+            Present
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-pink-500/20 text-pink-300 font-bold flex items-center justify-center text-xs">PV</div>
+            <div>
+              <p class="text-white font-semibold text-sm">Priya Verma</p>
+              <p class="text-slate-400 text-[11px]">Roll #1029</p>
+            </div>
+          </div>
+          <button onclick="toggleAttendanceStatus(this)" class="px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold">
+            Present
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-full bg-amber-500/20 text-amber-300 font-bold flex items-center justify-center text-xs">RK</div>
+            <div>
+              <p class="text-white font-semibold text-sm">Rohan Kapoor</p>
+              <p class="text-slate-400 text-[11px]">Roll #1035</p>
+            </div>
+          </div>
+          <button onclick="toggleAttendanceStatus(this)" class="px-3 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-semibold">
+            Absent
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+        <span class="text-slate-400 text-xs">Roster Status: <strong class="text-emerald-400">2 Present</strong> / 1 Absent</span>
+        <button onclick="saveAttendance()" class="btn-gradient text-white text-xs font-bold px-5 py-2.5 rounded-xl">
+          Publish Attendance Record
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: MARKS & GRADING MODULE -->
+  <div id="gradingModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-3xl p-6 border border-white/10 relative">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+        <h3 class="text-white font-bold text-lg">Input Test Marks</h3>
+        <button onclick="closeGradingModal()" class="text-slate-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleMarksSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-slate-300 text-xs mb-1">Select Subject</label>
+          <select class="w-full form-input px-3 py-2 rounded-xl text-xs">
+            <option>CS-201 Data Structures Mid-Term</option>
+            <option>CS-305 Algorithms Assignment 1</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 text-xs mb-1">Student Roll Number</label>
+          <input type="text" placeholder="1024" required class="w-full form-input px-3 py-2 rounded-xl text-xs font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 text-xs mb-1">Marks Obtained</label>
+            <input type="number" max="100" placeholder="88" required class="w-full form-input px-3 py-2 rounded-xl text-xs">
+          </div>
+          <div>
+            <label class="block text-slate-300 text-xs mb-1">Total Marks</label>
+            <input type="number" value="100" readonly class="w-full form-input px-3 py-2 rounded-xl text-xs opacity-60">
+          </div>
+        </div>
+
+        <button type="submit" class="w-full btn-gradient text-white text-xs font-bold py-3 rounded-xl mt-3">
+          Save & Post Grade
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 5: PUBLISH NOTICE MODULE -->
+  <div id="noticeModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-3xl p-6 border border-white/10 relative">
+      <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+        <h3 class="text-white font-bold text-lg">Broadcast Class Notice</h3>
+        <button onclick="closeNoticeModal()" class="text-slate-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleNoticeSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-slate-300 text-xs mb-1">Notice Title</label>
+          <input type="text" placeholder="Mid-Term Lab Exam Date Revision" required class="w-full form-input px-3 py-2 rounded-xl text-xs">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 text-xs mb-1">Notice Details / Message</label>
+          <textarea rows="3" placeholder="Write announcement for enrolled students..." required class="w-full form-input px-3 py-2 rounded-xl text-xs"></textarea>
+        </div>
+
+        <button type="submit" class="w-full btn-gradient text-white text-xs font-bold py-3 rounded-xl mt-2">
+          Publish to Student Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 6: GENERIC INFO MODAL -->
+  <div id="infoModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card max-w-md w-full rounded-3xl p-6 border border-white/10 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-indigo-600/30 border border-indigo-400/30 text-indigo-300 mx-auto flex items-center justify-center text-xl mb-4">
+        <i class="fa-solid fa-circle-info"></i>
+      </div>
+      <h3 class="text-white font-bold text-lg mb-2" id="infoTitle">Info</h3>
+      <p class="text-slate-300 text-xs leading-relaxed mb-6" id="infoBody">Details here.</p>
+      <button onclick="closeInfoModal()" class="w-full btn-gradient text-white text-xs font-bold py-2.5 rounded-xl">
+        Acknowledge
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Bar -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-900/95 border border-indigo-500/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center space-x-3">
+    <i class="fa-solid fa-circle-check text-emerald-400 text-lg" id="toastIcon"></i>
+    <span class="text-xs font-semibold" id="toastMessage">Notification</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-white/5 py-6 bg-slate-950/90 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-bolt text-indigo-400"></i>
+        <span>Smart CampusQR &copy; 2026. Faculty Portal Platform.</span>
+      </div>
+      <div class="flex space-x-6">
+        <a href="#" onclick="showNotification('AES-256 Portal Security Active', 'info')" class="hover:text-indigo-400">Security Policy</a>
+        <a href="#" onclick="showNotification('Faculty IT Support: Ext 4022', 'info')" class="hover:text-indigo-400">IT Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Global Teacher State Object
+    let currentTeacher = null;
+
+    // 1. Switch Auth Tabs (Login vs Register)
+    function switchAuthTab(tab) {
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const loginBtn = document.getElementById('loginTabBtn');
+      const regBtn = document.getElementById('registerTabBtn');
+
+      if (tab === 'login') {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        loginBtn.className = 'w-1/2 py-2.5 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md';
+        regBtn.className = 'w-1/2 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all';
+      } else {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        regBtn.className = 'w-1/2 py-2.5 text-xs font-bold rounded-xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md';
+        loginBtn.className = 'w-1/2 py-2.5 text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all';
+      }
+    }
+
+    // 2. Handle Teacher Registration Submission
+    function handleTeacherRegister(e) {
+      e.preventDefault();
+
+      const pass = document.getElementById('regPass').value;
+      const confirmPass = document.getElementById('regConfirmPass').value;
+
+      if (pass !== confirmPass) {
+        showNotification('Passwords do not match! Please verify.', 'error');
+        return;
+      }
+
+      currentTeacher = {
+        name: document.getElementById('regName').value,
+        id: document.getElementById('regId').value.toUpperCase(),
+        dept: document.getElementById('regDept').value + " Department",
+        role: document.getElementById('regRole').value,
+        phone: document.getElementById('regPhone').value,
+        email: document.getElementById('regEmail').value,
+        cabin: document.getElementById('regCabin').value,
+        callTime: document.getElementById('regCallTime').value,
+        subjects: document.getElementById('regSubjects').value
+      };
+
+      unlockDashboard();
+      showNotification('Faculty Account Successfully Registered & Online!', 'success');
+    }
+
+    // 3. Handle Existing Teacher Login
+    function handleTeacherLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+
+      let name = "Prof. Rajesh Sharma";
+      if (email.includes('.')) {
+        const parts = email.split('@')[0].split('.');
+        name = "Prof. " + parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+      }
+
+      currentTeacher = {
+        name: name,
+        id: "FAC-9042",
+        dept: "Computer Science Department",
+        role: "Assistant Professor",
+        phone: "+91 98765-43210",
+        email: email,
+        cabin: "Cabin C-204, IT Block Level 2",
+        callTime: "02:00 PM - 04:00 PM (Mon-Fri)",
+        subjects: "CS-201 Data Structures, CS-305 Algorithms"
+      };
+
+      unlockDashboard();
+      showNotification('Welcome back, ' + currentTeacher.name, 'success');
+    }
+
+    // 4. Unlock Dashboard & Sync UI Elements
+    function unlockDashboard() {
+      document.getElementById('authSection').classList.add('hidden');
+      document.getElementById('dashboardSection').classList.remove('hidden');
+
+      document.getElementById('authHeaderStatus').classList.add('hidden');
+      document.getElementById('userHeaderProfile').classList.remove('hidden');
+      document.getElementById('navLinks').classList.remove('hidden');
+
+      // Update Dashboard Texts
+      document.getElementById('loggedInTeacherName').innerText = currentTeacher.name;
+      document.getElementById('loggedInFacultyId').innerText = currentTeacher.id;
+      document.getElementById('dashTeacherName').innerText = currentTeacher.name;
+      document.getElementById('welcomeDeptTag').innerText = currentTeacher.dept;
+      document.getElementById('welcomeRoleTag').innerText = currentTeacher.role;
+
+      // Update Faculty Badge Card
+      document.getElementById('badgeCabin').innerText = currentTeacher.cabin;
+      document.getElementById('badgeCallTime').innerText = currentTeacher.callTime;
+      document.getElementById('badgePhone').innerText = currentTeacher.phone;
+      document.getElementById('badgeSubjects').innerText = currentTeacher.subjects;
+
+      // Update Avatar Initials
+      const nameWords = currentTeacher.name.replace('Prof.', '').trim().split(' ');
+      const initials = nameWords.map(w => w.charAt(0)).join('').toUpperCase();
+      document.getElementById('avatarInitials').innerText = initials || 'TS';
+
+      setDynamicGreeting();
+    }
+
+    // 5. Profile Edit Modal Logic
+    function openProfileModal() {
+      if (!currentTeacher) return;
+
+      document.getElementById('editName').value = currentTeacher.name;
+      document.getElementById('editDept').value = currentTeacher.dept;
+      document.getElementById('editFacId').value = currentTeacher.id;
+      document.getElementById('editCabin').value = currentTeacher.cabin;
+      document.getElementById('editPhone').value = currentTeacher.phone;
+      document.getElementById('editCallTime').value = currentTeacher.callTime;
+      document.getElementById('editSubjects').value = currentTeacher.subjects;
+
+      document.getElementById('profileModal').classList.remove('hidden');
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.add('hidden');
+    }
+
+    function handleProfileUpdate(e) {
+      e.preventDefault();
+
+      currentTeacher.name = document.getElementById('editName').value;
+      currentTeacher.cabin = document.getElementById('editCabin').value;
+      currentTeacher.phone = document.getElementById('editPhone').value;
+      currentTeacher.callTime = document.getElementById('editCallTime').value;
+      currentTeacher.subjects = document.getElementById('editSubjects').value;
+
+      unlockDashboard();
+      closeProfileModal();
+      showNotification('Faculty Profile & Cabin Details Updated!', 'success');
+    }
+
+    // 6. Logout Functionality
+    function logoutTeacher() {
+      currentTeacher = null;
+      document.getElementById('dashboardSection').classList.add('hidden');
+      document.getElementById('authSection').classList.remove('hidden');
+
+      document.getElementById('authHeaderStatus').classList.remove('hidden');
+      document.getElementById('userHeaderProfile').classList.add('hidden');
+      document.getElementById('navLinks').classList.add('hidden');
+
+      showNotification('Session closed successfully.', 'info');
+    }
+
+    // Navigation Helpers
+    function handleLogoClick() {
+      if (!currentTeacher) {
+        showNotification('Please register or log in to view dashboard.', 'info');
+      } else {
+        scrollToTop();
+      }
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function setDynamicGreeting() {
+      const greetingEl = document.getElementById('dashGreeting');
+      const hour = new Date().getHours();
+      if (hour < 12) greetingEl.textContent = "Good Morning";
+      else if (hour < 17) greetingEl.textContent = "Good Afternoon";
+      else greetingEl.textContent = "Good Evening";
+    }
+
+    // Modals Handlers
+    function openQRModal() { document.getElementById('qrModal').classList.remove('hidden'); }
+    function closeQRModal() { document.getElementById('qrModal').classList.add('hidden'); }
+
+    function openAttendanceModal() { document.getElementById('attendanceModal').classList.remove('hidden'); }
+    function closeAttendanceModal() { document.getElementById('attendanceModal').classList.add('hidden'); }
+
+    function openGradingModal() { document.getElementById('gradingModal').classList.remove('hidden'); }
+    function closeGradingModal() { document.getElementById('gradingModal').classList.add('hidden'); }
+
+    function openNoticeModal() { document.getElementById('noticeModal').classList.remove('hidden'); }
+    function closeNoticeModal() { document.getElementById('noticeModal').classList.add('hidden'); }
+
+    function openScheduleModal() {
+      showCampusModal('Weekly Lecture Schedule', 'CS-201 Data Structures (10:00 AM @ Room 302), CS-305 Algorithms (02:00 PM @ Lab 4).');
+    }
+
+    function toggleAttendanceStatus(btn) {
+      if (btn.classList.contains('bg-emerald-500/20')) {
+        btn.className = 'px-3 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-semibold';
+        btn.innerText = 'Absent';
+      } else {
+        btn.className = 'px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold';
+        btn.innerText = 'Present';
+      }
+    }
+
+    function saveAttendance() {
+      closeAttendanceModal();
+      showNotification('Attendance synced with campus database!', 'success');
+    }
+
+    function simulateScan(student) {
+      closeQRModal();
+      showNotification('Verified: ' + student + ' marked Present!', 'success');
+    }
+
+    function handleMarksSubmit(e) {
+      e.preventDefault();
+      closeGradingModal();
+      showNotification('Grade recorded and posted to student record!', 'success');
+    }
+
+    function handleNoticeSubmit(e) {
+      e.preventDefault();
+      closeNoticeModal();
+      showNotification('Notice broadcasted to enrolled students!', 'success');
+    }
+
+    function showCampusModal(title, body) {
+      document.getElementById('infoTitle').innerText = title;
+      document.getElementById('infoBody').innerText = body;
+      document.getElementById('infoModal').classList.remove('hidden');
+    }
+
+    function closeInfoModal() { document.getElementById('infoModal').classList.add('hidden'); }
+
+    function showNotification(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMessage.innerText = msg;
+      if (type === 'success') {
+        toastIcon.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+      } else if (type === 'error') {
+        toastIcon.className = 'fa-solid fa-circle-xmark text-rose-400 text-lg';
+      } else {
+        toastIcon.className = 'fa-solid fa-circle-info text-indigo-400 text-lg';
+      }
+
+      toast.classList.remove('hidden');
+      setTimeout(() => { toast.classList.add('hidden'); }, 3200);
+    }
+  </script>
+</body>
+</html>

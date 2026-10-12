@@ -593,7 +593,7 @@
         <section class="services-grid" id="servicesGrid">
 
             <!-- DEPARTMENT -->
-            <a href="department.html" class="service-card" data-service="department academic departments faculty" data-category="academic">
+            <a href="/department.html" class="service-card" data-service="department academic departments faculty" data-category="academic">
                 <div class="card-header-row">
                     <div class="service-icon department">🏫</div>
                     <span class="status-badge open">Active</span>
@@ -607,7 +607,7 @@
             </a>
 
             <!-- LIBRARY -->
-            <a href="library.html" class="service-card" data-service="library books reading study" data-category="facilities">
+            <a href="/library.html" class="service-card" data-service="library books reading study" data-category="facilities">
                 <div class="card-header-row">
                     <div class="service-icon library">📚</div>
                     <span class="status-badge open">Open 24/7</span>
@@ -621,7 +621,7 @@
             </a>
 
             <!-- TRANSPORT -->
-            <a href="transport.html" class="service-card" data-service="transport bus route location travel" data-category="facilities">
+            <a href="/transport.html" class="service-card" data-service="transport bus route location travel" data-category="facilities">
                 <div class="card-header-row">
                     <div class="service-icon transport">🚌</div>
                     <span class="status-badge open">Live Routes</span>
@@ -635,7 +635,7 @@
             </a>
 
             <!-- CAFETERIA -->
-            <a href="cafeteria.html" class="service-card" data-service="cafeteria food canteen restaurant" data-category="facilities">
+            <a href="/cafeteria.html" class="service-card" data-service="cafeteria food canteen restaurant" data-category="facilities">
                 <div class="card-header-row">
                     <div class="service-icon cafeteria">🍴</div>
                     <span class="status-badge open">Open Now</span>
@@ -649,7 +649,7 @@
             </a>
 
             <!-- MEDICAL -->
-            <a href="medical.html" class="service-card" data-service="medical health doctor emergency clinic" data-category="health">
+            <a href="/medical.html" class="service-card" data-service="medical health doctor emergency clinic" data-category="health">
                 <div class="card-header-row">
                     <div class="service-icon medical">🏥</div>
                     <span class="status-badge open">Emergency Ready</span>
@@ -663,7 +663,7 @@
             </a>
 
             <!-- EVENTS -->
-            <a href="events.html" class="service-card" data-service="events fest activities programs" data-category="academic">
+            <a href="/event.html" class="service-card" data-service="events fest activities programs" data-category="academic">
                 <div class="card-header-row">
                     <div class="service-icon events">🎉</div>
                     <span class="status-badge open">Upcoming</span>
@@ -691,7 +691,7 @@
             </a>
 
             <!-- STUDENT FACILITIES -->
-            <a href="#student-facilities-modal" class="service-card facilities-card" data-service="student facilities support rooms labs lounge" data-category="facilities">
+            <a href="/studentfaculity.html" class="service-card facilities-card" data-service="student facilities support rooms labs lounge" data-category="facilities">
                 <div class="card-header-row">
                     <div class="service-icon facilities">🧰</div>
                     <span class="status-badge open">Available</span>
@@ -889,7 +889,7 @@
             }
         }
 
-        document.querySelectorAll('.feedback-card, .facilities-card, .lost-card').forEach(card => {
+        document.querySelectorAll('.feedback-card, .lost-card').forEach(card => {
             card.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = this.getAttribute('href');
@@ -930,20 +930,6 @@
             });
         }
 
-        // Click feedback & smooth exit animation on card click
-        serviceCards.forEach(card => {
-            if (!card.classList.contains('feedback-card') && !card.classList.contains('facilities-card') && !card.classList.contains('lost-card')) {
-                card.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const targetUrl = this.getAttribute("href");
-                    this.classList.add("clicked");
-
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 300);
-                });
-            }
-        });
     </script>
 </body>
 </html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - Check Class Room</title>
+    <!-- Include SheetJS library for reading Excel files -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --heading-bg: #f1f5f9;
+            --input-bg: #f8fafc;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --heading-bg: #0f172a;
+            --input-bg: #0f172a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 18px 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 9px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--primary-color);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-color);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Cards */
+        .upload-box, .filter-section, .result-section {
+            background: var(--card-bg);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.04);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+
+        .upload-box h2, .filter-section h2, .result-section h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .upload-help, .upload-status {
+            margin: 0 0 10px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .upload-status {
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .upload-status.error {
+            color: #ef4444;
+        }
+
+        .upload-status.success {
+            color: #22c55e;
+        }
+
+        /* Filters */
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            outline: none;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary-color);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .search-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .search-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Result Section */
+        .day-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: var(--card-bg);
+        }
+
+        .day-title {
+            background: var(--primary-color);
+            color: white;
+            padding: 14px 18px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .class-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1.5fr 1.2fr 1fr;
+            gap: 12px;
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .class-row.heading {
+            background: var(--heading-bg);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .class-row:last-child {
+            border-bottom: none;
+        }
+
+        .room {
+            font-weight: 700;
+            color: #16a34a;
+            background: rgba(22, 163, 74, 0.1);
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .no-result {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            .class-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body data-theme="light">
+
+<div class="container">
+    <!-- NAVBAR WITH SMARTCAMPUSQR BRAND -->
+    <div class="navbar">
+        <div class="brand-logo">🎓 SmartCampusQR</div>
+        <button class="theme-toggle-btn" id="themeToggleBtn" type="button">
+            🌙 <span id="themeToggleText">Dark Mode</span>
+        </button>
+    </div>
+
+    <div class="header">
+        <h1>Check Class Room</h1>
+        <p>Upload your college Excel timetable and easily check your class & room number</p>
+    </div>
+
+    <!-- UPLOAD TIMETABLE -->
+    <div class="upload-box">
+        <h2>Upload Timetable File</h2>
+        <p class="upload-help">Select your official Excel timetable file (<b>.xlsx</b> or <b>.xls</b>). The system will automatically parse all days, classes, and subjects.</p>
+        <input type="file" id="timetableFile" class="file-input" accept=".xlsx,.xls">
+        <p class="upload-status" id="uploadStatus" role="status" aria-live="polite"></p>
+    </div>
+
+    <!-- FILTERS: SELECT DAY, CLASS & TIME -->
+    <div class="filter-section">
+        <h2>Filter Schedule</h2>
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label for="daySelect">Select Day</label>
+                <select id="daySelect" class="filter-select" disabled>
+                    <option value="">Upload timetable first</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="classSelect">Select Class</label>
+                <select id="classSelect" class="filter-select" disabled>
+                    <option value="">Upload timetable first</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="timeSelect">Select Time</label>
+                <select id="timeSelect" class="filter-select" disabled>
+                    <option value="">All Times</option>
+                </select>
+            </div>
+        </div>
+        <button class="search-btn" id="searchButton" type="button" disabled>Search Schedule</button>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-section">
+        <h2>Class Schedule & Room No</h2>
+        <div id="result">
+            <div class="no-result">Please upload your Excel timetable and select your Day & Class to view details.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const timetableInput = document.getElementById("timetableFile");
+    const daySelect = document.getElementById("daySelect");
+    const classSelect = document.getElementById("classSelect");
+    const timeSelect = document.getElementById("timeSelect");
+    const searchButton = document.getElementById("searchButton");
+    const result = document.getElementById("result");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeToggleText = document.getElementById("themeToggleText");
+    let scheduleEntries = [];
+
+    // Dark / Light Mode Toggle
+    themeToggleBtn.addEventListener("click", () => {
+        const currentTheme = document.body.getAttribute("data-theme");
+        if (currentTheme === "light") {
+            document.body.setAttribute("data-theme", "dark");
+            themeToggleBtn.innerHTML = "☀️ Light Mode";
+        } else {
+            document.body.setAttribute("data-theme", "light");
+            themeToggleBtn.innerHTML = "🌙 Dark Mode";
+        }
+    });
+
+    function setStatus(message, type = "") {
+        const uploadStatus = document.getElementById("uploadStatus");
+        uploadStatus.textContent = message;
+        uploadStatus.className = `upload-status ${type}`.trim();
+    }
+
+    // Handle File Upload & Excel Parsing
+    timetableInput.addEventListener("change", async () => {
+        const file = timetableInput.files[0];
+        if (!file) return;
+
+        try {
+            setStatus("Reading timetable file...", "");
+            const data = await file.arrayBuffer();
+            const workbook = XLSX.read(data, { type: 'array' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            
+            const rows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+            
+            if (rows.length < 3) throw new Error("The Excel file format is invalid or too short.");
+
+            let entries = [];
+            let currentDay = "";
+            
+            const timeSlots = [
+                { time: "09:00 AM - 10:00 AM", subIdx: 2, facIdx: 3 },
+                { time: "02:00 PM - 03:00 PM", subIdx: 4, facIdx: 5 },
+                { time: "06:00 PM - 07:00 PM", subIdx: 6, facIdx: 7 }
+            ];
+
+            for (let i = 2; i < rows.length; i++) {
+                const row = rows[i];
+                if (!row || row.length < 2) continue;
+
+                const dayVal = String(row[0] || "").trim();
+                if (dayVal !== "") {
+                    currentDay = dayVal.toUpperCase();
+                }
+
+                const className = String(row[1] || "").trim();
+                if (!className || className.toUpperCase() === "CLASS") continue;
+
+                timeSlots.forEach(slot => {
+                    const subject = String(row[slot.subIdx] || "").trim();
+                    const faculty = String(row[slot.facIdx] || "").trim() || "Not assigned";
+
+                    if (subject !== "") {
+                        entries.push({
+                            day: currentDay || "WEDNESDAY",
+                            className: className,
+                            time: slot.time,
+                            subject: subject,
+                            teacher: faculty,
+                            room: "Room 101" // Automatically allocated or placeholder room
+                        });
+                    }
+                });
+            }
+
+            if (!entries.length) throw new Error("No class entries found in the file.");
+
+            scheduleEntries = entries;
+            const days = [...new Set(entries.map(e => e.day))];
+            const classes = [...new Set(entries.map(e => e.className))].sort();
+
+            daySelect.innerHTML = '<option value="">-- Select Day --</option>' + 
+                days.map(d => `<option value="${d}">${d}</option>`).join("");
+
+            classSelect.innerHTML = '<option value="">-- Select Class --</option>' + 
+                classes.map(c => `<option value="${c}">${c}</option>`).join("");
+
+            daySelect.disabled = false;
+            classSelect.disabled = false;
+            timeSelect.disabled = false;
+            searchButton.disabled = false;
+
+            daySelect.value = days[0];
+            classSelect.value = classes[0];
+
+            updateTimeDropdown();
+            renderSchedule();
+            setStatus(`Successfully loaded ${entries.length} classes across ${days.length} days!`, "success");
+
+        } catch (error) {
+            scheduleEntries = [];
+            daySelect.innerHTML = '<option value="">Upload timetable first</option>';
+            classSelect.innerHTML = '<option value="">Upload timetable first</option>';
+            daySelect.disabled = true;
+            classSelect.disabled = true;
+            timeSelect.disabled = true;
+            searchButton.disabled = true;
+            result.innerHTML = '<div class="no-result">Could not read the timetable file. Please verify the Excel structure.</div>';
+            setStatus(error.message || "Error reading file.", "error");
+        }
+    });
+
+    function updateTimeDropdown() {
+        const selectedDay = daySelect.value;
+        const selectedClass = classSelect.value;
+        
+        let filtered = scheduleEntries;
+        if (selectedDay) filtered = filtered.filter(e => e.day === selectedDay);
+        if (selectedClass) filtered = filtered.filter(e => e.className === selectedClass);
+
+        const uniqueTimes = [...new Set(filtered.map(e => e.time))];
+
+        timeSelect.innerHTML = '<option value="">All Times</option>' + 
+            uniqueTimes.map(t => `<option value="${t}">${t}</option>`).join("");
+    }
+
+    function renderSchedule() {
+        const selectedDay = daySelect.value;
+        const selectedClass = classSelect.value;
+        const selectedTime = timeSelect.value;
+
+        if (!selectedDay || !selectedClass) {
+            result.innerHTML = '<div class="no-result">Please select both Day and Class to view schedule.</div>';
+            return;
+        }
+
+        let entries = scheduleEntries.filter(e => e.day === selectedDay && e.className === selectedClass);
+        if (selectedTime) {
+            entries = entries.filter(e => e.time === selectedTime);
+        }
+
+        if (!entries.length) {
+            result.innerHTML = '<div class="no-result">No classes found matching your selected filters.</div>';
+            return;
+        }
+
+        result.innerHTML = `
+            <section class="day-card">
+                <h3 class="day-title">${selectedDay} — ${selectedClass}</h3>
+                <div class="class-row heading">
+                    <span>Time Slot</span>
+                    <span>Subject</span>
+                    <span>Teacher</span>
+                    <span>Room No.</span>
+                </div>
+                ${entries.map(e => `
+                    <div class="class-row">
+                        <span>${e.time}</span>
+                        <span><b>${e.subject}</b></span>
+                        <span>${e.teacher}</span>
+                        <span><span class="room">${e.room}</span></span>
+                    </div>
+                `).join("")}
+            </section>
+        `;
+    }
+
+    daySelect.addEventListener("change", updateTimeDropdown);
+    classSelect.addEventListener("change", updateTimeDropdown);
+    searchButton.addEventListener("click", renderSchedule);
+</script>
+
+</body>
+</html>

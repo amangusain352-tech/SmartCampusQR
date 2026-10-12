@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard - Smart CampusQR</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-dark: #080b14;
+      --bg-card: rgba(18, 24, 43, 0.75);
+      --bg-card-border: rgba(255, 255, 255, 0.08);
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-glow: rgba(139, 92, 246, 0.35);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --glass-blur: blur(16px);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.9) 0%, transparent 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* Layout Structure */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* GLASS CARD */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    /* LEFT SIDEBAR PROFILE PANEL */
+    .sidebar {
+      width: 320px;
+      background: rgba(8, 11, 20, 0.9);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .brand-logo span.highlight {
+      background: linear-gradient(135deg, #a78bfa, #f472b6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Teacher Profile Section */
+    .profile-card {
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 0 20px var(--accent-glow);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .profile-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .profile-dept {
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .profile-info-list {
+      width: 100%;
+      text-align: left;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.85rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .info-item i {
+      color: var(--accent-purple);
+      width: 16px;
+    }
+
+    /* Sidebar Navigation Links */
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item a:hover, .nav-item a.active {
+      background: rgba(139, 92, 246, 0.15);
+      color: #ffffff;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .badge-num {
+      background: var(--accent-pink);
+      color: white;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    /* MAIN DASHBOARD CONTENT AREA */
+    .main-content {
+      margin-left: 320px;
+      flex: 1;
+      padding: 30px;
+    }
+
+    .header-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .header-banner h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .purple { background: rgba(139, 92, 246, 0.15); color: #c084fc; }
+    .pink { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+    .cyan { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+    .orange { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+
+    /* NOTIFICATION & FEED PANELS */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .feed-panel {
+      padding: 25px;
+    }
+
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .feed-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Feed Item Cards */
+    .item-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .item-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .item-desc {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .action-btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .btn-action {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn-approve { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .btn-reject { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .btn-resolve { background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
+
+    .btn-action:hover { opacity: 0.8; }
+
+    @media (max-width: 992px) {
+      .app-container { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: relative; }
+      .main-content { margin-left: 0; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- 1. LEFT SIDEBAR (PROFILE & NAVIGATION) -->
+    <aside class="sidebar">
+      <a href="#" class="brand-logo">
+        <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+        <span>Smart <span class="highlight">CampusQR</span></span>
+      </a>
+
+      <!-- Teacher Profile Card -->
+      <div class="profile-card glass-card">
+        <div class="profile-avatar">{{ teacher_initials }}</div>
+        <div>
+          <div class="profile-name">{{ teacher.full_name }}</div>
+          <div class="profile-dept">{{ teacher.department }}</div>
+        </div>
+
+        <div class="profile-info-list">
+          <div class="info-item"><i class="fa-solid fa-id-badge"></i> ID: {{ teacher.faculty_id }}</div>
+          <div class="info-item"><i class="fa-solid fa-user-tie"></i> {{ teacher.designation }}</div>
+          <div class="info-item"><i class="fa-solid fa-envelope"></i> {{ teacher.user.email }}</div>
+          <div class="info-item"><i class="fa-solid fa-door-open"></i> Cabin: {{ teacher.cabin }}</div>
+          <div class="info-item"><i class="fa-solid fa-phone"></i> {{ teacher.phone }}</div>
+          <div class="info-item"><i class="fa-solid fa-clock"></i> Calls: {{ teacher.call_hours }}</div>
+          <div class="info-item"><i class="fa-solid fa-book"></i> {{ teacher.subjects }}</div>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="#" class="active">
+            <span><i class="fa-solid fa-chart-pie" style="margin-right:10px;"></i> Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#">
+            <span><i class="fa-solid fa-calendar-check" style="margin-right:10px;"></i> Appointments</span>
+            <span class="badge-num" id="sideApptBadge">2</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#">
+            <span><i class="fa-solid fa-triangle-exclamation" style="margin-right:10px;"></i> Complaints</span>
+            <span class="badge-num" style="background:var(--accent-purple);" id="sideCompBadge">2</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#">
+            <span><i class="fa-solid fa-box-open" style="margin-right:10px;"></i> Lost & Found</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#">
+            <span><i class="fa-solid fa-user-check" style="margin-right:10px;"></i> Attendance</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- 2. MAIN DASHBOARD CONTENT -->
+    <main class="main-content">
+
+      <div class="header-banner">
+        <div>
+          <h1>Faculty Control Dashboard</h1>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Manage incoming student appointment requests, complaints, and campus notices.</p>
+        </div>
+      </div>
+
+      <!-- Overview Stats -->
+      <div class="stats-grid">
+        <div class="stat-card glass-card">
+          <div class="stat-icon purple"><i class="fa-solid fa-user-clock"></i></div>
+          <div>
+            <h3>0</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Appointment records</p>
+          </div>
+        </div>
+
+        <div class="stat-card glass-card">
+          <div class="stat-icon pink"><i class="fa-solid fa-circle-exclamation"></i></div>
+          <div>
+            <h3>0</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Complaint records</p>
+          </div>
+        </div>
+
+        <div class="stat-card glass-card">
+          <div class="stat-icon cyan"><i class="fa-solid fa-box-archive"></i></div>
+          <div>
+            <h3>0</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Lost item records</p>
+          </div>
+        </div>
+
+        <div class="stat-card glass-card">
+          <div class="stat-icon orange"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div>
+            <h3>0</h3>
+            <p style="color:var(--text-muted); font-size:0.85rem;">Student records</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid: Notifications Center -->
+      <div class="dashboard-grid">
+
+        <!-- PANEL 1: APPOINTMENTS NOTIFICATIONS -->
+        <div class="feed-panel glass-card">
+          <div class="feed-header">
+            <h2><i class="fa-solid fa-calendar-check" style="color: var(--accent-pink);"></i> Appointment Requests</h2>
+          </div>
+
+          <div id="appointmentsList">
+            <p style="color:var(--text-muted);">No appointment records are available.</p>
+          </div>
+        </div>
+
+        <!-- PANEL 2: COMPLAINTS & LOST & FOUND -->
+        <div class="feed-panel glass-card">
+          <div class="feed-header">
+            <h2><i class="fa-solid fa-triangle-exclamation" style="color: var(--accent-cyan);"></i> Complaints & Issues</h2>
+          </div>
+
+          <div id="complaintsList">
+            <p style="color:var(--text-muted);">No complaint or lost-item records are available.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    document.querySelectorAll('.badge-num').forEach((badge) => {
+      badge.textContent = '0';
+    });
+  </script>
+</body>
+</html>

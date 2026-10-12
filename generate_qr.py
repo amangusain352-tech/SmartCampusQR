@@ -1,16 +1,17 @@
 import os
 import qrcode
 
-# QR image ko isi Python file ke folder mein save karega
-qr_path = os.path.join(
-    os.path.dirname(__file__),
-    "smart_campus_qr.png"
-)
+# PC ka LAN IP
+base_url = "http://192.168.1.12:5500"
+data = f"{base_url}/service-selection.html"
 
-# QR scan hone ke baad ab service selection page open hoga
-data = "http://127.0.0.1:5500/service-selection.html"
+output_dir = os.path.dirname(__file__)
 
-# QR create
+qr_paths = [
+    os.path.join(output_dir, "smart_campus_qr.png"),
+    os.path.join(output_dir, "Qr.PNG"),
+]
+
 qr = qrcode.QRCode(
     version=1,
     box_size=10,
@@ -18,20 +19,18 @@ qr = qrcode.QRCode(
 )
 
 qr.add_data(data)
-
 qr.make(fit=True)
 
-# Image
 img = qr.make_image(
     fill_color="black",
     back_color="white"
 )
 
-# Save
-img.save(qr_path)
+for qr_path in qr_paths:
+    img.save(qr_path)
 
 print("QR Code created successfully!")
-print("Saved at:", qr_path)
+print("QR DATA:", data)
+print("Saved at:", ", ".join(qr_paths))
 
-# Screen par QR show
 img.show()

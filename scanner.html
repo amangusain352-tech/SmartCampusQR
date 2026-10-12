@@ -1146,12 +1146,12 @@
                         <!-- QR -->
 
                         <div class="qr-wrapper">
-                            <img
-                                src="/smart_campus_qr.png"
-                                alt="SmartCampusQR"
-                                onerror="this.onerror=null; this.src='/Qr.PNG';"
-                                style="max-width: 100%; height: auto; display: block;"
-                            >
+                          <img
+    src="smart_campus_qr.png"
+    alt="SmartCampusQR"
+    style="max-width: 100%; height: auto; display: block;"
+>
+>
                         </div>
 
 
@@ -1408,10 +1408,26 @@
                 setScanStatus('Scanning for QR code...');
 
                 const context = qrCanvas.getContext('2d', { willReadFrequently: true });
-                const openServiceSelection = () => {
+                const openServiceSelection = scannedValue => {
+                    let scannedUrl;
+                    try {
+                        scannedUrl = new URL(scannedValue, window.location.href);
+                    } catch (error) {
+                        setScanStatus('QR detected, but it is not a SmartCampus service QR.', true);
+                        return false;
+                    }
+
+                    const servicePaths = ['/service-selection', '/service-selection.html', '/selectservices', '/selectservices.html'];
+                    if (!servicePaths.includes(scannedUrl.pathname.replace(/\/$/, ''))) {
+                        setScanStatus('QR detected, but it is not a SmartCampus service QR.', true);
+                        return false;
+                    }
+
+                   const serviceUrl = new URL('/service-selection.html', window.location.href);
                     setScanStatus('QR code detected! Opening service selection...');
                     stopScanner();
-                    window.location.href = '/service-selection/';
+                    window.location.href = serviceUrl.href;
+                    return true;
                 };
 
                 const scanFrame = async () => {
@@ -1422,8 +1438,7 @@
                             try {
                                 const [code] = await barcodeDetector.detect(qrVideo);
                                 if (code && code.rawValue.trim()) {
-                                    openServiceSelection();
-                                    return;
+                                    if (openServiceSelection(code.rawValue.trim())) return;
                                 }
                             } catch (error) {
                                 barcodeDetector = null;
@@ -1447,8 +1462,7 @@
                         if (code) {
                             const scannedValue = code.data.trim();
                             if (scannedValue) {
-                                openServiceSelection();
-                                return;
+                                if (openServiceSelection(scannedValue)) return;
                             }
                         }
                     }

@@ -17,6 +17,11 @@ urlpatterns = [
     path('python-scan/', views.python_scanner_view, name='python_scan'),
     # 4. QR code generate karne ke liye path
     path('generate-qr/', views.generate_qr_view, name='generate_qr'),
+    path('teacherportal.html', views.teacher_portal_view, name='teacher_portal'),
+    path('teacher/register/', views.teacher_register_view, name='teacher_register'),
+    path('teacher/login/', views.teacher_login_view, name='teacher_login'),
+    path('teacher/logout/', views.teacher_logout_view, name='teacher_logout'),
+    path('teacherdashboard.html', views.teacher_dashboard_view, name='teacher_dashboard'),
 ]
 
 if settings.DEBUG:

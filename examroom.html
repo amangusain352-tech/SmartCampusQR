@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - Exam Room Finder</title>
+    <!-- SheetJS library for parsing Excel/CSV files directly in browser -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- PDF.js for reading PDF seating plans -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --subtext-color: #64748b;
+            --border-color: #cbd5e1;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --input-bg: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --subtext-color: #94a3b8;
+            --border-color: #334155;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --input-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .header {
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+            background: var(--card-bg);
+            padding: 15px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .dark-btn {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        p.subtitle {
+            color: var(--subtext-color);
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            text-align: left;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media(max-width: 600px) {
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label.field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--subtext-color);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        select, input[type="number"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 18px;
+            display: none;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="header">
+        <div class="logo">
+            🎓 SmartCampusQR
+        </div>
+        <button class="dark-btn" onclick="toggleDarkMode()">
+            <span id="darkModeIcon">🌙</span> <span id="darkModeText">Dark Mode</span>
+        </button>
+    </div>
+
+    <div class="main-container">
+        <h1>Check Class Room</h1>
+        <p class="subtitle">Upload your daily Seating Plan file (.xlsx, .xls, .csv, .pdf) and instantly check your room</p>
+
+        <!-- Upload File Card -->
+        <div class="card">
+            <h3>📂 Upload Seating File</h3>
+            <div class="form-group">
+                <label class="field-label">SELECT EXCEL/CSV/PDF FILE</label>
+                <input type="file" id="seatingFile" accept=".xlsx, .xls, .csv, .pdf" onchange="handleFileUpload(event)">
+            </div>
+            <div id="uploadStatus" style="margin-top: 10px; font-size: 14px; color: var(--subtext-color);">Pehle file upload karein taaki classes dropdown mein aa sakein.</div>
+        </div>
+
+        <!-- Filter & Search Card -->
+        <div class="card">
+            <h3>Filter Seating & Check Room</h3>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label class="field-label">SELECT CLASS</label>
+                    <select id="className">
+                        <option value="">-- Upload file first --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="field-label">ENTER ROLL NUMBER</label>
+                    <input type="number" id="rollNo" placeholder="e.g. 2329265">
+                </div>
+            </div>
+            <button class="action-btn" onclick="checkRoom()">Search Exam Room</button>
+            <div id="resultBox" class="result-box"></div>
+        </div>
+    </div>
+
+    <script>
+        let seatingData = [];
+
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            
+            document.getElementById('darkModeIcon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            document.getElementById('darkModeText').textContent = newTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+        }
+
+        function normalizeClassName(value) {
+            let cleaned = String(value || '').replace(/\s+/g, ' ').trim();
+            cleaned = cleaned.replace(/\s*[-–—]\s*\d{3,}\s*$/, '');
+            return cleaned.trim();
+        }
+
+        function normalizeRoomName(value) {
+            return String(value || '').replace(/\s+/g, ' ').replace(/[|]/g, '').trim();
+        }
+
+        function isNoiseLine(line) {
+            const lower = line.toLowerCase();
+            return lower.includes('consolidated') || lower.includes('seating plan') || lower.includes('examination') ||
+                lower.includes('date:') || lower.includes('from') || lower.includes('room number') ||
+                lower.includes('roll number') || lower.includes('morning') || lower.includes('afternoon') ||
+                lower.includes('evening') || lower.includes('upload') || lower.includes('select class');
+        }
+
+        function isLikelyClassLine(line) {
+            if (!line || isNoiseLine(line)) return false;
+            if (line.length > 80) return false;
+            const classPattern = /(B\.Tech|BCA|BBA|MCA|MBA|M\.Tech|B\.Sc|B\.Com|M\.Sc|M\.Com|B\.E|M\.E|B\.Arch|M\.Arch|CSE|ECE|EEE|ME|CE|IT|MBA|MCA)/i;
+            const semesterPattern = /(3rd|2nd|1st|4th|5th|6th|7th|8th|Sem|Semester|Year)/i;
+            return classPattern.test(line) && (semesterPattern.test(line) || /\d/.test(line));
+        }
+
+        function buildClassDropdown(records) {
+            seatingData = records;
+            const classDropdown = document.getElementById('className');
+            classDropdown.innerHTML = '<option value="">-- Select Class --</option>';
+
+            const uniqueClasses = [...new Set(records.map(item => item.class))];
+            uniqueClasses.forEach(cls => {
+                let opt = document.createElement('option');
+                opt.value = cls;
+                opt.textContent = cls;
+                classDropdown.appendChild(opt);
+            });
+        }
+
+        function parseSeatingRows(rows) {
+            const records = [];
+
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                if (!row) continue;
+
+                const flatRow = Array.isArray(row) ? row.join(' ') : String(row);
+                if (!flatRow || flatRow.length < 4) continue;
+
+                const rowValues = Array.isArray(row) ? row : flatRow.split(/\s{2,}|\t|\|/).filter(Boolean);
+
+                if (rowValues.length >= 4) {
+                    const className = normalizeClassName(rowValues[0]);
+                    const fromRoll = parseInt(rowValues[1], 10);
+                    const toRoll = parseInt(rowValues[2], 10);
+                    const roomName = normalizeRoomName(rowValues[3]);
+
+                    if (className && !isNaN(fromRoll) && !isNaN(toRoll) && roomName) {
+                        records.push({ class: className, from: fromRoll, to: toRoll, room: roomName });
+                    }
+                }
+
+                const numericValues = [...flatRow.matchAll(/\d{4,}/g)].map(match => parseInt(match[0], 10));
+                if (numericValues.length >= 2 && flatRow.match(/[A-Za-z]/)) {
+                    const roomName = normalizeRoomName(flatRow.replace(/\d+/g, ' ').replace(/\s+/g, ' ').trim());
+                    const firstNum = numericValues[0];
+                    const secondNum = numericValues[1];
+                    if (roomName && !isNaN(firstNum)) {
+                        records.push({
+                            class: 'Unknown Class',
+                            from: firstNum,
+                            to: secondNum && secondNum >= firstNum ? secondNum : firstNum,
+                            room: roomName
+                        });
+                    }
+                }
+            }
+
+            const classMap = new Map();
+            records.forEach(record => {
+                if (!record.class || record.class === 'Unknown Class') return;
+                if (!classMap.has(record.class)) {
+                    classMap.set(record.class, []);
+                }
+                classMap.get(record.class).push(record);
+            });
+
+            const tidyRecords = [];
+            classMap.forEach((items, className) => {
+                const uniqueRoomMap = new Map();
+                items.forEach(item => {
+                    const key = `${item.from}-${item.to}-${item.room}`;
+                    if (!uniqueRoomMap.has(key)) {
+                        uniqueRoomMap.set(key, item);
+                    }
+                });
+                uniqueRoomMap.forEach(item => tidyRecords.push(item));
+            });
+
+            buildClassDropdown(tidyRecords);
+            return tidyRecords;
+        }
+
+        function parsePdfTextToRecords(pdfText) {
+            const lines = pdfText.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+            const records = [];
+            let currentClass = '';
+
+            lines.forEach(line => {
+                const cleanedLine = normalizeClassName(line);
+
+                if (isLikelyClassLine(cleanedLine)) {
+                    currentClass = cleanedLine;
+                    return;
+                }
+
+                if (isNoiseLine(line) || !currentClass) return;
+
+                const rowData = line.replace(/[|]/g, ' ').replace(/\s+/g, ' ').trim();
+                const numbers = [...rowData.matchAll(/\d{4,}/g)].map(match => parseInt(match[0], 10));
+                if (numbers.length === 0) return;
+
+                const routeText = rowData.replace(/[A-Za-z]/g, ' ');
+                const roomCandidate = routeText.match(/(MT\s*\d{1,3}|[A-Z]{1,4}\s*\d{2,5}[A-Z]?)/i);
+                const room = roomCandidate ? normalizeRoomName(roomCandidate[1]) : normalizeRoomName(rowData);
+
+                if (numbers.length >= 2) {
+                    const fromRoll = numbers[0];
+                    const toRoll = numbers[1];
+                    if (room && room !== currentClass && rowData.length < 150) {
+                        records.push({ class: currentClass, from: fromRoll, to: toRoll, room: room });
+                    }
+                    return;
+                }
+
+                if (room && room !== currentClass && rowData.length < 150) {
+                    records.push({ class: currentClass, from: numbers[0], to: numbers[0], room: room });
+                }
+            });
+
+            return records;
+        }
+
+        function loadPdfFile(file, statusDiv) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const pdfData = new Uint8Array(e.target.result);
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+                pdfjsLib.getDocument({ data: pdfData }).promise.then(function(pdf) {
+                    let textChunks = [];
+
+                    const pagePromises = [];
+                    for (let pageNo = 1; pageNo <= pdf.numPages; pageNo++) {
+                        pagePromises.push(pdf.getPage(pageNo).then(page => page.getTextContent()).then(content => {
+                            const pageText = content.items.map(item => item.str).join(' ');
+                            textChunks.push(pageText);
+                        }));
+                    }
+
+                    Promise.all(pagePromises).then(() => {
+                        const text = textChunks.join('\n');
+                        const parsedRecords = parsePdfTextToRecords(text);
+
+                        if (parsedRecords.length === 0) {
+                            statusDiv.style.color = '#e11d48';
+                            statusDiv.textContent = '❌ PDF se class details extract nahi hui. Excel/CSV ya PDF table format check karein.';
+                            return;
+                        }
+
+                        buildClassDropdown(parsedRecords);
+                        statusDiv.style.color = '#16a34a';
+                        statusDiv.textContent = `✅ PDF successfully loaded: "${file.name}" (${parsedRecords.length} records)`;
+                    }).catch(err => {
+                        console.error(err);
+                        statusDiv.style.color = '#e11d48';
+                        statusDiv.textContent = '❌ PDF read karte waqt error aayi.';
+                    });
+                }).catch(err => {
+                    console.error(err);
+                    statusDiv.style.color = '#e11d48';
+                    statusDiv.textContent = '❌ Invalid PDF file. Please upload a valid seating plan PDF.';
+                });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            const statusDiv = document.getElementById('uploadStatus');
+
+            if (!file) return;
+
+            if (file.name.toLowerCase().endsWith('.pdf')) {
+                loadPdfFile(file, statusDiv);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    parseSeatingRows(jsonRows);
+
+                    statusDiv.style.color = '#16a34a';
+                    statusDiv.textContent = `✅ File successfully loaded: "${file.name}" (${seatingData.length} records)`;
+                } catch (error) {
+                    statusDiv.style.color = '#e11d48';
+                    statusDiv.textContent = "❌ File parse karne mein error aayi. Columns check karein: [Class, From, To, Room]";
+                    console.error(error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function checkRoom() {
+            const selectedClass = document.getElementById('className').value;
+            const rollNo = parseInt(document.getElementById('rollNo').value, 10);
+            const resultBox = document.getElementById('resultBox');
+
+            if (seatingData.length === 0) {
+                resultBox.style.display = 'block';
+                resultBox.style.color = '#e11d48';
+                resultBox.innerHTML = "⚠️ Pehle seating plan wali file upload karein!";
+                return;
+            }
+
+            if (!selectedClass || isNaN(rollNo)) {
+                resultBox.style.display = 'block';
+                resultBox.style.color = '#e11d48';
+                resultBox.innerHTML = "⚠️ Kripaya Class select karein aur valid Roll Number dalein!";
+                return;
+            }
+
+            let foundRoom = null;
+            for (let item of seatingData) {
+                if (item.class === selectedClass && rollNo >= item.from && rollNo <= item.to) {
+                    foundRoom = item.room;
+                    break;
+                }
+            }
+
+            resultBox.style.display = 'block';
+            if (foundRoom) {
+                resultBox.style.color = '#16a34a';
+                resultBox.innerHTML = `✅ Tamaro Exam Room chhe: <strong style="font-size: 22px;">${foundRoom}</strong>`;
+            } else {
+                resultBox.style.color = '#e11d48';
+                resultBox.innerHTML = "❌ Aa roll number mate aa class ma koi room malyo nathi.";
+            }
+        }
+    </script>
+</body>
+</html>

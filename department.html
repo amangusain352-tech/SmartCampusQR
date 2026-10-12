@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprehensive Department Directory | Smart CampusQR</title>
+    <title>Department Directory | Smart CampusQR</title>
     <style>
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
-            --accent: #0ea5e9;
             --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
             --radius: 16px;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
         }
 
         * {
@@ -91,18 +93,37 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
-            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
         .btn-primary:hover {
             background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Notice Banner */
+        .notice-banner {
+            background: #ede9fe;
+            border-bottom: 1px solid #ddd6fe;
+            color: #5b21b6;
+            padding: 0.75rem 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         /* Main Container */
         main {
-            max-width: 1200px;
-            margin: 2.5rem auto;
+            max-width: 1000px;
+            margin: 3rem auto;
             padding: 0 1.5rem;
+            text-align: center;
         }
 
         .page-header {
@@ -110,7 +131,7 @@
         }
 
         .page-header h1 {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: var(--text-main);
             margin-bottom: 0.5rem;
@@ -118,19 +139,44 @@
 
         .page-header p {
             color: var(--text-muted);
+            font-size: 1.05rem;
         }
 
-        /* Section Headings */
-        .section-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin: 2.5rem 0 1.25rem 0;
+        /* Search & Filter Bar */
+        .search-container {
+            margin-bottom: 2rem;
             display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 0.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 280px;
+            padding: 1.1rem 1.5rem;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            font-size: 1.05rem;
+            outline: none;
+            background: var(--card-bg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .filter-select {
+            padding: 0 1.2rem;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            outline: none;
+            cursor: pointer;
         }
 
         /* Grid Layouts */
@@ -138,6 +184,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
+            text-align: left;
         }
 
         .card {
@@ -145,12 +192,14 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            display: none; /* Initially Hidden until searched */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
@@ -164,8 +213,8 @@
         }
 
         .faculty-avatar {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary);
@@ -187,6 +236,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
+            margin-bottom: 1rem;
         }
 
         .tree-list li {
@@ -202,47 +252,139 @@
             text-align: right;
         }
 
+        /* Badges */
         .badge-status {
-            display: inline-block;
-            background: #dcfce7;
-            color: #166534;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
             font-size: 0.75rem;
             font-weight: 600;
-            padding: 0.2rem 0.5rem;
+            padding: 0.2rem 0.6rem;
             border-radius: 6px;
         }
+        .status-available { background: #dcfce7; color: #166534; }
+        .status-class { background: #fef3c7; color: #92400e; }
+        .status-meeting { background: #fee2e2; color: #991b1b; }
+        .status-offline { background: #f1f5f9; color: #475569; }
 
-        /* Map Card */
-        .card-full {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
-            border: 1px solid #c7d2fe;
-            text-align: center;
-            padding: 2.5rem;
-        }
-
-        .map-placeholder {
+        /* Card Action Buttons */
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
             margin-top: 1rem;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            border: 2px dashed #a5b4fc;
-            color: #4f46e5;
-            font-weight: 600;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--border);
         }
 
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
-            margin-top: 4rem;
+        .btn-sm {
+            flex: 1;
+            padding: 0.45rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 1px solid var(--border);
             background: var(--card-bg);
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            background: var(--bg-color);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .no-result {
+            color: var(--text-muted);
+            font-style: italic;
+            display: none;
+            margin-top: 2rem;
+            font-size: 1rem;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 450px;
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: left;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            transform: scale(0.95);
+            transition: transform 0.2s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
 <body>
+
+    <!-- Notice Banner -->
+    <div class="notice-banner">
+        <span>📢 **Alert:** Dr. Rajesh Sharma's cabin has been temporarily shifted from Room 401 to Room 410 for maintenance.</span>
+    </div>
 
     <header>
         <div class="logo-area">
@@ -253,23 +395,33 @@
             <ul>
                 <li><a href="#">Home</a></li>
                 <li><a href="#" class="active">Directory</a></li>
-                <li><a href="#">QR Simulator</a></li>
-                <li><a href="#">Workflow</a></li>
+                <li><a href="#" onclick="openReportModal(); return false;">Report Issue</a></li>
             </ul>
         </nav>
-        <a href="#" class="btn-primary">Scan Station</a>
+        <button class="btn-primary" onclick="alert('Point your camera or QR Scanner at any cabin QR code to test instant redirection!')">Scan Station</button>
     </header>
 
     <main>
         <div class="page-header">
             <h1>Department Resource Hub</h1>
-            <p>Complete structural hierarchy including Faculty profiles with photos, contact numbers, cabins, and campus facilities.</p>
+            <p>Type a teacher's name, office, or facility below to find information instantly.</p>
         </div>
 
-        <h2 class="section-title">👨‍🏫 Faculty Cabins & Profiles</h2>
-        <div class="grid-container">
+        <!-- Search & Filter Container -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search teacher name, lab, room or facility..." autocomplete="off">
+            <select id="filterCategory" class="filter-select">
+                <option value="all">All Categories</option>
+                <option value="faculty">Faculty Members</option>
+                <option value="facilities">Labs & Rooms</option>
+            </select>
+        </div>
+
+        <!-- Hidden Cards Database -->
+        <div class="grid-container" id="directoryGrid">
             
-            <div class="card">
+            <!-- Card 1 -->
+            <div class="card search-item" data-category="faculty">
                 <div class="card-header-flex">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Dr. Rajesh Sharma" class="faculty-avatar">
                     <div>
@@ -278,14 +430,19 @@
                     </div>
                 </div>
                 <ul class="tree-list">
-                    <li><span>Cabin Number:</span> <span>Room 401</span></li>
-                    <li><span>Floor:</span> <span>4th Floor</span></li>
-                    <li><span>Contact Number:</span> <span>+91 98765-43210</span></li>
-                    <li><span>Availability:</span> <span><span class="badge-status">Available</span></span></li>
+                    <li><span>Cabin Number:</span> <span>Room 410 (Shifted)</span></li>
+                    <li><span>Route:</span> <span>Block A → 4th Floor → Left Wing</span></li>
+                    <li><span>Contact:</span> <span>+91 98765-43210</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-available">● Available</span></span></li>
                 </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Dr. Rajesh Sharma')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block A, 4th Floor, Room 410')">📍 Directions</button>
+                </div>
             </div>
 
-            <div class="card">
+            <!-- Card 2 -->
+            <div class="card search-item" data-category="faculty">
                 <div class="card-header-flex">
                     <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80" alt="Dr. Anil Kumar" class="faculty-avatar">
                     <div>
@@ -295,13 +452,18 @@
                 </div>
                 <ul class="tree-list">
                     <li><span>Cabin Number:</span> <span>Room 404</span></li>
-                    <li><span>Floor:</span> <span>4th Floor</span></li>
-                    <li><span>Contact Number:</span> <span>+91 91234-56789</span></li>
-                    <li><span>Availability:</span> <span><span class="badge-status">Available</span></span></li>
+                    <li><span>Route:</span> <span>Block A → 4th Floor → Central Corridor</span></li>
+                    <li><span>Contact:</span> <span>+91 91234-56789</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-class">● In Class</span></span></li>
                 </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Dr. Anil Kumar')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block A, 4th Floor, Room 404')">📍 Directions</button>
+                </div>
             </div>
 
-            <div class="card">
+            <!-- Card 3 -->
+            <div class="card search-item" data-category="faculty">
                 <div class="card-header-flex">
                     <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Prof. Priya Verma" class="faculty-avatar">
                     <div>
@@ -311,95 +473,162 @@
                 </div>
                 <ul class="tree-list">
                     <li><span>Cabin Number:</span> <span>Room 407</span></li>
-                    <li><span>Floor:</span> <span>4th Floor</span></li>
-                    <li><span>Contact Number:</span> <span>+91 99887-76655</span></li>
-                    <li><span>Availability:</span> <span><span class="badge-status">Available</span></span></li>
+                    <li><span>Route:</span> <span>Block A → 4th Floor → East Wing</span></li>
+                    <li><span>Contact:</span> <span>+91 99887-76655</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-meeting">● In Meeting</span></span></li>
                 </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Prof. Priya Verma')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block A, 4th Floor, Room 407')">📍 Directions</button>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="card search-item" data-category="facilities">
+                <div class="card-title" style="margin-bottom:0.75rem;">👨‍💼 HOD Office</div>
+                <ul class="tree-list">
+                    <li><span>Head:</span> <span>Dr. R. K. Malhotra</span></li>
+                    <li><span>Office Number:</span> <span>Room 402</span></li>
+                    <li><span>Route:</span> <span>Block A → 4th Floor</span></li>
+                    <li><span>Status:</span> <span><span class="badge-status status-available">● Open</span></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="showDirections('Block A, 4th Floor, Room 402')">📍 Directions</button>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="card search-item" data-category="facilities">
+                <div class="card-title" style="margin-bottom:0.75rem;">🧪 AI & Data Science Lab</div>
+                <ul class="tree-list">
+                    <li><span>Lab Number:</span> <span>Room 201</span></li>
+                    <li><span>Floor:</span> <span>2nd Floor</span></li>
+                    <li><span>Route:</span> <span>Block B → 2nd Floor Wing</span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="showDirections('Block B, 2nd Floor, Room 201')">📍 Directions</button>
+                </div>
             </div>
 
         </div>
 
-        <h2 class="section-title">🏢 Administrative Offices & Facilities</h2>
-        <div class="grid-container">
+        <div id="noResult" class="no-result">No matching results found. Try typing a broader keyword.</div>
+    </main>
 
-            <div class="card">
-                <div class="card-header-flex">
-                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80" alt="HOD" class="faculty-avatar">
-                    <div>
-                        <div class="card-title">👨‍💼 HOD Office</div>
-                        <div class="card-subtitle">Dr. R. K. Malhotra (Head)</div>
-                    </div>
+    <!-- Appointment Modal -->
+    <div class="modal-overlay" id="appointmentModal">
+        <div class="modal-card">
+            <h3 id="modalTeacherTitle">Request Appointment</h3>
+            <form onsubmit="submitAppointment(event)">
+                <div class="form-group">
+                    <label>Your Name & Roll No.</label>
+                    <input type="text" class="form-control" required placeholder="e.g., Amanjot Singh (211099)">
                 </div>
-                <ul class="tree-list">
-                    <li><span>Office Number:</span> <span>Room 402</span></li>
-                    <li><span>Floor:</span> <span>4th Floor</span></li>
-                    <li><span>Contact:</span> <span>+91 98111-22334</span></li>
-                </ul>
-            </div>
+                <div class="form-group">
+                    <label>Reason for Meeting</label>
+                    <textarea class="form-control" rows="3" required placeholder="Project discussion, doubt clearing..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Date & Time</label>
+                    <input type="datetime-local" class="form-control" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-sm" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="padding: 0.5rem 1rem;">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🏢 Department Office</div>
-                <ul class="tree-list">
-                    <li><span>Office Number:</span> <span>Room 403</span></li>
-                    <li><span>Staff Details:</span> <span>Mr. Suresh (Admin Clerk)</span></li>
-                    <li><span>Working Hours:</span> <span>9:00 AM - 5:00 PM</span></li>
-                    <li><span>Contact:</span> <span>+91 11-23456789</span></li>
-                </ul>
-            </div>
+    <!-- Report Correction Modal -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-card">
+            <h3>Report Incorrect Information</h3>
+            <form onsubmit="submitReport(event)">
+                <div class="form-group">
+                    <label>Select Item / Teacher</label>
+                    <input type="text" class="form-control" required placeholder="e.g., Room 401 / Dr. Rajesh Sharma">
+                </div>
+                <div class="form-group">
+                    <label>What is incorrect?</label>
+                    <textarea class="form-control" rows="3" required placeholder="Explain what needs updating (e.g., cabin number changed)..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-sm" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn-primary" style="padding: 0.5rem 1rem;">Send to Admin</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🧪 Laboratories</div>
-                <ul class="tree-list">
-                    <li><span>Lab Name:</span> <span>AI & Data Science Lab</span></li>
-                    <li><span>Lab Number:</span> <span>Room 201</span></li>
-                    <li><span>Floor:</span> <span>2nd Floor</span></li>
-                </ul>
-            </div>
+    <!-- Script to handle search, filters, and modal interactions -->
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const filterCategory = document.getElementById('filterCategory');
+        const cards = document.querySelectorAll('.search-item');
+        const noResult = document.getElementById('noResult');
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">📚 Department Library</div>
-                <ul class="tree-list">
-                    <li><span>Location:</span> <span>Room 405, 4th Floor</span></li>
-                    <li><span>Timings:</span> <span>8:30 AM - 6:00 PM</span></li>
-                </ul>
-            </div>
+        function filterDirectory() {
+            const query = searchInput.value.toLowerCase().trim();
+            const category = filterCategory.value;
+            let hasMatch = false;
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🎤 Seminar Hall</div>
-                <ul class="tree-list">
-                    <li><span>Hall Number:</span> <span>Auditorium Wing, Hall B</span></li>
-                    <li><span>Floor:</span> <span>3rd Floor</span></li>
-                </ul>
-            </div>
+            if (query === '' && category === 'all') {
+                cards.forEach(card => card.style.display = 'none');
+                noResult.style.display = 'none';
+                return;
+            }
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🖨️ Printing / Photocopy</div>
-                <ul class="tree-list">
-                    <li><span>Location:</span> <span>Near Department Office (Room 403)</span></li>
-                </ul>
-            </div>
+            cards.forEach(card => {
+                const textContent = card.innerText.toLowerCase();
+                const cardCategory = card.getAttribute('data-category');
+                
+                const matchesQuery = query === '' || textContent.includes(query);
+                const matchesCategory = category === 'all' || cardCategory === category;
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🚻 Washroom</div>
-                <ul class="tree-list">
-                    <li><span>Male:</span> <span>East Wing Corridor</span></li>
-                    <li><span>Female:</span> <span>West Wing Corridor</span></li>
-                </ul>
-            </div>
+                if (matchesQuery && matchesCategory) {
+                    card.style.display = 'block';
+                    hasMatch = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">💧 Drinking Water</div>
-                <ul class="tree-list">
-                    <li><span>Water Cooler Location:</span> <span>Near Central Elevator Lobby</span></li>
-                </ul>
-            </div>
+            noResult.style.display = hasMatch ? 'none' : 'block';
+        }
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0.5rem;">🛗 Lift / Stairs</div>
-                <ul class="tree-list">
-                    <li><span>Location:</span> <span>Main Entrance Foyer</span></li>
-                </ul>
-            </div>
+        searchInput.addEventListener('input', filterDirectory);
+        filterCategory.addEventListener('change', filterDirectory);
 
-            <div class="card">
-                <div class="card-title" style="border:none; margin-bottom:0
+        // Modal Controls
+        function openAppointmentModal(teacherName) {
+            document.getElementById('modalTeacherTitle').innerText = `Book Meeting with ${teacherName}`;
+            document.getElementById('appointmentModal').classList.add('active');
+        }
+
+        function openReportModal() {
+            document.getElementById('reportModal').classList.add('active');
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        }
+
+        function submitAppointment(e) {
+            e.preventDefault();
+            alert('Appointment request successfully sent to the teacher! You will receive confirmation via student portal.');
+            closeModals();
+        }
+
+        function submitReport(e) {
+            e.preventDefault();
+            alert('Correction request submitted! Admin will verify and update the records shortly.');
+            closeModals();
+        }
+
+        function showDirections(locationStr) {
+            alert(`🧭 Step-by-Step Navigation:\nDestination: ${locationStr}\n\n1. Enter main campus foyer.\n2. Proceed towards the elevator lobby.\n3. Take stairs/lift to destination floor.`);
+        }
+    </script>
+</body>
+</html>

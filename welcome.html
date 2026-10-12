@@ -1808,7 +1808,7 @@
                 <a href="{% url 'welcome' %}">Home</a>
                 <a href="#services">Services</a>
                 <a href="#simulator">QR Simulator</a>
-                <a href="#workflow">Workflow</a>
+                <a href="{% url 'page_render' page_name='teacherportal.html' %}">Teacher Portal</a>
                 <a href="{% url 'page_render' page_name='register.html' %}" class="signup-btn">Get Started</a>
                 <a href="{% url 'page_render' page_name='login.html' %}" class="login-btn">Login</a>
             </div>
