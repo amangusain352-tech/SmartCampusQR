@@ -5,6 +5,32 @@ from django.urls import reverse
 from .models import TeacherProfile
 
 
+class CampusNavigationTests(TestCase):
+    def test_homepage_loads_and_links_to_service_selection(self):
+        response = self.client.get(reverse("welcome"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "service-selection.html")
+
+    def test_service_selection_page_loads(self):
+        response = self.client.get(reverse("service_selection"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "What service do")
+
+    def test_static_service_selection_path_loads(self):
+        response = self.client.get("/service-selection.html")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "What service do")
+
+    def test_generated_qr_returns_a_png_image(self):
+        response = self.client.get(reverse("generate_qr"), HTTP_HOST="localhost")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/png")
+
+
 class TeacherAuthenticationTests(TestCase):
     def test_registration_saves_profile_and_opens_dashboard(self):
         response = self.client.post(

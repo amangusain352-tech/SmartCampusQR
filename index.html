@@ -1798,19 +1798,19 @@
 
     <!-- NAVBAR -->
     <nav>
-        <a href="{% url 'welcome' %}" class="logo" aria-label="SmartCampusQR home">
+        <a href="index.html" class="logo" aria-label="SmartCampusQR home">
             <div class="logo-icon">⚡</div>
             Smart<span>CampusQR</span>
         </a>
 
         <div class="nav-right">
             <div class="nav-links" id="navLinks">
-                <a href="{% url 'welcome' %}">Home</a>
+                <a href="index.html">Home</a>
                 <a href="#services">Services</a>
                 <a href="#simulator">QR Simulator</a>
-                <a href="{% url 'page_render' page_name='teacherportal.html' %}">Teacher Portal</a>
-                <a href="{% url 'page_render' page_name='register.html' %}" class="signup-btn">Get Started</a>
-                <a href="{% url 'page_render' page_name='login.html' %}" class="login-btn">Login</a>
+                <a href="teacherportal.html">Teacher Portal</a>
+                <a href="register.html" class="signup-btn">Get Started</a>
+                <a href="login.html" class="login-btn">Login</a>
             </div>
 
 
@@ -1845,10 +1845,10 @@
             </p>
 
             <div class="hero-buttons">
-                <a href="{% url 'service_selection' %}" class="btn-primary">
+                <a href="service-selection.html" class="btn-primary">
                     Explore Directory <span>&rarr;</span>
                 </a>
-                <a href="{% url 'page_render' page_name='login.html' %}" class="btn-secondary">
+                <a href="login.html" class="btn-secondary">
                     Sign In
                 </a>
             </div>
@@ -1860,19 +1860,12 @@
             </div>
 
             <!-- DJANGO QR SCANNER LOGS CONSOLE -->
-            <div id="qrLogsConsole" class="qr-status-card reveal" {% if not logs %}style="display: none;"{% endif %}>
+            <div id="qrLogsConsole" class="qr-status-card reveal" style="display: none;">
                 <div class="qr-status-card-header">
                     <span>🔍 QR System Diagnostics &amp; Logs</span>
                     <span style="font-size: 11px; color: var(--emerald);">● Active</span>
                 </div>
                 <div id="qrLogsContent">
-                    {% if logs %}
-                        {% for log in logs %}
-                            <div class="qr-log-item">
-                                <span style="color: var(--primary-light);">&gt;</span> {{ log }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
                 </div>
             </div>
 
@@ -1903,28 +1896,28 @@
 
                 <!-- Mini Quick Action Grid -->
                 <div class="mini-services-grid">
-                    <a href="{% url 'service_selection' %}" class="mini-item">
+                    <a href="service-selection.html" class="mini-item">
                         <div class="mini-item-icon">📚</div>
                         <div class="mini-item-info">
                             <h5>Library</h5>
                             <p>Seats Open</p>
                         </div>
                     </a>
-                    <a href="{% url 'service_selection' %}" class="mini-item">
+                    <a href="service-selection.html" class="mini-item">
                         <div class="mini-item-icon">🚌</div>
                         <div class="mini-item-info">
                             <h5>Transport</h5>
                             <p>Live Routes</p>
                         </div>
                     </a>
-                    <a href="{% url 'service_selection' %}" class="mini-item">
+                    <a href="service-selection.html" class="mini-item">
                         <div class="mini-item-icon">🍴</div>
                         <div class="mini-item-info">
                             <h5>Cafeteria</h5>
                             <p>Menu Ready</p>
                         </div>
                     </a>
-                    <a href="{% url 'service_selection' %}" class="mini-item">
+                    <a href="service-selection.html" class="mini-item">
                         <div class="mini-item-icon">🏥</div>
                         <div class="mini-item-info">
                             <h5>Medical</h5>
@@ -1974,35 +1967,35 @@
         </div>
 
         <div class="services-grid">
-            <a href="{% url 'service_selection' %}" class="service-box reveal">
+            <a href="service-selection.html" class="service-box reveal">
                 <div class="s-icon-wrapper">📚</div>
                 <h3>Library</h3>
                 <p>Explore digital catalogs, track live open seating, and view operating hours.</p>
                 <div class="service-link-btn">Access Module &rarr;</div>
             </a>
 
-            <a href="{% url 'service_selection' %}" class="service-box reveal">
+            <a href="service-selection.html" class="service-box reveal">
                 <div class="s-icon-wrapper">🚌</div>
                 <h3>Transport</h3>
                 <p>Live shuttle tracking, route schedules, and real-time arrival estimates.</p>
                 <div class="service-link-btn">Access Module &rarr;</div>
             </a>
 
-            <a href="{% url 'service_selection' %}" class="service-box reveal">
+            <a href="service-selection.html" class="service-box reveal">
                 <div class="s-icon-wrapper">🍴</div>
                 <h3>Cafeteria</h3>
                 <p>Digital menus, meal prep schedules, and stall queue metrics.</p>
                 <div class="service-link-btn">Access Module &rarr;</div>
             </a>
 
-            <a href="{% url 'service_selection' %}" class="service-box reveal">
+            <a href="service-selection.html" class="service-box reveal">
                 <div class="s-icon-wrapper">🏥</div>
                 <h3>Medical</h3>
                 <p>Emergency medical hotline, dispensary hours, and health desks.</p>
                 <div class="service-link-btn">Access Module &rarr;</div>
             </a>
 
-            <a href="{% url 'service_selection' %}" class="service-box reveal">
+            <a href="service-selection.html" class="service-box reveal">
                 <div class="s-icon-wrapper">🎉</div>
                 <h3>Events</h3>
                 <p>Hackathons, club announcements, and university fests calendar.</p>
@@ -2074,19 +2067,19 @@
                 <h3>Select Campus QR Tag</h3>
                 <p>Click a station preset below to test how python-pyzbar decodes location payload tags instantly.</p>
                 <div class="sim-btn-list">
-                    <button class="sim-btn active" onclick="simulateQR('Library Seat #42', '/service-selection/', '📚 Central Library - Floor 2', this)">
+                    <button class="sim-btn active" onclick="simulateQR('Library Seat #42', 'service-selection.html', '📚 Central Library - Floor 2', this)">
                         <span>📚 Central Library Tag</span>
                         <span>&rarr;</span>
                     </button>
-                    <button class="sim-btn" onclick="simulateQR('Campus Shuttle #4', '/service-selection/', '🚌 Shuttle Route B - Live En Route', this)">
+                    <button class="sim-btn" onclick="simulateQR('Campus Shuttle #4', 'service-selection.html', '🚌 Shuttle Route B - Live En Route', this)">
                         <span>🚌 Campus Bus Shuttle</span>
                         <span>&rarr;</span>
                     </button>
-                    <button class="sim-btn" onclick="simulateQR('Cafeteria Counter 2', '/service-selection/', '🍴 Food Court - Open Queue', this)">
+                    <button class="sim-btn" onclick="simulateQR('Cafeteria Counter 2', 'service-selection.html', '🍴 Food Court - Open Queue', this)">
                         <span>🍴 Main Cafeteria Tag</span>
                         <span>&rarr;</span>
                     </button>
-                    <button class="sim-btn" onclick="simulateQR('Dispensary Station', '/service-selection/', '🏥 Health Desk - Duty Doctor Active', this)">
+                    <button class="sim-btn" onclick="simulateQR('Dispensary Station', 'service-selection.html', '🏥 Health Desk - Duty Doctor Active', this)">
                         <span>🏥 Emergency Health Desk</span>
                         <span>&rarr;</span>
                     </button>
@@ -2095,14 +2088,14 @@
 
             <div class="sim-result-box">
                 <div class="sim-qr-preview">
-                    <img src="smart_campus_qr.png" alt="Smart Campus QR Tag" id="simQrImg" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22 viewBox=%220 0 100 100%22%3E%3Crect width=%22100%22 height=%22100%22 fill=%22%230f172a%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%233b82f6%22 font-size=%2230%22%3EQR%3C/text%3E%3C/svg%3E';">
+                    <div id="simQrCode" aria-label="QR code linking to service selection"></div>
                 </div>
                 <div class="sim-data-display" id="simDataDisplay">
-                    QR DATA: http://127.0.0.1:8000/service-selection/
+                    QR DATA: <span id="simQrData"></span>
                 </div>
                 <h4 id="simLocationTitle" style="font-size: 15px; font-weight: 700; margin-bottom: 6px;">📚 Central Library - Floor 2</h4>
                 <p id="simStatusText" style="font-size: 13px; color: var(--emerald); font-weight: 600; margin-bottom: 16px;">● 94 Seats Available &bull; Latency 0.03s</p>
-                <a href="{% url 'service_selection' %}" class="btn-primary" style="padding: 10px 20px; font-size: 13px; width: 100%;">
+                <a href="service-selection.html" class="btn-primary" style="padding: 10px 20px; font-size: 13px; width: 100%;">
                     Launch Station Portal &rarr;
                 </a>
             </div>
@@ -2118,7 +2111,7 @@
                 <h3>Ready to Transform Your Campus Experience?</h3>
                 <p>Scan location QR tags or browse services directly from your student portal.</p>
             </div>
-            <a href="{% url 'service_selection' %}" class="btn-primary">
+            <a href="service-selection.html" class="btn-primary">
                 Explore Services &rarr;
             </a>
         </div>
@@ -2127,7 +2120,7 @@
         <div class="footer-grid">
             <!-- Brand Column -->
             <div class="footer-col footer-col-brand">
-                <a href="{% url 'welcome' %}" class="footer-logo">
+                <a href="index.html" class="footer-logo">
                     <div class="logo-icon" style="width: 36px; height: 36px; font-size: 18px;">⚡</div>
                     Smart<span>CampusQR</span>
                 </a>
@@ -2144,11 +2137,11 @@
             <div class="footer-col">
                 <h4>Platform</h4>
                 <ul>
-                    <li><a href="{% url 'welcome' %}">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li><a href="#services">Services Grid</a></li>
                     <li><a href="#workflow">Workflow Guide</a></li>
-                    <li><a href="{% url 'service_selection' %}">Service Selection</a></li>
-                    <li><a href="{% url 'python_scan' %}">Python QR Scanner</a></li>
+                    <li><a href="service-selection.html">Service Selection</a></li>
+                    <li><a href="scanner.html">QR Scanner</a></li>
                 </ul>
             </div>
 
@@ -2156,11 +2149,11 @@
             <div class="footer-col">
                 <h4>Modules</h4>
                 <ul>
-                    <li><a href="{% url 'service_selection' %}">Digital Library</a></li>
-                    <li><a href="{% url 'service_selection' %}">Live Transport</a></li>
-                    <li><a href="{% url 'service_selection' %}">Cafeteria Menu</a></li>
-                    <li><a href="{% url 'service_selection' %}">Medical &amp; Health</a></li>
-                    <li><a href="{% url 'service_selection' %}">Campus Events</a></li>
+                    <li><a href="library.html">Digital Library</a></li>
+                    <li><a href="transport.html">Live Transport</a></li>
+                    <li><a href="cafeteria.html">Cafeteria Menu</a></li>
+                    <li><a href="medical.html">Medical &amp; Health</a></li>
+                    <li><a href="event.html">Campus Events</a></li>
                 </ul>
             </div>
 
@@ -2168,9 +2161,9 @@
             <div class="footer-col">
                 <h4>Portals</h4>
                 <ul>
-                    <li><a href="{% url 'page_render' page_name='login.html' %}">Student Sign In</a></li>
-                    <li><a href="{% url 'page_render' page_name='register.html' %}">Register Account</a></li>
-                    <li><a href="{% url 'generate_qr' %}">QR Code Generator</a></li>
+                    <li><a href="login.html">Student Sign In</a></li>
+                    <li><a href="register.html">Register Account</a></li>
+                    <li><a href="#simulator">QR Code Preview</a></li>
                     <li><a href="/admin/">Admin Console</a></li>
                 </ul>
             </div>
@@ -2192,6 +2185,7 @@
 
 
     <!-- JAVASCRIPT FOR INTERACTIVITY & THEME -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // Theme Toggle Logic
         const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -2221,6 +2215,21 @@
             });
         }
 
+        const serviceSelectionUrl = new URL('service-selection.html', window.location.href);
+        const simQrCode = document.getElementById('simQrCode');
+        const simQrData = document.getElementById('simQrData');
+
+        if (simQrCode && typeof QRCode === 'function') {
+            new QRCode(simQrCode, {
+                text: serviceSelectionUrl.href,
+                width: 116,
+                height: 116,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
+
+        if (simQrData) simQrData.textContent = serviceSelectionUrl.href;
+
         // Live QR Tag Simulator Interactivity
         function simulateQR(tag, url, locationInfo, btnElement) {
             document.querySelectorAll('.sim-btn').forEach(btn => btn.classList.remove('active'));
@@ -2231,7 +2240,7 @@
             const statusEl = document.getElementById('simStatusText');
             
             if (displayEl && titleEl && statusEl) {
-                displayEl.textContent = 'QR DATA: ' + url;
+                displayEl.textContent = 'QR DATA: ' + new URL(url, window.location.href).href;
                 titleEl.textContent = locationInfo;
                 statusEl.textContent = '● Verified Active • Latency 0.03s';
             }

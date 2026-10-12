@@ -39,9 +39,9 @@ def welcome_view(request):
     except Exception as e:
         output_logs.append(f"Error: {e}")
 
-    # welcome.html template ko logs ke sath render karne ke liye
+    # Render the homepage with QR diagnostics.
     context = {'logs': output_logs}
-    return render(request, 'welcome.html', context)
+    return render(request, 'index.html', context)
 
 def service_selection_view(request):
     try:

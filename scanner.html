@@ -971,12 +971,12 @@
 
         <nav class="menu">
 
-            <a href="/python-scan/" class="active">
+            <a href="scanner.html" class="active">
                 <div class="menu-icon">⌂</div>
                 <span>Dashboard</span>
             </a>
 
-            <a href="/MyProfile.html">
+            <a href="MyProfile.html">
                 <div class="menu-icon">👤</div>
                 <span>Profile</span>
             </a>
@@ -991,7 +991,7 @@
         <div class="sidebar-bottom">
 
             <nav class="menu">
-                <a href="/login.html" class="logout" id="logoutBtn">
+                <a href="login.html" class="logout" id="logoutBtn">
                     <div class="menu-icon">↪</div>
                     <span>Logout</span>
                 </a>
@@ -1146,12 +1146,7 @@
                         <!-- QR -->
 
                         <div class="qr-wrapper">
-                          <img
-    src="smart_campus_qr.png"
-    alt="SmartCampusQR"
-    style="max-width: 100%; height: auto; display: block;"
->
->
+                          <div id="campusQrCode" aria-label="QR code linking to service selection"></div>
                         </div>
 
 
@@ -1191,7 +1186,7 @@
                             <div class="scan-action-group">
                                 <button id="startScannerBtn" class="scan-btn" type="button">Scan QR with Camera</button>
                                 <button id="stopScannerBtn" class="scan-btn secondary hidden" type="button">Stop Camera</button>
-                                <a href="/service-selection/" class="scan-btn secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Open Service Page</a>
+                                <a href="service-selection.html" class="scan-btn secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">Open Service Page</a>
                             </div>
 
                             <div id="scannerPanel" class="scanner-panel hidden">
@@ -1322,6 +1317,7 @@
 
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script>
         const themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -1331,6 +1327,16 @@
         const savedTheme = localStorage.getItem('smartcampus_theme') || 'light';
         root.setAttribute('data-theme', savedTheme);
         themeIcon.className = savedTheme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+
+        const campusQrCode = document.getElementById('campusQrCode');
+        if (campusQrCode && typeof QRCode === 'function') {
+            new QRCode(campusQrCode, {
+                text: new URL('service-selection.html', window.location.href).href,
+                width: 220,
+                height: 220,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        }
 
         themeToggleBtn.addEventListener('click', () => {
             const activeTheme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -1423,7 +1429,7 @@
                         return false;
                     }
 
-                   const serviceUrl = new URL('/service-selection.html', window.location.href);
+                        const serviceUrl = new URL('/service-selection.html', window.location.origin);
                     setScanStatus('QR code detected! Opening service selection...');
                     stopScanner();
                     window.location.href = serviceUrl.href;
