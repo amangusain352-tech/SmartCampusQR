@@ -1,12 +1,13 @@
-python
+
 import os
 import qrcode
+from qrcode.constants import ERROR_CORRECT_H
 
-# Online website URL
-base_url = "https://smartcampusqr.netlify.app"
-data = f"{base_url}/service-selection.html"
+# Live Netlify website page
+data = "https://smartcampusqr.netlify.app/service-selection.html"
 
-output_dir = os.path.dirname(__file__)
+# Save QR images in the same folder
+output_dir = os.path.dirname(os.path.abspath(__file__))
 
 qr_paths = [
     os.path.join(output_dir, "smart_campus_qr.png"),
@@ -14,9 +15,10 @@ qr_paths = [
 ]
 
 qr = qrcode.QRCode(
-    version=1,
-    box_size=10,
-    border=4
+    version=None,
+    error_correction=ERROR_CORRECT_H,
+    box_size=15,
+    border=6,
 )
 
 qr.add_data(data)
@@ -25,7 +27,7 @@ qr.make(fit=True)
 img = qr.make_image(
     fill_color="black",
     back_color="white"
-)
+).convert("RGB")
 
 for qr_path in qr_paths:
     img.save(qr_path)

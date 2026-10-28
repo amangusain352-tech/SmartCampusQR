@@ -149,16 +149,16 @@
             font-size: 0.95rem;
         }
 
-        /* Large & Gorgeous PCTE to Home Live Tracker Box */
+        /* Large Animated Bus Tracker */
         .pcte-live-tracker-large {
             background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(6, 182, 212, 0.08));
             border: 2px solid var(--border);
             border-radius: 18px;
-            padding: 1.75rem;
+            padding: 1.5rem;
             margin-top: 0.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
+            gap: 1rem;
             box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
             text-align: left;
         }
@@ -167,24 +167,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .tracker-title-group {
-            display: flex;
-            flex-direction: column;
+            gap: 1rem;
         }
 
         .tracker-main-title {
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 800;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
         }
 
         .tracker-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--text-muted);
             font-weight: 600;
         }
@@ -193,14 +186,13 @@
             background: rgba(16, 185, 129, 0.15);
             color: #34d399;
             border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 0.3rem 0.75rem;
+            padding: 0.3rem 0.7rem;
             border-radius: 30px;
             font-size: 0.75rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.4rem;
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
         }
 
         .live-badge-glow::before {
@@ -209,26 +201,26 @@
             height: 8px;
             background: var(--success);
             border-radius: 50%;
-            animation: pulseDot 1.5s infinite;
+            animation: pulseDot 1.4s infinite;
         }
 
         @keyframes pulseDot {
-            0% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { opacity: 0.5; transform: scale(1.5); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Visual Highway Container */
         .highway-track {
             position: relative;
-            height: 54px;
+            height: 56px;
             background: var(--input-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 18px;
+            overflow: hidden;
         }
 
         .station-marker {
@@ -236,36 +228,36 @@
             align-items: center;
             gap: 0.4rem;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             z-index: 2;
             background: var(--card-bg);
-            padding: 0.4rem 0.8rem;
+            padding: 0.38rem 0.7rem;
             border-radius: 8px;
             border: 1px solid var(--border);
         }
 
         .moving-bus-graphic {
             position: absolute;
-            left: 20px;
+            left: 18px;
             font-size: 1.8rem;
             animation: driveAcrossHighway 5s ease-in-out infinite alternate;
             filter: drop-shadow(0 4px 8px rgba(6, 182, 212, 0.5));
-            z-index: 5;
+            z-index: 3;
         }
 
         @keyframes driveAcrossHighway {
-            0% { left: 25px; transform: scaleX(1); }
-            90% { left: calc(100% - 75px); transform: scaleX(1); }
-            100% { left: calc(100% - 75px); transform: scaleX(-1); }
+            0% { left: 22px; transform: scaleX(1); }
+            90% { left: calc(100% - 80px); transform: scaleX(1); }
+            100% { left: calc(100% - 80px); transform: scaleX(-1); }
         }
 
         .tracker-info-footer {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
+            font-size: 0.76rem;
             color: var(--text-muted);
-            font-weight: 600;
-            padding-top: 0.2rem;
+            font-weight: 700;
+            padding-top: 0.3rem;
             border-top: 1px solid var(--border);
         }
 
@@ -424,36 +416,9 @@
         }
 
         /* Schedule Section */
-        .schedule-section h3 {
-            font-size: 1.15rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        .schedule-table th, .schedule-table td {
-            padding: 0.85rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .schedule-table th {
-            font-size: 0.75rem;
-            text-transform: uppercase;
+        .no-route-message {
             color: var(--text-muted);
-            font-weight: 700;
-        }
-
-        .schedule-table td {
-            font-weight: 600;
+            margin-top: 1rem;
         }
 
         /* Footer */
@@ -480,19 +445,18 @@
     <!-- Main Container -->
     <div class="portal-container">
         
-        <!-- Hero Section with Expanded Large Animated Live Tracker -->
+        <!-- Hero Section -->
         <div class="card-box hero-section">
             <div class="hero-header-content">
                 <h1><span>🚌</span> Campus Transport</h1>
-                <p>Find bus routes, stops and timings easily.</p>
+                <p>Enter your destination to find the bus and driver contact.</p>
             </div>
 
-            <!-- Large, Premium PCTE to Home Live Tracker Panel -->
             <div class="pcte-live-tracker-large">
                 <div class="tracker-top-row">
-                    <div class="tracker-title-group">
-                        <span class="tracker-main-title">📍 Live Shuttle Telemetry</span>
-                        <span class="tracker-subtitle">Bus #01 • Driver: Mr. Mohan Lal</span>
+                    <div>
+                        <div class="tracker-main-title">📍 Live Shuttle Telemetry</div>
+                        <div class="tracker-subtitle">Bus #01 • Driver: Mr. Mohan Lal</div>
                     </div>
                     <span class="live-badge-glow">Active Transit</span>
                 </div>
@@ -525,85 +489,31 @@
             <h3>🔎 Find Your Route</h3>
             <div class="form-row">
                 <div class="input-group">
-                    <label>From:</label>
-                    <select id="fromLocation" class="select-box">
-                        <option value="">Select Location ▼</option>
-                        <option value="PCTE Campus">PCTE Campus</option>
-                        <option value="Hostel Block C">Hostel Block C</option>
-                        <option value="Academic Quad">Academic Quad</option>
-                        <option value="Central Library">Central Library</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label>To:</label>
-                    <select id="toLocation" class="select-box">
-                        <option value="">Select Location ▼</option>
-                        <option value="Home">Home</option>
-                        <option value="Hostel Block C">Hostel Block C</option>
-                        <option value="Academic Quad">Academic Quad</option>
-                        <option value="Central Library">Central Library</option>
-                    </select>
+                    <label for="destinationLocation">Destination:</label>
+                    <input id="destinationLocation" class="select-box" type="text" placeholder="Enter your destination" autocomplete="off">
                 </div>
             </div>
             <button class="search-route-btn" onclick="searchRoute()">Search Route</button>
 
             <!-- Dynamic Result Display Box -->
             <div id="routeResultBox" class="results-container">
-                <h4 style="font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem;">✨ Assigned Route Match</h4>
+                <h4 id="routeResultTitle" style="font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem;">✨ Route Found</h4>
+                <p id="noRouteMessage" class="no-route-message" hidden></p>
                 <div class="result-grid">
                     <div class="result-item">
-                        <div class="result-label">Assigned Bus</div>
+                        <div class="result-label">Bus Number</div>
                         <div id="resBus" class="result-value">-</div>
                     </div>
                     <div class="result-item">
-                        <div class="result-label">Departure</div>
-                        <div id="resTime" class="result-value">-</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-label">Driver In-Charge</div>
+                        <div class="result-label">Driver Name</div>
                         <div id="resDriver" class="result-value">-</div>
                     </div>
                     <div class="result-item">
                         <div class="result-label">Driver Contact</div>
-                        <div class="result-value"><a id="resContact" href="#" class="phone-link">-</a></div>
+                        <div class="result-value"><a id="resContact" class="phone-link">-</a></div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Today's Bus Schedule Table -->
-        <div class="card-box schedule-section">
-            <h3><span>🕒</span> Today's Bus Schedule & Drivers</h3>
-            <table class="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Route / Bus</th>
-                        <th>Departure</th>
-                        <th>Driver Name</th>
-                        <th>Contact No.</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>PCTE to Home (Bus #01)</td>
-                        <td>8:00 AM</td>
-                        <td>Mr. Mohan Lal</td>
-                        <td><a href="tel:+919988776655" class="phone-link">+91 99887-76655</a></td>
-                    </tr>
-                    <tr>
-                        <td>PCTE to Home (Bus #02)</td>
-                        <td>9:00 AM</td>
-                        <td>Mr. Suresh Singh</td>
-                        <td><a href="tel:+919123456789" class="phone-link">+91 91234-56789</a></td>
-                    </tr>
-                    <tr>
-                        <td>PCTE Express (Bus #04)</td>
-                        <td>10:00 AM</td>
-                        <td>Mr. Ramesh Kumar</td>
-                        <td><a href="tel:+919876543210" class="phone-link">+91 98765-43210</a></td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
 
     </div>
@@ -627,51 +537,72 @@
 
         // Route Lookup Logic
         function searchRoute() {
-            const from = document.getElementById('fromLocation').value;
-            const to = document.getElementById('toLocation').value;
+            const destinationInput = document.getElementById('destinationLocation');
+            const destination = destinationInput.value.trim().toLowerCase();
             const resultBox = document.getElementById('routeResultBox');
+            const resultGrid = resultBox.querySelector('.result-grid');
+            const resultTitle = document.getElementById('routeResultTitle');
+            const noRouteMessage = document.getElementById('noRouteMessage');
 
-            if (!from || !to) {
-                alert('Please select both "From" and "To" locations to search.');
-                resultBox.style.display = 'none';
+            if (!destination) {
+                resultBox.style.display = 'block';
+                resultGrid.style.display = 'none';
+                resultTitle.textContent = 'Destination required';
+                noRouteMessage.textContent = 'Enter a destination to search for a bus route.';
+                noRouteMessage.hidden = false;
                 return;
             }
 
-            if (from === to) {
-                alert('"From" and "To" locations cannot be the same!');
-                resultBox.style.display = 'none';
-                return;
-            }
+            const routes = {
+                'home': {
+                    bus: 'Bus #01',
+                    driver: 'Mr. Mohan Lal',
+                    phone: '+91 99887-76655'
+                },
+                'hostel block c': {
+                    bus: 'Bus #02',
+                    driver: 'Mr. Suresh Singh',
+                    phone: '+91 91234-56789'
+                },
+                'central library': {
+                    bus: 'Bus #02',
+                    driver: 'Mr. Suresh Singh',
+                    phone: '+91 91234-56789'
+                },
+                'academic quad': {
+                    bus: 'Bus #04',
+                    driver: 'Mr. Ramesh Kumar',
+                    phone: '+91 98765-43210'
+                }
+            };
+            const route = routes[destination];
 
             resultBox.style.display = 'block';
-
-            // Simulated matching data
-            let bus = "Bus #04 (PCTE Express Route)";
-            let time = "09:30 AM";
-            let driver = "Mr. Ramesh Kumar";
-            let phone = "+91 98765-43210";
-
-            if (from.includes("PCTE") && to.includes("Home")) {
-                bus = "Bus #01 (PCTE to Home Shuttle)";
-                time = "08:00 AM";
-                driver = "Mr. Mohan Lal";
-                phone = "+91 99887-76655";
-            } else if (from.includes("Hostel") || to.includes("Library")) {
-                bus = "Bus #02 (Academic Quad Express)";
-                time = "09:00 AM";
-                driver = "Mr. Suresh Singh";
-                phone = "+91 91234-56789";
+            if (!route) {
+                resultTitle.textContent = 'No route found';
+                noRouteMessage.textContent = 'No bus route is listed for this destination. Please check the destination or contact campus transport.';
+                noRouteMessage.hidden = false;
+                resultGrid.style.display = 'none';
+                return;
             }
 
-            // Inject values
-            document.getElementById('resBus').innerText = bus;
-            document.getElementById('resTime').innerText = time;
-            document.getElementById('resDriver').innerText = driver;
-            
+            resultTitle.textContent = '✨ Route Found';
+            noRouteMessage.hidden = true;
+            resultGrid.style.display = 'grid';
+            document.getElementById('resBus').textContent = route.bus;
+            document.getElementById('resDriver').textContent = route.driver;
             const contactEl = document.getElementById('resContact');
-            contactEl.innerText = phone;
-            contactEl.href = "tel:" + phone;
+            contactEl.textContent = route.phone;
+            contactEl.href = `tel:${route.phone.replace(/[^\d+]/g, '')}`;
+            destinationInput.focus();
         }
+
+        document.getElementById('destinationLocation').addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                searchRoute();
+            }
+        });
     </script>
 </body>
 </html>
