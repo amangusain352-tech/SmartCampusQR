@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - Sports & Equipment Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="w-full max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                <i class="fa-solid fa-graduation-cap text-xl"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tight text-slate-900">SmartCampus<span class="text-indigo-600">QR</span></span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <!-- System Online Badge -->
+            <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                System Online
+            </div>
+
+            <!-- Cart / Bookings Drawer Trigger -->
+            <button onclick="toggleDrawer()" class="relative flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full font-semibold text-sm text-slate-700 hover:bg-slate-50 transition shadow-xs cursor-pointer">
+                <i class="fa-solid fa-bag-shopping text-indigo-600"></i>
+                <span class="hidden md:inline">Reservations</span>
+                <span id="cartBadge" class="absolute -top-1 -right-1 w-5 h-5 bg-indigo-600 text-white text-xs rounded-full flex items-center justify-center font-bold">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-7xl mx-auto px-6 py-8 flex-grow">
+        
+        <!-- Hero Section -->
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <!-- Official Portal Pill -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-50 border border-rose-100 text-rose-600 text-xs font-semibold mb-4 shadow-2xs">
+                <i class="fa-solid fa-location-dot"></i> Official Sports & Gear Portal
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
+                What sport do you <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">need today?</span>
+            </h1>
+            <p class="text-slate-500 text-sm sm:text-base">
+                Select or search campus sports equipment, pitches, and gear below for instant live reservations and QR pass generation.
+            </p>
+        </div>
+
+        <!-- Search & Filter Controls Bar -->
+        <div class="max-w-3xl mx-auto mb-12">
+            <!-- Search Input Bar -->
+            <div class="relative mb-6">
+                <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                <input type="text" id="searchInput" onkeyup="filterSports()" placeholder="Search sports gear, equipment, courts, or rules..." 
+                    class="w-full pl-14 pr-6 py-4 bg-white border border-slate-200 rounded-2xl shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-700 placeholder-slate-400 text-sm font-medium transition">
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div id="categoryFilters" class="flex flex-wrap items-center justify-center gap-2.5">
+                <button onclick="filterCategory('all', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-indigo-600 text-white transition shadow-sm cursor-pointer">All Sports</button>
+                <button onclick="filterCategory('outdoor', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer">Outdoor & Pitches</button>
+                <button onclick="filterCategory('indoor', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer">Indoor Equipment</button>
+                <button onclick="filterCategory('court', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer">Court Booking</button>
+                <button onclick="filterCategory('fitness', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer">Fitness & Gym</button>
+            </div>
+        </div>
+
+        <!-- Sports Cards Grid (3 Columns like SmartCampusQR) -->
+        <div id="sportsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Sport Card 1: Football -->
+            <div class="sport-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="outdoor" data-name="football soccer pitch gear">
+               <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-futbol"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-full">AVAILABLE</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Football & Pitch</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">FIFA-grade regulation balls, training cones, corner flags, and floodlit turf ground booking.</p>
+               </div>
+               
+               <div>
+                   <div class="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-4">
+                       <span class="text-xs font-semibold text-slate-600">Stock / Slots: <strong id="stock-1" class="text-indigo-600">12</strong> units</span>
+                       <div class="flex items-center gap-2">
+                           <button onclick="updateQty(1, -1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">-</button>
+                           <span id="qty-1" class="text-sm font-bold w-5 text-center">1</span>
+                           <button onclick="updateQty(1, 1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">+</button>
+                       </div>
+                   </div>
+                   <button onclick="bookItem('Football & Pitch', 1)" class="w-full py-3 px-4 bg-slate-900 hover:bg-indigo-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-md cursor-pointer flex items-center justify-center gap-2">
+                       <i class="fa-solid fa-qrcode"></i> Reserve via QR
+                   </button>
+               </div>
+            </div>
+
+            <!-- Sport Card 2: Basketball -->
+            <div class="sport-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="court" data-name="basketball court indoor hoop">
+               <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-basketball"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold rounded-full">POPULAR</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Basketball Court</h3>
+室内
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Indoor maple wood hardwood court access with official Molten leather basketballs and electronic scoreboard.</p>
+               </div>
+               
+               <div>
+                   <div class="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-4">
+                       <span class="text-xs font-semibold text-slate-600">Stock / Slots: <strong id="stock-2" class="text-amber-600">4</strong> courts</span>
+                       <div class="flex items-center gap-2">
+                           <button onclick="updateQty(2, -1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">-</button>
+                           <span id="qty-2" class="text-sm font-bold w-5 text-center">1</span>
+                           <button onclick="updateQty(2, 1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">+</button>
+                       </div>
+                   </div>
+                   <button onclick="bookItem('Basketball Court', 2)" class="w-full py-3 px-4 bg-slate-900 hover:bg-amber-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-md cursor-pointer flex items-center justify-center gap-2">
+                       <i class="fa-solid fa-qrcode"></i> Reserve via QR
+                   </button>
+               </div>
+            </div>
+
+            <!-- Sport Card 3: Tennis & Badminton -->
+            <div class="sport-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="court" data-name="tennis badminton racket net">
+               <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold rounded-full">AVAILABLE</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Tennis & Badminton</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Carbon-fiber rackets, shuttlecocks, pressurized tennis balls, and synthetic net court reservations.</p>
+               </div>
+               
+               <div>
+                   <div class="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-4">
+                       <span class="text-xs font-semibold text-slate-600">Stock / Slots: <strong id="stock-3" class="text-emerald-600">18</strong> sets</span>
+                       <div class="flex items-center gap-2">
+                           <button onclick="updateQty(3, -1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">-</button>
+                           <span id="qty-3" class="text-sm font-bold w-5 text-center">1</span>
+                           <button onclick="updateQty(3, 1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">+</button>
+                       </div>
+                   </div>
+                   <button onclick="bookItem('Tennis & Badminton', 3)" class="w-full py-3 px-4 bg-slate-900 hover:bg-emerald-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-md cursor-pointer flex items-center justify-center gap-2">
+                       <i class="fa-solid fa-qrcode"></i> Reserve via QR
+                   </button>
+               </div>
+            </div>
+
+            <!-- Sport Card 4: Fitness & Gym -->
+            <div class="sport-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="fitness" data-name="gym fitness weights dumbbells">
+               <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-dumbbell"></i>
+                        </div>
+                        <span class="px-3 py-1 bg-purple-50 text-purple-700 border border-purple-200 text-xs font-bold rounded-full">OPEN 24/7</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Campus Fitness & Gym</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed mb-6">Full Olympic barbell racks, adjustable dumbbells, treadmills, ellipticals, and personal trainer access.</p>
+               </div>
+               
+               <div>
+                   <div class="flex items-center justify-between bg-slate-50 border border-slate-100 rounded-2xl p-3 mb-4">
+                       <span class="text-xs font-semibold text-slate-600">Capacity: <strong id="stock-4" class="text-purple-600">30</strong> slots</span>
+                       <div class="flex items-center gap-2">
+                           <button onclick="updateQty(4, -1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">-</button>
+                           <span id="qty-4" class="text-sm font-bold w-5 text-center">1</span>
+                           <button onclick="updateQty(4, 1)" class="w-7 h-7 bg-white border border-slate-200 rounded-lg text-slate-600 font-bold hover:bg-slate-100 flex items-center justify-center cursor-pointer transition">+</button>
+                       </div>
+                   </div>
+                   <button onclick="bookItem('Campus Fitness & Gym', 4)" class="w-full py-3 px-4 bg-slate-900 hover:bg-purple-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-md cursor-pointer flex items-center justify-center gap-2">
+                       <i class="fa-solid fa-qrcode"></i> Reserve via QR
+                   </button>
+               </div>
+            </div>
+
+            <!-- Sport Card 5: Swimming Pool -->
+            <div class="sport-card glass-

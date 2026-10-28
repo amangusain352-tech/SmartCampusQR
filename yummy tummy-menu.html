@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yummy Tummy - Menu</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #e65100;
+            --primary-light: #fff3e0;
+            --secondary: #2e7d32;
+            --dark: #2c3e50;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header & Hero Section */
+        header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .brand-logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #ff9800;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            color: #ccc;
+            font-weight: 300;
+            margin-bottom: 25px;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 550px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* Category Filter Navigation */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 25px 20px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .cat-btn {
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.25);
+        }
+
+        /* Main Menu Container */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Item Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #f0f0f0;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        /* Floating Badges */
+        .veg-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .veg-icon {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #2e7d32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1px;
+        }
+
+        .veg-icon-dot {
+            width: 6px;
+            height: 6px;
+            background: #2e7d32;
+            border-radius: 50%;
+        }
+
+        .img-price-tag {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #ffb74d;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .text-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: var(--primary-light);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .card-desc {
+            color: #666;
+            font-size: 0.88rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            border-top: 1px solid #f0f0f0;
+            padding-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* Empty State */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: #777;
+            display: none;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: #888;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 50px;
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            color: #aaa;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 600px) {
+            .brand-logo { font-size: 2.2rem; }
+            .category-nav { padding: 15px 10px; gap: 8px; }
+            .cat-btn { padding: 8px 14px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header & Search -->
+    <header>
+        <div class="brand-logo"><i class="fa-solid fa-utensils"></i> Yummy Tummy</div>
+        <div class="brand-subtitle">Freshly Prepared Snacks, Desserts & Beverages</div>
+        
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search drinks, cakes, samosas, tea, coffee...">
+        </div>
+    </header>
+
+    <!-- Category Filters -->
+    <nav class="category-nav">
+        <button class="cat-btn active" onclick="filterCategory('all', this)"><i class="fa-solid fa-border-all"></i> All Items</button>
+        <button class="cat-btn" onclick="filterCategory('drinks', this)"><i class="fa-solid fa-glass-water"></i> Drinks</button>
+        <button class="cat-btn" onclick="filterCategory('samosas', this)"><i class="fa-solid fa-triangle-exclamation"></i> Samosas</button>
+        <button class="cat-btn" onclick="filterCategory('cakes', this)"><i class="fa-solid fa-cake-candles"></i> Cakes</button>
+        <button class="cat-btn" onclick="filterCategory('chocolates', this)"><i class="fa-solid fa-cookie-bite"></i> Chocolates</button>
+        <button class="cat-btn" onclick="filterCategory('patties', this)"><i class="fa-solid fa-bread-slice"></i> Patties</button>
+        <button class="cat-btn" onclick="filterCategory('tea-coffee', this)"><i class="fa-solid fa-mug-hot"></i> Tea & Coffee</button>
+    </nav>
+
+    <!-- Menu Items Container -->
+    <main class="container">
+        <div class="grid" id="menuGrid">
+
+            <!-- DRINKS -->
+            <div class="card" data-category="drinks">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80" alt="Fresh Lemon Mint Soda" class="card-img">
+                    <span class="img-price-tag">₹80</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Fresh Lemon Mint Soda</h3>
+                        <span class="text-price">₹80</span>
+                    </div>
+                    <p class="card-desc">Refreshing fizz infused with real mint leaves, lemon juice, and rock salt.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-glass-water"></i> 350 ml</span>
+                        <span>Beverage</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="drinks">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=600&q=80" alt="Blue Lagoon Mocktail" class="card-img">
+                    <span class="img-price-tag">₹120</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Blue Lagoon Mocktail</h3>
+                        <span class="text-price">₹120</span>
+                    </div>
+                    <p class="card-desc">Vibrant citrus mocktail with blue curaçao syrup, lemon juice, and sprite.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-glass-water"></i> 350 ml</span>
+                        <span>Mocktail</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="drinks">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80" alt="Mango Blast Smoothie" class="card-img">
+                    <span class="img-price-tag">₹140</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Mango Blast Smoothie</h3>
+                        <span class="text-price">₹140</span>
+                    </div>
+                    <p class="card-desc">Thick and creamy blend of Alphonso mango pulp, yogurt, and honey.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-glass-water"></i> 400 ml</span>
+                        <span>Smoothie</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SAMOSAS -->
+            <div class="card" data-category="samosas">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80" alt="Classic Potato Samosa" class="card-img">
+                    <span class="img-price-tag">₹30</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Classic Potato Samosa</h3>
+                        <span class="text-price">₹30</span>
+                    </div>
+                    <p class="card-desc">Crispy golden crust filled with spiced potatoes, green peas, and herbs.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-utensils"></i> 2 Pcs</span>
+                        <span>Snack</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="samosas">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=600&q=80" alt="Paneer Tikka Samosa" class="card-img">
+                    <span class="img-price-tag">₹50</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Paneer Tikka Samosa</h3>
+                        <span class="text-price">₹50</span>
+                    </div>
+                    <p class="card-desc">Stuffed with marinated paneer cubes cooked in tandoori spices.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-utensils"></i> 2 Pcs</span>
+                        <span>Special</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="samosas">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1541518763669-27fef04b14e8?auto=format&fit=crop&w=600&q=80" alt="Cheese Corn Jalapeño Samosa" class="card-img">
+                    <span class="img-price-tag">₹60</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Cheese Corn Samosa</h3>
+                        <span class="text-price">₹60</span>
+                    </div>
+                    <p class="card-desc">Melted mozzarella blended with sweet corn and spicy jalapeños.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-utensils"></i> 2 Pcs</span>
+                        <span>Fusion</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAKES -->
+            <div class="card" data-category="cakes">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=600&q=80" alt="Belgian Chocolate Truffle" class="card-img">
+                    <span class="img-price-tag">₹150</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Chocolate Truffle Pastry</h3>
+                        <span class="text-price">₹150</span>
+                    </div>
+                    <p class="card-desc">Rich sponge cake layered with dark Belgian chocolate ganache.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-cake-candles"></i> 1 Slice</span>
+                        <span>Bakery</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="cakes">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=600&q=80" alt="Red Velvet Cake" class="card-img">
+                    <span class="img-price-tag">₹160</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Red Velvet Cake Slice</h3>
+                        <span class="text-price">₹160</span>
+                    </div>
+                    <p class="card-desc">Classic red velvet base paired with smooth cream cheese frosting.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-cake-candles"></i> 1 Slice</span>
+                        <span>Bakery</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="cakes">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=600&q=80" alt="New York Cheesecake" class="card-img">
+                    <span class="img-price-tag">₹180</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">New York Cheesecake</h3>
+                        <span class="text-price">₹180</span>
+                    </div>
+                    <p class="card-desc">Dense, creamy cheesecake slice with a buttery graham cracker crust.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-cake-candles"></i> 1 Slice</span>
+                        <span>Specialty</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHOCOLATES -->
+            <div class="card" data-category="chocolates">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80" alt="Fudge Walnut Brownie" class="card-img">
+                    <span class="img-price-tag">₹110</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Fudge Walnut Brownie</h3>
+                        <span class="text-price">₹110</span>
+                    </div>
+                    <p class="card-desc">Gooey dark chocolate brownie topped with roasted crunchy walnuts.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-cookie-bite"></i> 1 Pc</span>
+                        <span>Dessert</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="chocolates">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=600&q=80" alt="Handcrafted Dark Truffles" class="card-img">
+                    <span class="img-price-tag">₹200</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Handcrafted Dark Truffles</h3>
+                        <span class="text-price">₹200</span>
+                    </div>
+                    <p class="card-desc">70% cocoa artisanal chocolate truffles dusted with premium cocoa powder.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-box"></i> 4 Pcs Box</span>
+                        <span>Confectionery</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PATTIES -->
+            <div class="card" data-category="patties">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=600&q=80" alt="Veg Puff Patty" class="card-img">
+                    <span class="img-price-tag">₹40</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Crispy Veg Puff Patty</h3>
+                        <span class="text-price">₹40</span>
+                    </div>
+                    <p class="card-desc">Flaky puff pastry stuffed with seasoned potatoes, carrots, and peas.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-bread-slice"></i> 1 Pc</span>
+                        <span>Bakery</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="patties">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=600&q=80" alt="Paneer Cream Patty" class="card-img">
+                    <span class="img-price-tag">₹55</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Paneer Cream Patty</h3>
+                        <span class="text-price">₹55</span>
+                    </div>
+                    <p class="card-desc">Multi-layered crispy pastry filled with creamy spiced cottage cheese.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-bread-slice"></i> 1 Pc</span>
+                        <span>Bakery</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEA & COFFEE -->
+            <div class="card" data-category="tea-coffee">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80" alt="Kulhad Masala Chai" class="card-img">
+                    <span class="img-price-tag">₹40</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Kulhad Masala Chai</h3>
+                        <span class="text-price">₹40</span>
+                    </div>
+                    <p class="card-desc">Aromatic Indian tea brewed with cardamom, ginger, and spices served in clay cup.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-mug-hot"></i> 1 Kulhad</span>
+                        <span>Hot Tea</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="tea-coffee">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80" alt="Hazelnut Cold Coffee" class="card-img">
+                    <span class="img-price-tag">₹130</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Hazelnut Cold Coffee</h3>
+                        <span class="text-price">₹130</span>
+                    </div>
+                    <p class="card-desc">Chilled espresso blended with milk, hazelnut syrup, and vanilla ice cream.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-glass-water"></i> 350 ml</span>
+                        <span>Cold Coffee</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="tea-coffee">
+                <div class="card-img-wrapper">
+                    <span class="veg-badge"><div class="veg-icon"><div class="veg-icon-dot"></div></div> VEG</span>
+                    <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=600&q=80" alt="Cappuccino" class="card-img">
+                    <span class="img-price-tag">₹110</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-header-row">
+                        <h3 class="card-title">Classic Cappuccino</h3>
+                        <span class="text-price">₹110</span>
+                    </div>
+                    <p class="card-desc">Rich espresso topped with velvety steamed milk foam and cocoa dusting.</p>
+                    <div class="card-footer">
+                        <span><i class="fa-solid fa-mug-hot"></i> 250 ml</span>
+                        <span>Hot Coffee</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Search Message -->
+            <div class="no-results" id="noResults">
+                <i class="fa-solid fa-face-frown"></i>
+                <h3>No items found</h3>
+                <p>Try searching for something else like "chai", "brownie", or "samosa".</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; Yummy Tummy Cafe & Bakery. All Rights Reserved.</p>
+        <p style="font-size: 0.8rem; margin-top: 5px;">Menu prices are inclusive of taxes.</p>
+    </footer>
+
+    <!-- Filter & Search Script -->
+    <script>
+        let currentCategory = 'all';
+
+        function filterCategory(category, element) {
+            currentCategory = category;
+            
+            // Update Active Tab UI
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+
+            applyFilterAndSearch();
+        }
+
+        // Live Search Handler
+        document.getElementById('searchInput').addEventListener('input', applyFilterAndSearch);
+
+        function applyFilterAndSearch() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const title = card.querySelector('.card-title').innerText.toLowerCase();
+                const desc = card.querySelector('.card-desc').innerText.toLowerCase();
+
+                const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+                const matchesSearch = title.includes(searchQuery) || desc.includes(searchQuery);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Toggle No Results Message
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

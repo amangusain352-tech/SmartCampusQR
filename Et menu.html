@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartCampusQR - Pure Veg Menu Catalog</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="w-full max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                <i class="fa-solid fa-graduation-cap text-xl"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tight text-slate-900">SmartCampus<span class="text-emerald-600">QR</span></span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <!-- System Online Badge -->
+            <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold shadow-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Menu Catalog Active
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-7xl mx-auto px-6 py-8 flex-grow">
+        
+        <!-- Hero Section -->
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <!-- Official Portal Pill -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-semibold mb-4 shadow-2xs">
+                <i class="fa-solid fa-leaf"></i> 100% Pure Vegetarian Menu Catalog
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
+                Explore our <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">Pure Veg Selection</span>
+            </h1>
+            <p class="text-slate-500 text-sm sm:text-base">
+                Browse through all 20 pure vegetarian food items and 10 refreshing drinks with prices and animated icons below.
+            </p>
+        </div>
+
+        <!-- Search & Filter Controls Bar -->
+        <div class="max-w-3xl mx-auto mb-12">
+            <!-- Search Input Bar -->
+            <div class="relative mb-6">
+                <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                <input type="text" id="searchInput" onkeyup="filterMenu()" placeholder="Search pure veg food items or drinks..." 
+                    class="w-full pl-14 pr-6 py-4 bg-white border border-slate-200 rounded-2xl shadow-xs focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-700 placeholder-slate-400 text-sm font-medium transition">
+            </div>
+
+            <!-- Category Filter Pills -->
+            <div id="categoryFilters" class="flex flex-wrap items-center justify-center gap-2.5">
+                <button onclick="filterCategory('all', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-emerald-600 text-white transition shadow-sm cursor-pointer">All Items (30)</button>
+                <button onclick="filterCategory('veg-food', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer">Pure Veg Food (20)</button>
+                <button onclick="filterCategory('drink', this)" class="category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer">Drinks & Beverages (10)</button>
+            </div>
+        </div>
+
+        <!-- Menu Grid (3 Columns) -->
+        <div id="menuGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- FOOD ITEM 1 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="paneer tikka masala veg">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-food"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹180</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Paneer Tikka Masala</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Grilled cottage cheese cubes cooked in a rich, spicy tomato-butter gravy.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 2 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="veg biryani rice special">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-plate-wheat"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹140</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Hyderabadi Veg Biryani</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Aromatic basmati rice layered with seasoned mixed vegetables and herbs.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 3 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="masala dosa south indian">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹90</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Crispy Masala Dosa</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Golden fermented crepe stuffed with spiced potato mash, served with chutney & sambar.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 4 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="chole bhature punjabi">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-yellow-50 border border-yellow-100 flex items-center justify-center text-yellow-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-burger"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹120</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Punjabi Chole Bhature</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Spiced chickpea curry paired with fluffy deep-fried leavened bread.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 5 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="hakka noodles chinese veg">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-red-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-rice"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹110</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Veg Hakka Noodles</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Stir-fried noodles tossed with crisp garden-fresh julienne vegetables and sauces.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 6 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="margherita pizza cheese veg">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-pizza-slice"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹199</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Cheese Margherita Pizza</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Hand-tossed crust topped with rich tomato sauce, fresh basil, and double mozzarella.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 7 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="veg burger cheese fries">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-burger"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹99</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Crispy Veggie Burger</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Crunchy potato and corn patty with creamy mayo, lettuce, and melted cheese slice.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 8 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="rajma chawal traditional meal">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-food"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹110</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Rajma Chawal Bowl</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Comforting home-style red kidney bean curry served over steamed basmati rice.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 9 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="dal makhani butter naan">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-mug-hot"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹150</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Dal Makhani & Naan</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Slow-cooked black lentils simmered with cream and butter, served with 2 butter naans.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 10 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="pav bhaji butter street food">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹100</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Mumbai Masala Pav Bhaji</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Thick vegetable mash cooked with spices and butter, served with butter-toasted buns.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 11 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="white sauce pasta cheese italian">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-food"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹160</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Creamy White Sauce Pasta</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Penne pasta tossed in rich garlic cream sauce with mushrooms, bell peppers, and herbs.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 12 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="veg momos steamed dumplings">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-dumpling"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹80</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Steamed Veg Momos (8pcs)</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Delicate steamed flour dumplings filled with finely chopped cabbage, carrots, and spices.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 13 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="aloo paratha curd breakfast">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bread-slice"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹70</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Stuffed Aloo Paratha (2pcs)</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Whole wheat flatbread stuffed with spiced potatoes, cooked on tawa with fresh curd and pickle.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 14 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="idli sambar south indian breakfast">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-food"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹60</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Soft Steamed Idli (4pcs)</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Fluffy rice and lentil cakes served hot with traditional coconut chutney and lentil sambar.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 15 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="veg fried rice manchurian">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-rice"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹130</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Veg Fried Rice & Manchurian</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Wok-tossed fried rice served alongside crispy vegetable manchurian balls in garlic sauce.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 16 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="malai kofta creamy curry">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-bowl-food"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹170</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Shahi Malai Kofta</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Deep-fried potato and paneer dumplings stuffed with dry fruits in a rich cashew gravy.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 17 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="panipuri golgappe chaat">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹50</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Pani Puri / Golgappe (6pcs)</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Crispy hollow spheres filled with spicy tamarind water, potatoes, and chickpeas.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 18 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="veg thali meal deluxe">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-plate-wheat"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹210</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Campus Special Veg Thali</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Complete meal with paneer curry, dal tadka, mix veg, 3 rotis, jeera rice, raita, and sweet.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 19 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="french fries crispy salted snacks">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-yellow-50 border border-yellow-100 flex items-center justify-center text-yellow-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-utensils"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹70</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Crispy French Fries</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Golden salted potato finger fries fried to perfection, served with tomato ketchup.</p>
+                </div>
+            </div>
+
+            <!-- FOOD ITEM 20 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="veg-food" data-name="veg wrap roll paneer">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-burger"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-sm font-extrabold rounded-full">₹110</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Spicy Paneer Tikka Wrap</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Tandoori paneer chunks wrapped in soft rumali roti with crunchy onions and mint mayo.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 1 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="mango shake smoothie beverage">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-500 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹80</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Thick Mango Milkshake</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Blended ripe Alphonso mango pulp with chilled creamy milk and vanilla ice cream.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 2 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="cold coffee chocolate drink">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-800 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-mug-hot"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹90</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Café Frappe Cold Coffee</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Blended espresso coffee with chilled milk, sugar, and topped with chocolate syrup.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 3 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="fresh lime soda drink mojito">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹50</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Fresh Mint Lime Soda</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Refreshing carbonated soda infused with fresh lime juice, mint leaves, and black salt.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 4 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="sweet lassi punjabi yogurt drink">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹60</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Punjabi Sweet Lassi</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Thick, creamy churned yogurt drink sweetened with sugar syrup and topped with malai.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 5 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="masala tea chai hot beverage">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-orange-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-mug-hot"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹25</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Hot Masala Chai</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Traditional Indian brewed milk tea infused with fresh ginger, cardamom, and spices.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 6 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="strawberry milkshake smoothie">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹80</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Strawberry Milkshake</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Sweet strawberry puree blended with cold milk, vanilla ice cream, and whipped cream.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 7 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="badam milk almond healthy drink">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-yellow-50 border border-yellow-100 flex items-center justify-center text-yellow-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-mug-hot"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹70</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Warm Kesar Badam Milk</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Nutritious almond milk simmered with saffron strands, cardamom, and crushed pistachios.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 8 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="lemon iced tea beverage">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹60</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Lemon Iced Tea</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Chilled brewed black tea flavored with natural lemon extract and fresh mint sprigs.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 9 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="butter milk chaas healthy drink">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-100 border border-sky-200 flex items-center justify-center text-sky-700 text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-glass-water"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹30</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Spiced Masala Chaas (Buttermilk)</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Refreshing light churned yogurt cooler seasoned with roasted cumin, coriander, and salt.</p>
+                </div>
+            </div>
+
+            <!-- DRINK ITEM 10 -->
+            <div class="menu-card glass-card rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between" data-category="drink" data-name="hot chocolate fudge beverage">
+                <div>
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-900 border border-amber-950 flex items-center justify-center text-white text-2xl shadow-xs animate-float">
+                            <i class="fa-solid fa-mug-hot"></i>
+                        </div>
+                        <span class="px-3.5 py-1.5 bg-cyan-50 text-cyan-700 border border-cyan-200 text-sm font-extrabold rounded-full">₹90</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-1">Rich Belgian Hot Chocolate</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Velvety steamed dark cocoa milk topped with mini marshmallows and chocolate shavings.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Area matching Netlify branding -->
+    <footer class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between border-t border-slate-200 text-xs text-slate-500 mt-12 gap-4">
+        <div>&copy; 2026 SmartCampusQR System. All campus rights reserved.</div>
+        <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white rounded-full font-semibold shadow-xs">
+            <i class="fa-solid fa-bolt text-emerald-400"></i> Powered by Netlify
+        </div>
+    </footer>
+
+    <!-- JavaScript Filtering Logic -->
+    <script>
+        // Live Search Filtering
+        function filterMenu() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.menu-card');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const title = card.querySelector('h3').innerText.toLowerCase();
+                const desc = card.querySelector('p').innerText.toLowerCase();
+                
+                if (name.includes(query) || title.includes(query) || desc.includes(query)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // Category Filter Buttons
+        function filterCategory(category, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.className = "category-btn px-5 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition cursor-pointer";
+            });
+            btn.className = "category-btn px-5 py-2 rounded-full text-xs font-bold bg-emerald-600 text-white transition shadow-sm cursor-pointer";
+
+            const cards = document.querySelectorAll('.menu-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+    </script>
+</body>
+</html>

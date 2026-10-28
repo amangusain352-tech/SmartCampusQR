@@ -1331,7 +1331,7 @@
         const campusQrCode = document.getElementById('campusQrCode');
         if (campusQrCode && typeof QRCode === 'function') {
             new QRCode(campusQrCode, {
-                text: new URL('service-selection.html', window.location.href).href,
+                text: new URL('/service-selection.html', window.location.origin).href,
                 width: 220,
                 height: 220,
                 correctLevel: QRCode.CorrectLevel.M
@@ -1386,6 +1386,11 @@
         }
 
         async function startScanner() {
+            if (!window.isSecureContext) {
+                setScanStatus('Camera access requires HTTPS or localhost. Open this page over a secure connection.', true);
+                return;
+            }
+
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 setScanStatus('Camera is not supported in this browser.', true);
                 return;
@@ -1429,10 +1434,9 @@
                         return false;
                     }
 
-                        const serviceUrl = new URL('/service-selection.html', window.location.origin);
                     setScanStatus('QR code detected! Opening service selection...');
                     stopScanner();
-                    window.location.href = serviceUrl.href;
+                    window.location.href = scannedUrl.href;
                     return true;
                 };
 

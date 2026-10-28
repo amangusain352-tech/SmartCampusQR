@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu - Veg & Non-Veg</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00A669;
+            --primary-hover: #008754;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --radius: 16px;
+            --veg-color: #16A34A;
+            --nonveg-color: #DC2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding-bottom: 60px;
+        }
+
+        /* Header / Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 20px 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 650px;
+            margin: 25px auto 30px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 20px rgba(0, 166, 105, 0.15);
+        }
+
+        /* Filter Tabs */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            padding: 0 20px;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            padding: 10px 22px;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: #ffffff;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 166, 105, 0.3);
+        }
+
+        .badge-icon {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid currentColor;
+            padding: 1px;
+        }
+
+        .badge-icon::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .badge-icon.veg { color: var(--veg-color); }
+        .badge-icon.nonveg { color: var(--nonveg-color); }
+        .filter-btn.active .badge-icon { color: #ffffff; }
+
+        /* Menu Grid */
+        .menu-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 30px;
+        }
+
+        /* Food Card */
+        .food-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .food-card:hover .card-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .food-type-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            margin-top: auto;
+        }
+
+        .add-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .add-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Empty state */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .menu-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Header -->
+    <header class="hero">
+        <h1>What would you like to <span>order today?</span></h1>
+        <p>Browse our fresh selection of veg and non-veg dishes, select your favorites, and enjoy your meal!</p>
+    </header>
+
+    <!-- Search Section -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search veg, non-veg dishes, or drinks..." onkeyup="filterMenu()">
+        </div>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="filters">
+        <button class="filter-btn active" onclick="setCategory('all', this)">
+            All Items
+        </button>
+        <button class="filter-btn" onclick="setCategory('veg', this)">
+            <span class="badge-icon veg"></span> Veg Dishes
+        </button>
+        <button class="filter-btn" onclick="setCategory('non-veg', this)">
+            <span class="badge-icon nonveg"></span> Non-Veg Dishes
+        </button>
+        <button class="filter-btn" onclick="setCategory('beverage', this)">
+            <i class="fa-solid fa-glass-water" style="font-size: 0.85rem;"></i> Drinks & Beverages
+        </button>
+    </div>
+
+    <!-- Menu Grid -->
+    <main class="menu-container" id="menuGrid">
+        
+        <!-- 1. Veg Item -->
+        <article class="food-card" data-category="veg" data-title="Paneer Tikka Masala">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=600&q=80" alt="Paneer Tikka Masala">
+                <span class="food-type-tag"><span class="badge-icon veg"></span> VEG</span>
+                <span class="price-badge">₹180</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Paneer Tikka Masala</h2>
+                <p class="card-desc">Grilled cottage cheese cubes cooked in a rich, spicy tomato-butter gravy with aromatic Indian spices.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 2. Non-Veg Item -->
+        <article class="food-card" data-category="non-veg" data-title="Butter Chicken Masala">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=600&q=80" alt="Butter Chicken">
+                <span class="food-type-tag"><span class="badge-icon nonveg"></span> NON-VEG</span>
+                <span class="price-badge">₹260</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Butter Chicken Masala</h2>
+                <p class="card-desc">Tender chicken pieces simmered in a creamy, velvety tomato sauce enriched with cashew paste and butter.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 3. Veg Item -->
+        <article class="food-card" data-category="veg" data-title="Hyderabadi Veg Biryani">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80" alt="Hyderabadi Veg Biryani">
+                <span class="food-type-tag"><span class="badge-icon veg"></span> VEG</span>
+                <span class="price-badge">₹140</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Hyderabadi Veg Biryani</h2>
+                <p class="card-desc">Aromatic basmati rice layered with seasoned mixed vegetables, saffron, and fresh saffron-infused herbs.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 4. Non-Veg Item -->
+        <article class="food-card" data-category="non-veg" data-title="Chicken Dum Biryani">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=600&q=80" alt="Chicken Biryani">
+                <span class="food-type-tag"><span class="badge-icon nonveg"></span> NON-VEG</span>
+                <span class="price-badge">₹220</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Chicken Dum Biryani</h2>
+                <p class="card-desc">Slow-cooked fragrant long-grain basmati rice with marinated chicken, fried onions, and whole spices.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 5. Veg Item -->
+        <article class="food-card" data-category="veg" data-title="Crispy Masala Dosa">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?auto=format&fit=crop&w=600&q=80" alt="Crispy Masala Dosa">
+                <span class="food-type-tag"><span class="badge-icon veg"></span> VEG</span>
+                <span class="price-badge">₹90</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Crispy Masala Dosa</h2>
+                <p class="card-desc">Golden fermented crepe stuffed with spiced potato mash, served with coconut chutney & lentil sambar.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 6. Non-Veg Item -->
+        <article class="food-card" data-category="non-veg" data-title="Grilled Tandoori Chicken">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&w=600&q=80" alt="Tandoori Chicken">
+                <span class="food-type-tag"><span class="badge-icon nonveg"></span> NON-VEG</span>
+                <span class="price-badge">₹280</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Grilled Tandoori Chicken</h2>
+                <p class="card-desc">Juicy chicken roasted in a clay oven after being marinated in yogurt, lemon juice, and traditional tandoori spices.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 7. Beverage Item -->
+        <article class="food-card" data-category="beverage" data-title="Mango Lassi">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1528740561666-dc2479dc08ab?auto=format&fit=crop&w=600&q=80" alt="Mango Lassi">
+                <span class="food-type-tag"><span class="badge-icon veg"></span> DRINK</span>
+                <span class="price-badge">₹70</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Mango Lassi</h2>
+                <p class="card-desc">Creamy and refreshing yogurt-based drink blended with sweet Alphonso mango pulp and cardamom.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+        <!-- 8. Beverage Item -->
+        <article class="food-card" data-category="beverage" data-title="Iced Cold Coffee">
+            <div class="card-img-wrapper">
+                <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=600&q=80" alt="Iced Cold Coffee">
+                <span class="food-type-tag"><span class="badge-icon veg"></span> DRINK</span>
+                <span class="price-badge">₹80</span>
+            </div>
+            <div class="card-body">
+                <h2 class="card-title">Iced Cold Coffee</h2>
+                <p class="card-desc">Rich espresso blended with chilled milk, ice, and a scoop of vanilla ice cream topped with chocolate drizzle.</p>
+                <div class="card-footer">
+                    <button class="add-btn"><i class="fa-solid fa-cart-plus"></i> Add to Order</button>
+                </div>
+            </div>
+        </article>
+
+    </main>
+
+    <!-- JavaScript Filter Functionality -->
+    <script>
+        let currentCategory = 'all';
+
+        function setCategory(category, buttonElement) {
+            currentCategory = category;
+            
+            // Update active button state
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            buttonElement.classList.add('active');
+
+            // Apply filter
+            filterMenu();
+        }
+
+        function filterMenu() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.food-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const title = card.getAttribute('data-title').toLowerCase();
+                const description = card.querySelector('.card-desc').textContent.toLowerCase();
+
+                const matchesCategory = (currentCategory === 'all') || (category === currentCategory);
+                const matchesSearch = title.includes(searchQuery) || description.includes(searchQuery);
+
+                if (matchesCategory && matchesSearch) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Handle No Results Message
+            let noResultsEl = document.getElementById('noResultsMessage');
+            if (visibleCount === 0) {
+                if (!noResultsEl) {
+                    noResultsEl = document.createElement('div');
+                    noResultsEl.id = 'noResultsMessage';
+                    noResultsEl.className = 'no-results';
+                    noResultsEl.innerHTML = '<i class="fa-solid fa-utensils"></i><p>No dishes found matching your selection.</p>';
+                    document.getElementById('menuGrid').appendChild(noResultsEl);
+                }
+            } else if (noResultsEl) {
+                noResultsEl.remove();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -27,16 +27,19 @@
 
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
+            background:
+                radial-gradient(circle at 8% 0%, rgba(99, 102, 241, 0.10), transparent 28rem),
+                var(--bg-color);
             color: var(--text-main);
             line-height: 1.5;
         }
 
         /* Navbar */
         header {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px);
             border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
+            padding: 0.9rem max(1.5rem, calc((100% - 1180px) / 2));
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -120,31 +123,65 @@
 
         /* Main Container */
         main {
-            max-width: 1000px;
-            margin: 3rem auto;
+            max-width: 1180px;
+            margin: 2.5rem auto;
             padding: 0 1.5rem;
-            text-align: center;
         }
 
         .page-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
         }
 
         .page-header h1 {
-            font-size: 2.2rem;
+            font-size: clamp(2rem, 4vw, 2.8rem);
             font-weight: 800;
             color: var(--text-main);
             margin-bottom: 0.5rem;
+            letter-spacing: -0.04em;
         }
 
         .page-header p {
             color: var(--text-muted);
             font-size: 1.05rem;
+            max-width: 720px;
+        }
+
+        .directory-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .summary-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .summary-item strong {
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin-right: 0.35rem;
+        }
+
+        .directory-note {
+            margin: 0 0 1.5rem;
+            padding: 0.85rem 1rem;
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            background: #eef2ff;
+            color: #3730a3;
+            font-size: 0.9rem;
         }
 
         /* Search & Filter Bar */
         .search-container {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
@@ -182,7 +219,7 @@
         /* Grid Layouts */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
             gap: 1.5rem;
             text-align: left;
         }
@@ -192,15 +229,17 @@
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            display: none; /* Initially Hidden until searched */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.04);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             position: relative;
         }
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border-color: #c7d2fe;
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.09);
         }
 
         .card-header-flex {
@@ -218,6 +257,13 @@
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--primary);
+            flex: 0 0 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            color: var(--primary-dark);
+            font-weight: 800;
         }
 
         .card-title {
@@ -237,11 +283,14 @@
             flex-direction: column;
             gap: 0.6rem;
             margin-bottom: 1rem;
+            flex: 1;
         }
 
         .tree-list li {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
             font-size: 0.92rem;
             color: var(--text-muted);
         }
@@ -250,6 +299,16 @@
             color: var(--text-main);
             font-weight: 500;
             text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .tree-list a {
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+
+        .tree-list a:hover {
+            text-decoration: underline;
         }
 
         /* Badges */
@@ -377,13 +436,50 @@
             gap: 0.75rem;
             margin-top: 1.5rem;
         }
+
+        @media (max-width: 720px) {
+            header {
+                padding: 0.85rem 1rem;
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+
+            nav {
+                order: 3;
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            nav ul {
+                gap: 1.25rem;
+                padding: 0.2rem 0;
+            }
+
+            main {
+                margin: 1.75rem auto;
+                padding: 0 1rem;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .filter-select {
+                min-height: 48px;
+                width: 100%;
+            }
+
+            .card-actions {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- Notice Banner -->
     <div class="notice-banner">
-        <span>📢 **Alert:** Dr. Rajesh Sharma's cabin has been temporarily shifted from Room 401 to Room 410 for maintenance.</span>
+        <span>Directory notice: Existing sample faculty profiles should be verified. Block contacts below were provided by the user.</span>
     </div>
 
     <header>
@@ -393,23 +489,33 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#" class="active">Directory</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="department.html" class="active">Directory</a></li>
                 <li><a href="#" onclick="openReportModal(); return false;">Report Issue</a></li>
             </ul>
         </nav>
-        <button class="btn-primary" onclick="alert('Point your camera or QR Scanner at any cabin QR code to test instant redirection!')">Scan Station</button>
+        <a class="btn-primary" href="scanner.html">Scan Station</a>
     </header>
 
     <main>
         <div class="page-header">
-            <h1>Department Resource Hub</h1>
-            <p>Type a teacher's name, office, or facility below to find information instantly.</p>
+            <h1>Department Faculty Directory</h1>
+            <p>Browse faculty profiles, contact information, office locations, consultation hours, and subjects. Search is optional.</p>
         </div>
 
-        <!-- Search & Filter Container -->
+        <div class="directory-summary" aria-label="Directory summary">
+            <div class="summary-item"><strong>9</strong> faculty profiles</div>
+            <div class="summary-item"><strong>2</strong> department facilities</div>
+            <div class="summary-item"><strong>All</strong> profiles shown below</div>
+        </div>
+
+        <div class="directory-note">
+            Existing faculty profiles contain sample data and should be verified. MT Block and Pharmacy Block contact details were provided by the user.
+        </div>
+
+        <!-- Optional search and category filters -->
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search teacher name, lab, room or facility..." autocomplete="off">
+            <input type="search" id="searchInput" class="search-input" placeholder="Optional: search a teacher, subject, room, or facility..." autocomplete="off" aria-label="Search faculty and facilities">
             <select id="filterCategory" class="filter-select">
                 <option value="all">All Categories</option>
                 <option value="faculty">Faculty Members</option>
@@ -417,7 +523,6 @@
             </select>
         </div>
 
-        <!-- Hidden Cards Database -->
         <div class="grid-container" id="directoryGrid">
             
             <!-- Card 1 -->
@@ -430,9 +535,13 @@
                     </div>
                 </div>
                 <ul class="tree-list">
-                    <li><span>Cabin Number:</span> <span>Room 410 (Shifted)</span></li>
-                    <li><span>Route:</span> <span>Block A → 4th Floor → Left Wing</span></li>
-                    <li><span>Contact:</span> <span>+91 98765-43210</span></li>
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-001</span></li>
+                    <li><span>Department:</span> <span>Computer Science</span></li>
+                    <li><span>Cabin:</span> <span>Room 410, Block A · 4th Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000001">+91 90000 00001</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:rajesh.sharma@example.edu">rajesh.sharma@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Mon–Wed, 2:00–4:00 PM</span></li>
+                    <li><span>Subjects:</span> <span>Data Structures, Research Methods</span></li>
                     <li><span>Availability:</span> <span><span class="badge-status status-available">● Available</span></span></li>
                 </ul>
                 <div class="card-actions">
@@ -451,9 +560,13 @@
                     </div>
                 </div>
                 <ul class="tree-list">
-                    <li><span>Cabin Number:</span> <span>Room 404</span></li>
-                    <li><span>Route:</span> <span>Block A → 4th Floor → Central Corridor</span></li>
-                    <li><span>Contact:</span> <span>+91 91234-56789</span></li>
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-002</span></li>
+                    <li><span>Department:</span> <span>Computer Science</span></li>
+                    <li><span>Cabin:</span> <span>Room 404, Block A · 4th Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000002">+91 90000 00002</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:anil.kumar@example.edu">anil.kumar@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Tue–Thu, 11:00 AM–1:00 PM</span></li>
+                    <li><span>Subjects:</span> <span>Algorithms, Database Systems</span></li>
                     <li><span>Availability:</span> <span><span class="badge-status status-class">● In Class</span></span></li>
                 </ul>
                 <div class="card-actions">
@@ -472,14 +585,149 @@
                     </div>
                 </div>
                 <ul class="tree-list">
-                    <li><span>Cabin Number:</span> <span>Room 407</span></li>
-                    <li><span>Route:</span> <span>Block A → 4th Floor → East Wing</span></li>
-                    <li><span>Contact:</span> <span>+91 99887-76655</span></li>
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-003</span></li>
+                    <li><span>Department:</span> <span>Information Technology</span></li>
+                    <li><span>Cabin:</span> <span>Room 407, Block A · 4th Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000003">+91 90000 00003</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:priya.verma@example.edu">priya.verma@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Mon–Fri, 10:00–11:00 AM</span></li>
+                    <li><span>Subjects:</span> <span>Web Technologies, Software Engineering</span></li>
                     <li><span>Availability:</span> <span><span class="badge-status status-meeting">● In Meeting</span></span></li>
                 </ul>
                 <div class="card-actions">
                     <button class="btn-sm" onclick="openAppointmentModal('Prof. Priya Verma')">📅 Book Meeting</button>
                     <button class="btn-sm" onclick="showDirections('Block A, 4th Floor, Room 407')">📍 Directions</button>
+                </div>
+            </div>
+
+            <!-- Additional sample faculty profiles -->
+            <div class="card search-item" data-category="faculty">
+                <div class="card-header-flex">
+                    <div class="faculty-avatar" aria-hidden="true">KR</div>
+                    <div>
+                        <div class="card-title">Dr. Kavita Rao</div>
+                        <div class="card-subtitle">Head of Department · Electronics &amp; Communication</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-004</span></li>
+                    <li><span>Department:</span> <span>Electronics &amp; Communication</span></li>
+                    <li><span>Cabin:</span> <span>Room 302, Block B · 3rd Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000004">+91 90000 00004</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:kavita.rao@example.edu">kavita.rao@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Mon–Wed, 12:00–1:00 PM</span></li>
+                    <li><span>Subjects:</span> <span>Digital Electronics, VLSI Design</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-available">● Available</span></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Dr. Kavita Rao')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block B, 3rd Floor, Room 302')">📍 Directions</button>
+                </div>
+            </div>
+
+            <div class="card search-item" data-category="faculty">
+                <div class="card-header-flex">
+                    <div class="faculty-avatar" aria-hidden="true">AM</div>
+                    <div>
+                        <div class="card-title">Prof. Arjun Mehta</div>
+                        <div class="card-subtitle">Associate Professor · Mechanical Engineering</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-005</span></li>
+                    <li><span>Department:</span> <span>Mechanical Engineering</span></li>
+                    <li><span>Cabin:</span> <span>Room 215, Block C · 2nd Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000005">+91 90000 00005</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:arjun.mehta@example.edu">arjun.mehta@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Wed–Fri, 3:00–4:00 PM</span></li>
+                    <li><span>Subjects:</span> <span>Thermodynamics, Machine Design</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-class">● In Class</span></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Prof. Arjun Mehta')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block C, 2nd Floor, Room 215')">📍 Directions</button>
+                </div>
+            </div>
+
+            <div class="card search-item" data-category="faculty">
+                <div class="card-header-flex">
+                    <div class="faculty-avatar" aria-hidden="true">NK</div>
+                    <div>
+                        <div class="card-title">Dr. Neha Kapoor</div>
+                        <div class="card-subtitle">Assistant Professor · Applied Sciences</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-006</span></li>
+                    <li><span>Department:</span> <span>Applied Sciences</span></li>
+                    <li><span>Cabin:</span> <span>Room 108, Block A · 1st Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000006">+91 90000 00006</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:neha.kapoor@example.edu">neha.kapoor@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Tue–Thu, 1:00–2:00 PM</span></li>
+                    <li><span>Subjects:</span> <span>Engineering Mathematics, Statistics</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-meeting">● In Meeting</span></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Dr. Neha Kapoor')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block A, 1st Floor, Room 108')">📍 Directions</button>
+                </div>
+            </div>
+
+            <div class="card search-item" data-category="faculty">
+                <div class="card-header-flex">
+                    <div class="faculty-avatar" aria-hidden="true">SG</div>
+                    <div>
+                        <div class="card-title">Prof. Sameer Gill</div>
+                        <div class="card-subtitle">Assistant Professor · Information Technology</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Faculty ID:</span> <span>FAC-DEMO-007</span></li>
+                    <li><span>Department:</span> <span>Information Technology</span></li>
+                    <li><span>Cabin:</span> <span>Room 306, Block B · 3rd Floor</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919000000007">+91 90000 00007</a></span></li>
+                    <li><span>Email:</span> <span><a href="mailto:sameer.gill@example.edu">sameer.gill@example.edu</a></span></li>
+                    <li><span>Consultation:</span> <span>Mon–Thu, 4:00–5:00 PM</span></li>
+                    <li><span>Subjects:</span> <span>Computer Networks, Cloud Computing</span></li>
+                    <li><span>Availability:</span> <span><span class="badge-status status-offline">● Off Campus</span></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="openAppointmentModal('Prof. Sameer Gill')">📅 Book Meeting</button>
+                    <button class="btn-sm" onclick="showDirections('Block B, 3rd Floor, Room 306')">📍 Directions</button>
+                </div>
+            </div>
+
+            <div class="card search-item" data-category="faculty">
+                <div class="card-header-flex">
+                    <div class="faculty-avatar" aria-hidden="true">NA</div>
+                    <div>
+                        <div class="card-title">Nisha Arora</div>
+                        <div class="card-subtitle">Teacher · MT Block</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Block:</span> <span>MT Block</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+919646574879">+91 96465 74879</a></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="showDirections('MT Block')">📍 Directions</button>
+                </div>
+            </div>
+
+            <div class="card search-item" data-category="faculty">
+                <div class="card-header-flex">
+                    <div class="faculty-avatar" aria-hidden="true">GM</div>
+                    <div>
+                        <div class="card-title">Gaurav Mangar</div>
+                        <div class="card-subtitle">Teacher · Pharmacy Block</div>
+                    </div>
+                </div>
+                <ul class="tree-list">
+                    <li><span>Block:</span> <span>Pharmacy Block</span></li>
+                    <li><span>Contact:</span> <span><a href="tel:+918194873482">+91 81948 73482</a></span></li>
+                </ul>
+                <div class="card-actions">
+                    <button class="btn-sm" onclick="showDirections('Pharmacy Block')">📍 Directions</button>
                 </div>
             </div>
 
@@ -573,12 +821,6 @@
             const category = filterCategory.value;
             let hasMatch = false;
 
-            if (query === '' && category === 'all') {
-                cards.forEach(card => card.style.display = 'none');
-                noResult.style.display = 'none';
-                return;
-            }
-
             cards.forEach(card => {
                 const textContent = card.innerText.toLowerCase();
                 const cardCategory = card.getAttribute('data-category');
@@ -587,7 +829,7 @@
                 const matchesCategory = category === 'all' || cardCategory === category;
 
                 if (matchesQuery && matchesCategory) {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                     hasMatch = true;
                 } else {
                     card.style.display = 'none';

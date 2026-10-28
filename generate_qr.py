@@ -1,8 +1,9 @@
+python
 import os
 import qrcode
 
-# PC ka LAN IP
-base_url = "http://192.168.1.12:5500"
+# Online website URL
+base_url = "https://smartcampusqr.netlify.app"
 data = f"{base_url}/service-selection.html"
 
 output_dir = os.path.dirname(__file__)
