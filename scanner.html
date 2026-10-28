@@ -1335,7 +1335,7 @@
         const campusQrCode = document.getElementById('campusQrCode');
         if (campusQrCode && typeof QRCode === 'function') {
             new QRCode(campusQrCode, {
-             text: new URL('/index.html', window.location.origin).href,
+                text: new URL('service-selection.html', window.location.href).href,
                 width: 220,
                 height: 220,
                 correctLevel: QRCode.CorrectLevel.M
