@@ -4,7 +4,7 @@ import qrcode
 from qrcode.constants import ERROR_CORRECT_H
 
 # Live Netlify website page
-data = "https://smartcampusqr.netlify.app/service-selection.html"
+data = data = "https://smartcampusqr.netlify.app/index.html"
 
 # Save QR images in the same folder
 output_dir = os.path.dirname(os.path.abspath(__file__))
