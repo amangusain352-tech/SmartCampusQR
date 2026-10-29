@@ -1423,7 +1423,7 @@
                 setScanStatus('Scanning for QR code...');
 
                 const context = qrCanvas.getContext('2d', { willReadFrequently: true });
-                const openServiceSelection = scannedValue => {
+                const openCampusHomePage = scannedValue => {
                     let scannedUrl;
                     try {
                         scannedUrl = new URL(scannedValue, window.location.href);
@@ -1459,7 +1459,7 @@
                             try {
                                 const [code] = await barcodeDetector.detect(qrVideo);
                                 if (code && code.rawValue.trim()) {
-                                    if (openServiceSelection(code.rawValue.trim())) return;
+                                    if (openCampusHomePage(code.rawValue.trim())) return;
                                 }
                             } catch (error) {
                                 barcodeDetector = null;
@@ -1483,7 +1483,7 @@
                         if (code) {
                             const scannedValue = code.data.trim();
                             if (scannedValue) {
-                                if (openServiceSelection(scannedValue)) return;
+                                if (openCampusHomePage(scannedValue)) return;
                             }
                         }
                     }
