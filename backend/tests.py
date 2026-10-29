@@ -28,6 +28,16 @@ class CampusNavigationTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "What service do")
 
+    def test_legacy_qr_path_redirects_to_homepage(self):
+        response = self.client.get("/select-services.html")
+
+        self.assertRedirects(
+            response,
+            "/index.html",
+            status_code=301,
+            fetch_redirect_response=False,
+        )
+
     def test_generated_qr_returns_a_png_image(self):
         response = self.client.get(reverse("generate_qr"), HTTP_HOST="localhost")
 
