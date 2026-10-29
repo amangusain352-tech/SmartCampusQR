@@ -251,17 +251,6 @@
             box-shadow: 0 22px 45px rgba(37, 99, 235, 0.12);
         }
 
-        /* CLICK ANIMATION & RIPPLE EFFECT */
-        .service-card.clicked {
-            animation: cardClickEffect 0.35s ease forwards;
-        }
-
-        @keyframes cardClickEffect {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.95); background: #f8fafc; border-color: var(--primary); }
-            100% { transform: scale(0.97); opacity: 0.8; }
-        }
-
         .card-header-row {
             display: flex;
             justify-content: space-between;
@@ -269,7 +258,6 @@
             margin-bottom: 22px;
         }
 
-        /* ENLARGED SERVICE ICON */
         .service-icon {
             width: 72px;
             height: 72px;
@@ -527,13 +515,11 @@
             font-size: 16px;
         }
 
-        /* ANIMATIONS */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(18px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* RESPONSIVE */
         @media (max-width: 900px) {
             .services-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -725,24 +711,22 @@
 
         </section>
 
+        <!-- FEEDBACK MODAL -->
         <div id="feedback-modal" class="modal" aria-hidden="true">
             <div class="modal-panel">
                 <div class="modal-header">
                     <h3>Feedback</h3>
                     <button class="close-btn" type="button" aria-label="Close">×</button>
                 </div>
-
                 <form>
                     <div class="form-field">
                         <label for="feedback-name">Your Name</label>
                         <input id="feedback-name" type="text" placeholder="Enter your name">
                     </div>
-
                     <div class="form-field">
                         <label for="feedback-message">Message</label>
                         <textarea id="feedback-message" placeholder="Tell us about your campus experience or suggestion..."></textarea>
                     </div>
-
                     <div class="modal-actions">
                         <button class="cancel-btn" type="button">Cancel</button>
                         <button class="submit-btn" type="submit">Send</button>
@@ -751,52 +735,26 @@
             </div>
         </div>
 
-        <div id="student-facilities-modal" class="modal" aria-hidden="true">
-            <div class="modal-panel">
-                <div class="modal-header">
-                    <h3>Student Facilities</h3>
-                    <button class="close-btn" type="button" aria-label="Close">×</button>
-                </div>
-
-                <div class="form-field">
-                    <label>Available Facilities</label>
-                    <textarea readonly>• Library Study Zones
-• Computer Labs
-• Medical Support Desk
-• Transport Help Desk
-• Wi-Fi & Digital Access Points
-• Cafeteria Seating Area</textarea>
-                </div>
-
-                <div class="modal-actions">
-                    <button class="cancel-btn" type="button">Close</button>
-                </div>
-            </div>
-        </div>
-
+        <!-- LOST & FOUND MODAL -->
         <div id="lost-found-modal" class="modal" aria-hidden="true">
             <div class="modal-panel">
                 <div class="modal-header">
                     <h3>Lost &amp; Found</h3>
                     <button class="close-btn" type="button" aria-label="Close">×</button>
                 </div>
-
                 <form>
                     <div class="form-field">
                         <label for="item-name">Item Name</label>
                         <input id="item-name" type="text" placeholder="e.g. Black wallet, phone, headphones">
                     </div>
-
                     <div class="form-field">
                         <label for="item-location">Location</label>
                         <input id="item-location" type="text" placeholder="Where did you lose it?">
                     </div>
-
                     <div class="form-field">
                         <label for="item-phone">Contact Number</label>
                         <input id="item-phone" type="tel" placeholder="Your contact number">
                     </div>
-
                     <div class="form-field">
                         <label>Upload Photo</label>
                         <div class="upload-box">
@@ -805,7 +763,6 @@
                             <img id="item-preview" class="image-preview" alt="Selected item preview">
                         </div>
                     </div>
-
                     <div class="modal-actions">
                         <button class="cancel-btn" type="button">Cancel</button>
                         <button class="submit-btn" type="submit">Submit Report</button>
@@ -890,6 +847,7 @@
         }
 
         document.querySelectorAll('.feedback-card, .lost-card').forEach(card => {
+            card.style.cursor = "pointer";
             card.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = this.getAttribute('href');
@@ -929,7 +887,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
     </script>
 </body>
 </html>
