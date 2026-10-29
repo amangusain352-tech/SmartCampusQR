@@ -2067,19 +2067,19 @@
                 <h3>Select Campus QR Tag</h3>
                 <p>Click a station preset below to test how python-pyzbar decodes location payload tags instantly.</p>
                 <div class="sim-btn-list">
-                    <button class="sim-btn active" onclick="simulateQR('Library Seat #42', 'service-selection.html', '📚 Central Library - Floor 2', this)">
+                    <button class="sim-btn active" onclick="simulateQR('Library Seat #42', 'index.html', '📚 Central Library - Floor 2', this)">
                         <span>📚 Central Library Tag</span>
                         <span>&rarr;</span>
                     </button>
-                    <button class="sim-btn" onclick="simulateQR('Campus Shuttle #4', 'service-selection.html', '🚌 Shuttle Route B - Live En Route', this)">
+                    <button class="sim-btn" onclick="simulateQR('Campus Shuttle #4', 'index.html', '🚌 Shuttle Route B - Live En Route', this)">
                         <span>🚌 Campus Bus Shuttle</span>
                         <span>&rarr;</span>
                     </button>
-                    <button class="sim-btn" onclick="simulateQR('Cafeteria Counter 2', 'service-selection.html', '🍴 Food Court - Open Queue', this)">
+                    <button class="sim-btn" onclick="simulateQR('Cafeteria Counter 2', 'index.html', '🍴 Food Court - Open Queue', this)">
                         <span>🍴 Main Cafeteria Tag</span>
                         <span>&rarr;</span>
                     </button>
-                    <button class="sim-btn" onclick="simulateQR('Dispensary Station', 'service-selection.html', '🏥 Health Desk - Duty Doctor Active', this)">
+                    <button class="sim-btn" onclick="simulateQR('Dispensary Station', 'index.html', '🏥 Health Desk - Duty Doctor Active', this)">
                         <span>🏥 Emergency Health Desk</span>
                         <span>&rarr;</span>
                     </button>
@@ -2088,7 +2088,7 @@
 
             <div class="sim-result-box">
                 <div class="sim-qr-preview">
-                    <div id="simQrCode" aria-label="QR code linking to service selection"></div>
+                    <div id="simQrCode" aria-label="QR code linking to the home page"></div>
                 </div>
                 <div class="sim-data-display" id="simDataDisplay">
                     QR DATA: <span id="simQrData"></span>
@@ -2215,20 +2215,20 @@
             });
         }
 
-        const serviceSelectionUrl = new URL('service-selection.html', window.location.href);
+        const landingPageUrl = new URL('index.html', window.location.href);
         const simQrCode = document.getElementById('simQrCode');
         const simQrData = document.getElementById('simQrData');
 
         if (simQrCode && typeof QRCode === 'function') {
             new QRCode(simQrCode, {
-                text: serviceSelectionUrl.href,
+                text: landingPageUrl.href,
                 width: 116,
                 height: 116,
                 correctLevel: QRCode.CorrectLevel.M
             });
         }
 
-        if (simQrData) simQrData.textContent = serviceSelectionUrl.href;
+        if (simQrData) simQrData.textContent = landingPageUrl.href;
 
         // Live QR Tag Simulator Interactivity
         function simulateQR(tag, url, locationInfo, btnElement) {

@@ -1,6 +1,10 @@
+from io import BytesIO
+
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
+from PIL import Image
+from pyzbar.pyzbar import decode
 
 from .models import TeacherProfile
 
@@ -29,6 +33,11 @@ class CampusNavigationTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "image/png")
+        decoded = decode(Image.open(BytesIO(response.content)))
+        self.assertEqual(
+            [item.data.decode("utf-8") for item in decoded],
+            ["http://localhost/index.html"],
+        )
 
 
 class TeacherAuthenticationTests(TestCase):

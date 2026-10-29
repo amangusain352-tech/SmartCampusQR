@@ -57,9 +57,13 @@ def python_scanner_view(request):
 
 def generate_qr_view(request):
     base_url = os.environ.get("SMARTCAMPUS_BASE_URL", "").rstrip("/")
-    service_path = reverse("service_selection")
-    service_url = f"{base_url}{service_path}" if base_url else request.build_absolute_uri(service_path)
-    image = qrcode.make(service_url)
+    landing_path = "/index.html"
+    landing_url = (
+        f"{base_url}{landing_path}"
+        if base_url
+        else request.build_absolute_uri(landing_path)
+    )
+    image = qrcode.make(landing_url)
     image_buffer = BytesIO()
     image.save(image_buffer, format="PNG")
 
@@ -187,4 +191,3 @@ def teacher_dashboard_view(request):
 def teacher_logout_view(request):
     logout(request)
     return redirect("teacher_portal")
-

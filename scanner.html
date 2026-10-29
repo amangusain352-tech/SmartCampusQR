@@ -1335,7 +1335,7 @@
         const campusQrCode = document.getElementById('campusQrCode');
         if (campusQrCode && typeof QRCode === 'function') {
             new QRCode(campusQrCode, {
-                text: new URL('service-selection.html', window.location.href).href,
+                text: new URL('index.html', window.location.href).href,
                 width: 220,
                 height: 220,
                 correctLevel: QRCode.CorrectLevel.M
@@ -1433,9 +1433,13 @@
                     }
 
                    const servicePaths = [
-    '/select-services.html',
-    '/select-services'
-];
+                       '',
+                       '/index.html',
+                       '/service-selection',
+                       '/service-selection.html',
+                       '/select-services.html',
+                       '/select-services'
+                   ];
                     if (!servicePaths.includes(scannedUrl.pathname.replace(/\/$/, ''))) {
                         setScanStatus('QR detected, but it is not a SmartCampus service QR.', true);
                         return false;
