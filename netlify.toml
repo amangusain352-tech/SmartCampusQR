@@ -3,6 +3,12 @@
 
 [[redirects]]
   from = "/select-services.html"
-  to = "/index.html"
+  to = "/service-selection.html"
   status = 301
   force = true
+
+
+
+
+
+
