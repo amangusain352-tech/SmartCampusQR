@@ -1335,7 +1335,7 @@
         const campusQrCode = document.getElementById('campusQrCode');
         if (campusQrCode && typeof QRCode === 'function') {
             new QRCode(campusQrCode, {
-                text: new URL('/service-selection.html', window.location.href).href,
+                text: new URL('/index.html', window.location.href).href,
                 width: 220,
                 height: 220,
                 correctLevel: QRCode.CorrectLevel.M
@@ -1445,9 +1445,9 @@
                         return false;
                     }
 
-                    setScanStatus('QR code detected! Opening service selection...');
+                    setScanStatus('QR code detected! Opening campus home page...');
                     stopScanner();
-                    window.location.href = new URL('/service-selection.html', window.location.href).href;
+                    window.location.href = new URL('/index.html', window.location.href).href;
                     return true;
                 };
 
