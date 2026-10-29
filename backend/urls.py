@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic.base import RedirectView
 from . import views  # views.py ko import karein
 
 urlpatterns = [
@@ -13,13 +12,6 @@ urlpatterns = [
 
     # 2. Service selection page
     path('service-selection/', views.service_selection_view, name='service_selection'),
-    # Keep QR codes issued with the old URL opening the landing page.
-    path(
-        'select-services.html',
-        RedirectView.as_view(url='/index.html', permanent=True),
-        name='legacy_qr_landing',
-    ),
-
     # 3. Scanner test karne ke liye path
     path('python-scan/', views.python_scanner_view, name='python_scan'),
     # 4. QR code generate karne ke liye path

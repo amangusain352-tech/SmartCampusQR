@@ -57,7 +57,7 @@ def python_scanner_view(request):
 
 def generate_qr_view(request):
     base_url = os.environ.get("SMARTCAMPUS_BASE_URL", "").rstrip("/")
-    landing_path = "/index.html"
+    landing_path = "/select-services.html"
     landing_url = (
         f"{base_url}{landing_path}"
         if base_url

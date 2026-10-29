@@ -1187,7 +1187,7 @@
                                 <button id="startScannerBtn" class="scan-btn" type="button">Scan QR with Camera</button>
                                 <button id="stopScannerBtn" class="scan-btn secondary hidden" type="button">Stop Camera</button>
                                 <a
-                                    href="service-selection.html"
+                                    href="select-services.html"
                                     class="scan-btn secondary"
                                     style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;"
                                 >
@@ -1337,7 +1337,7 @@
         const campusQrCode = document.getElementById('campusQrCode');
         if (campusQrCode && typeof QRCode === 'function') {
             new QRCode(campusQrCode, {
-                text: new URL('/index.html', window.location.href).href,
+                text: new URL('/select-services.html', window.location.href).href,
                 width: 220,
                 height: 220,
                 correctLevel: QRCode.CorrectLevel.M
@@ -1447,9 +1447,9 @@
                         return false;
                     }
 
-                    setScanStatus('QR code detected! Opening campus home page...');
+                    setScanStatus('QR code detected! Opening service selection...');
                     stopScanner();
-                    window.location.href = new URL('/index.html', window.location.href).href;
+                    window.location.href = new URL('/select-services.html', window.location.href).href;
                     return true;
                 };
 

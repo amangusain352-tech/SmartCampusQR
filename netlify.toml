@@ -1,13 +1,6 @@
 [build]
   publish = "."
 
-# Aapka purana specific redirect
-[[redirects]]
-  from = "/select-services.html"
-  to = "/service-selection.html"
-  status = 301
-  force = true
-
 # Ye naya rule add karo: agar koi galat URL ho ya page na mile, toh index.html par bhej do
 [[redirects]]
   from = "/*"
