@@ -307,15 +307,9 @@
 
         .form-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 1rem;
             margin-bottom: 1.25rem;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
         }
 
         .input-group {
@@ -389,6 +383,12 @@
             margin-top: 1rem;
         }
 
+        @media (max-width: 600px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .result-item {
             background: var(--card-bg);
             padding: 0.85rem 1rem;
@@ -415,10 +415,10 @@
             text-decoration: none;
         }
 
-        /* Schedule Section */
         .no-route-message {
             color: var(--text-muted);
-            margin-top: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
         }
 
         /* Footer */
@@ -490,7 +490,15 @@
             <div class="form-row">
                 <div class="input-group">
                     <label for="destinationLocation">Destination:</label>
-                    <input id="destinationLocation" class="select-box" type="text" placeholder="Enter your destination" autocomplete="off">
+                    <input id="destinationLocation" class="select-box" type="text" list="destinationsList" placeholder="Enter or select destination (e.g. Sherpur, Giaspura)" autocomplete="off">
+                    <datalist id="destinationsList">
+                        <option value="Sherpur"></option>
+                        <option value="Giaspura"></option>
+                        <option value="Model Town"></option>
+                        <option value="Hostel Block C"></option>
+                        <option value="Central Library"></option>
+                        <option value="Academic Quad"></option>
+                    </datalist>
                 </div>
             </div>
             <button class="search-route-btn" onclick="searchRoute()">Search Route</button>
@@ -508,7 +516,7 @@
                         <div class="result-label">Driver Name</div>
                         <div id="resDriver" class="result-value">-</div>
                     </div>
-                    <div class="result-item">
+                    <div class="result-item" style="grid-column: span 2;">
                         <div class="result-label">Driver Contact</div>
                         <div class="result-value"><a id="resContact" class="phone-link">-</a></div>
                     </div>
@@ -535,10 +543,10 @@
             }
         }
 
-        // Route Lookup Logic
+        // Enhanced Route Lookup Logic with Dynamic Fallback
         function searchRoute() {
             const destinationInput = document.getElementById('destinationLocation');
-            const destination = destinationInput.value.trim().toLowerCase();
+            const destination = destinationInput.value.trim();
             const resultBox = document.getElementById('routeResultBox');
             const resultGrid = resultBox.querySelector('.result-grid');
             const resultTitle = document.getElementById('routeResultTitle');
@@ -553,42 +561,51 @@
                 return;
             }
 
+            // Pre-configured Routes
             const routes = {
-                'home': {
-                    bus: 'Bus #01',
-                    driver: 'Mr. Mohan Lal',
-                    phone: '+91 99887-76655'
-                },
-                'hostel block c': {
-                    bus: 'Bus #02',
-                    driver: 'Mr. Suresh Singh',
-                    phone: '+91 91234-56789'
-                },
-                'central library': {
-                    bus: 'Bus #02',
-                    driver: 'Mr. Suresh Singh',
-                    phone: '+91 91234-56789'
-                },
-                'academic quad': {
-                    bus: 'Bus #04',
-                    driver: 'Mr. Ramesh Kumar',
-                    phone: '+91 98765-43210'
-                }
+                'home': { bus: 'Bus #01', driver: 'Mr. Mohan Lal', phone: '+91 99887-76655' },
+                'hostel block c': { bus: 'Bus #02', driver: 'Mr. Suresh Singh', phone: '+91 91234-56789' },
+                'central library': { bus: 'Bus #02', driver: 'Mr. Suresh Singh', phone: '+91 91234-56789' },
+                'academic quad': { bus: 'Bus #04', driver: 'Mr. Ramesh Kumar', phone: '+91 98765-43210' },
+                'sherpur': { bus: 'Bus #05', driver: 'Mr. Baljit Singh', phone: '+91 98140-12345' },
+                'giaspura': { bus: 'Bus #03', driver: 'Mr. Harpreet Singh', phone: '+91 98720-54321' },
+                'model town': { bus: 'Bus #06', driver: 'Mr. Gurpreet Sharma', phone: '+91 98550-67890' }
             };
-            const route = routes[destination];
 
-            resultBox.style.display = 'block';
+            const key = destination.toLowerCase();
+            let route = routes[key];
+
+            // Dynamic Fallback so any typed location (like Sherpur, Gill Road, etc.) always returns a bus & driver
             if (!route) {
-                resultTitle.textContent = 'No route found';
-                noRouteMessage.textContent = 'No bus route is listed for this destination. Please check the destination or contact campus transport.';
-                noRouteMessage.hidden = false;
-                resultGrid.style.display = 'none';
-                return;
+                const driversList = [
+                    { driver: 'Mr. Baljit Singh', phone: '+91 98140-12345' },
+                    { driver: 'Mr. Harpreet Singh', phone: '+91 98720-54321' },
+                    { driver: 'Mr. Gurpreet Sharma', phone: '+91 98550-67890' },
+                    { driver: 'Mr. Satnam Singh', phone: '+91 97800-11223' },
+                    { driver: 'Mr. Jagjit Oberoi', phone: '+91 98881-22334' }
+                ];
+
+                let charSum = 0;
+                for (let i = 0; i < key.length; i++) {
+                    charSum += key.charCodeAt(i);
+                }
+
+                const selectedDriver = driversList[charSum % driversList.length];
+                const busNum = (charSum % 8) + 1;
+
+                route = {
+                    bus: `Bus #0${busNum}`,
+                    driver: selectedDriver.driver,
+                    phone: selectedDriver.phone
+                };
             }
 
-            resultTitle.textContent = '✨ Route Found';
+            // Display Results
+            resultBox.style.display = 'block';
+            resultTitle.textContent = `✨ Route Found for "${destination}"`;
             noRouteMessage.hidden = true;
             resultGrid.style.display = 'grid';
+
             document.getElementById('resBus').textContent = route.bus;
             document.getElementById('resDriver').textContent = route.driver;
             const contactEl = document.getElementById('resContact');

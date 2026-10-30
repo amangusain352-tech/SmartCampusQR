@@ -202,6 +202,15 @@
                 </div>
             </div>
 
+            <div class="mb-10">
+                <h2 class="text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider mb-4 flex items-center space-x-2">
+                    <span>📚</span><span>Other Programs Book Sections</span>
+                </h2>
+                <div id="program-book-sections" class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <!-- Program book sections injected dynamically -->
+                </div>
+            </div>
+
             <hr class="border-gray-200 dark:border-gray-700 mb-8 opacity-60">
 
             <!-- SEARCH 2: BOOK SEARCH -->
@@ -275,7 +284,22 @@
             { title: "Data Structures Using C", author: "Reema Thareja", category: "CS", semester: "Sem 2", isbn: "978-0198099307", status: "Available", icon: "💻" },
             { title: "Operating System Concepts", author: "Silberschatz", category: "CS", semester: "Sem 4", isbn: "978-1118063337", status: "Available", icon: "⚙️" },
             { title: "Database System Concepts", author: "Korth", category: "CS", semester: "Sem 4", isbn: "978-0073523323", status: "Available", icon: "🗄️" },
-            { title: "Computer Networks", author: "Tanenbaum", category: "CS", semester: "Sem 5", isbn: "978-0132126953", status: "Available", icon: "🌐" }
+            { title: "Computer Networks", author: "Tanenbaum", category: "CS", semester: "Sem 5", isbn: "978-0132126953", status: "Available", icon: "🌐" },
+            { title: "Programming in ANSI C", author: "E. Balagurusamy", category: "Programming", program: "BCA", semester: "Year 1", isbn: "978-9353162344", status: "Available", icon: "💻" },
+            { title: "Computer Fundamentals and Programming in C", author: "Reema Thareja", category: "Computer Science", program: "BCA", semester: "Year 1", isbn: "978-0199456155", status: "Available", icon: "🖥️" },
+            { title: "Data Structures Using C", author: "Reema Thareja", category: "Computer Science", program: "BCA", semester: "Year 2", isbn: "978-0198099307", status: "Available", icon: "🧩" },
+            { title: "Principles of Management", author: "Koontz and Weihrich", category: "Management", program: "BOM", semester: "Year 1", isbn: "978-0070425066", status: "Available", icon: "📊" },
+            { title: "Business Organisation and Management", author: "C.B. Gupta", category: "Business", program: "BOM", semester: "Year 1", isbn: "978-9355010262", status: "Available", icon: "🏢" },
+            { title: "Business Communication", author: "Rai and Rai", category: "Communication", program: "BOM", semester: "Year 2", isbn: "978-8125952153", status: "Available", icon: "🗣️" },
+            { title: "Marketing Management", author: "Philip Kotler", category: "Marketing", program: "MBA", semester: "Year 1", isbn: "978-9352867549", status: "Available", icon: "📈" },
+            { title: "Financial Management", author: "I.M. Pandey", category: "Finance", program: "MBA", semester: "Year 1", isbn: "978-9352607467", status: "Available", icon: "💰" },
+            { title: "Human Resource Management", author: "Gary Dessler", category: "Human Resources", program: "MBA", semester: "Year 2", isbn: "978-9352867556", status: "Available", icon: "👥" }
+        ];
+
+        const programBookSections = [
+            { name: "BCA", description: "Computer applications and programming", icon: "💻" },
+            { name: "BOM", description: "Business organisation and management", icon: "🏢" },
+            { name: "MBA", description: "Management, finance, and marketing", icon: "📊" }
         ];
 
         // Render User Account Hub (Fines, Loans, Reservations)
@@ -341,6 +365,8 @@
         }
 
         const semestersGrid = document.getElementById('semesters-grid');
+        const programBookSectionsContainer = document.getElementById('program-book-sections');
+
         function renderSemesters(semesters) {
             semestersGrid.innerHTML = '';
             if (semesters.length === 0) {
@@ -369,12 +395,46 @@
             });
         }
 
+        function renderProgramBookSections() {
+            programBookSectionsContainer.innerHTML = '';
+            programBookSections.forEach(program => {
+                const books = allLibraryBooks.filter(book => book.program === program.name);
+                const section = document.createElement('section');
+                section.className = 'p-5 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm';
+                section.innerHTML = `
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="text-2xl p-2 bg-brand-50 dark:bg-brand-900/40 rounded-xl">${program.icon}</span>
+                        <div>
+                            <h3 class="font-bold text-gray-800 dark:text-gray-100">${program.name} Books</h3>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">${program.description}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        ${books.map(book => `
+                            <div class="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div>
+                                        <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-100">${book.title}</h4>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${book.author} · ${book.semester}</p>
+                                    </div>
+                                    <span class="text-lg">${book.icon}</span>
+                                </div>
+                                <button onclick="reserveBook('${book.title}')" class="mt-3 w-full py-2 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 hover:bg-brand-100 dark:hover:bg-brand-900/60 rounded-lg text-xs font-semibold transition active:scale-95">Request / Reserve</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                programBookSectionsContainer.appendChild(section);
+            });
+        }
+
         const queryParams = new URLSearchParams(window.location.search);
         if (queryParams.get('fine_cleared') === 'true') {
             userFine = 0;
         }
 
         renderSemesters(semestersData);
+        renderProgramBookSections();
         renderUserHub();
 
         const semesterSearchInput = document.getElementById('semester-search-input');
@@ -405,7 +465,8 @@
                 book.title.toLowerCase().includes(trimmed) ||
                 book.author.toLowerCase().includes(trimmed) ||
                 book.category.toLowerCase().includes(trimmed) ||
-                book.semester.toLowerCase().includes(trimmed)
+                book.semester.toLowerCase().includes(trimmed) ||
+                (book.program && book.program.toLowerCase().includes(trimmed))
             );
 
             bookResultsGrid.innerHTML = '';
@@ -417,7 +478,7 @@
                         <div>
                             <div class="flex items-center justify-between mb-3">
                                 <span class="text-2xl">${book.icon}</span>
-                                <span class="text-xs px-2.5 py-1 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 rounded-lg font-semibold">${book.semester}</span>
+                                <span class="text-xs px-2.5 py-1 bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 rounded-lg font-semibold">${book.program ? `${book.program} · ` : ''}${book.semester}</span>
                             </div>
                             <h4 class="font-bold text-gray-800 dark:text-gray-100 text-sm">${book.title}</h4>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Author: ${book.author}</p>
